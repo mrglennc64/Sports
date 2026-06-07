@@ -62,16 +62,17 @@ systemctl daemon-reload
 systemctl enable mlb-edge >/dev/null 2>&1 || true
 systemctl restart mlb-edge
 
-echo "==> nginx site"
+echo "==> nginx site (additive: does NOT touch other vhosts)"
 cp "$APP/deploy/nginx-strike.conf" /etc/nginx/sites-available/strike
 ln -sf /etc/nginx/sites-available/strike /etc/nginx/sites-enabled/strike
-rm -f /etc/nginx/sites-enabled/default
+# NOTE: we intentionally do NOT remove the 'default' site — this box may host other
+# sites. The strike vhost is matched by server_name, so it coexists safely.
 nginx -t
 systemctl reload nginx
 
 echo "==> health check"
 sleep 2
-curl -fsS http://127.0.0.1:8000/health && echo
+curl -fsS http://127.0.0.1:8077/health && echo
 
 if [ -n "${LE_EMAIL:-}" ]; then
   echo "==> TLS via Let's Encrypt"
