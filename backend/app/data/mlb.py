@@ -137,6 +137,27 @@ class MlbClient:
             innings_pitched=ip,
         )
 
+    # --- actual result (for backtesting) -------------------------------------
+    def get_actual_strikeouts(self, pitcher_id: int, date: str) -> int | None:
+        """Strikeouts the pitcher actually recorded on ``date`` (YYYY-MM-DD).
+
+        Reads the season game log and matches the date. Returns None if the
+        pitcher did not appear that day (or the game isn't final yet).
+        """
+        resp = self._client.get(
+            f"/api/v1/people/{pitcher_id}/stats",
+            params={"stats": "gameLog", "group": "pitching"},
+        )
+        resp.raise_for_status()
+        stats = resp.json().get("stats") or []
+        if not stats:
+            return None
+        for split in stats[0].get("splits", []):
+            if split.get("date") == date:
+                ks = split.get("stat", {}).get("strikeOuts")
+                return int(ks) if ks is not None else None
+        return None
+
     # --- opponent strikeout rate ---------------------------------------------
     def get_team_k_rate(self, team_id: int) -> float | None:
         resp = self._client.get(

@@ -1,0 +1,14 @@
+[Unit]
+Description=MLB Strikeout Edge API (FastAPI/uvicorn)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/strike/backend
+EnvironmentFile=/etc/mlb-edge.env
+ExecStart=/opt/strike/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

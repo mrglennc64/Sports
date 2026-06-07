@@ -30,6 +30,7 @@ class EdgeRow:
     opponent: str
     venue: str
     status: str                      # "ok" | "no_prop" | "no_stats"
+    pitcher_id: int | None = None
     expected_ks: float | None = None
     line: float | None = None
     bookmaker: str | None = None
@@ -243,6 +244,7 @@ def build_slate(
                 opponent=start.opponent_team_name,
                 venue=start.venue_name,
                 status="ok",
+                pitcher_id=start.pitcher_id,
                 recommendation=insight.recommendation,
                 confidence=insight.confidence,
                 stake_label=insight.stake_label,

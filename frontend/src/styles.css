@@ -138,3 +138,76 @@ table.slate {
 .muted { color: var(--muted); }
 
 footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
+
+/* nav back-link on dashboard */
+.nav { margin-bottom: 8px; }
+.home-link { color: var(--muted); text-decoration: none; font-size: 13px; }
+.home-link:hover { color: var(--text); }
+
+/* ---------- landing page ---------- */
+.landing { max-width: 980px; margin: 0 auto; padding: 0 16px 64px; }
+.hero { text-align: center; padding: 72px 0 48px; }
+.badge {
+  display: inline-block;
+  background: rgba(31, 111, 235, 0.15);
+  color: #58a6ff;
+  border: 1px solid rgba(31, 111, 235, 0.4);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.hero h1 {
+  font-size: 44px;
+  line-height: 1.1;
+  margin: 18px auto 16px;
+  max-width: 720px;
+  background: linear-gradient(180deg, #fff, #9fb0c3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lede { max-width: 620px; margin: 0 auto 28px; color: var(--muted); font-size: 17px; }
+.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cta-row.center { margin-top: 24px; }
+.cta {
+  display: inline-block;
+  background: var(--bet);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.cta:hover { filter: brightness(1.1); }
+.cta.ghost { background: transparent; border: 1px solid var(--line); color: var(--text); }
+.disclaimer { margin-top: 22px; color: var(--neg); font-size: 12px; }
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.feature {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+}
+.feature-icon { font-size: 24px; }
+.feature h3 { margin: 10px 0 6px; font-size: 16px; }
+.feature p { margin: 0; color: var(--muted); font-size: 14px; }
+
+.how { margin: 48px 0; text-align: center; }
+.how h2 { font-size: 26px; margin-bottom: 18px; }
+.steps {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+  color: var(--text);
+  line-height: 1.8;
+}
+.steps b { color: #58a6ff; }
+.landing-footer { text-align: center; color: var(--muted); font-size: 12px; padding-top: 24px; }

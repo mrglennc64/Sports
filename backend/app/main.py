@@ -13,16 +13,27 @@ from datetime import date as date_cls
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
+from dataclasses import asdict as _asdict
+
+from app.backtest.metrics import summarize
+from app.backtest.settle import settle_predictions
 from app.config import settings
 from app.log.predictions import log_predictions
 from app.pipeline import build_slate, predict_pitcher
 
 app = FastAPI(title="MLB Strikeout Edge Platform", version="1.0.0")
 
-# Dev convenience: allow the Vite dev server to call the API.
+# Allow the Vite dev server (local) and the deployed domain. In production the
+# frontend is served same-origin behind nginx (/api/*), so CORS isn't strictly
+# needed, but listing the domain keeps direct API calls working too.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://strike.perfecthold.online",
+        "https://strike.perfecthold.online",
+    ],
     allow_methods=["GET"],
     allow_headers=["*"],
 )
@@ -89,3 +100,10 @@ def slate(
         "bets": sum(1 for r in rows if r.get("bet")),
         "rows": rows,
     }
+
+
+@app.get("/backtest")
+def backtest() -> dict:
+    """Settle logged predictions vs actual results -> hit rate, ROI, MAE."""
+    settled = settle_predictions(settings.predictions_log)
+    return _asdict(summarize(settled))
