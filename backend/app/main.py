@@ -1,9 +1,12 @@
 """FastAPI service exposing the strikeout-edge model.
 
 Routes:
-  GET /health   - liveness + active odds provider
-  GET /predict  - single-pitcher manual calculation (optionally with book odds)
-  GET /slate    - the product: ranked +EV pitcher-strikeout edges for a date
+  GET /health      - liveness + active odds provider
+  GET /predict     - single-pitcher calc, season-K/9 multiplier model (v1)
+  GET /slate       - ranked +EV edges for a date, multiplier model (v1)
+  GET /v2/predict  - single-pitcher calc, v2 ensemble + bridge (unified model)
+  GET /v2/slate    - ranked +EV edges for a date, v2 ensemble + bridge
+  GET /backtest    - settle logged predictions vs actual results
 """
 from __future__ import annotations
 
@@ -18,6 +21,7 @@ from dataclasses import asdict as _asdict
 from app.backtest.metrics import summarize
 from app.backtest.settle import settle_predictions
 from app.config import settings
+from app.ensemble_pipeline import build_slate_ensemble, predict_pitcher_ensemble
 from app.log.predictions import log_predictions
 from app.pipeline import build_slate, predict_pitcher
 
@@ -100,6 +104,46 @@ def slate(
         "bets": sum(1 for r in rows if r.get("bet")),
         "rows": rows,
     }
+
+
+@app.get("/v2/predict")
+async def predict_v2(
+    pitcher: str = Query(..., description="Pitcher name (matched to that day's starts)"),
+    line: float = Query(..., description="Strikeout line, e.g. 6.5"),
+    date: str | None = Query(None, description="YYYY-MM-DD; defaults to today"),
+    over_odds: float | None = Query(None, description="Book American odds for the over"),
+    under_odds: float | None = Query(None, description="Book American odds for the under"),
+) -> dict:
+    """Single-pitcher prediction via the v2 ensemble (recent form + lineup +
+    expected innings + umpire + ...), fed through the Poisson/edge bridge."""
+    try:
+        return await predict_pitcher_ensemble(
+            pitcher=pitcher,
+            line=line,
+            date=date or _today(),
+            over_odds=over_odds,
+            under_odds=under_odds,
+        )
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@app.get("/v2/slate")
+async def slate_v2(
+    date: str | None = Query(None, description="YYYY-MM-DD; defaults to today"),
+    min_edge: float | None = Query(None, description="Filter: only rows with edge >= this"),
+) -> dict:
+    """Ranked +EV pitcher-strikeout edges for a date via the v2 ensemble bridge."""
+    result = await build_slate_ensemble(date or _today())
+    if min_edge is not None:
+        result["rows"] = [
+            r for r in result["rows"]
+            if r.get("status") == "ok"
+            and r.get("edge") is not None
+            and r["edge"] >= min_edge
+        ]
+        result["count"] = len(result["rows"])
+    return result
 
 
 @app.get("/backtest")

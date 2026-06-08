@@ -1,0 +1,7 @@
+{
+  "_comment": "ILLUSTRATIVE PLACEHOLDER VALUES ONLY - do not bet on these. Copy this file to umpires.json and replace with real home-plate-umpire K tendencies from a trusted source (e.g. Umpire Scorecards, umpscorecards.com). 'k_rate' = strikeouts per plate appearance in that umpire's games (league average is ~0.22); 'called_strike_rate' is optional. Any umpire not listed here is treated as neutral by the model.",
+  "_league_average_k_rate": 0.22,
+  "Doug Eddings": {"k_rate": 0.225, "called_strike_rate": 0.50},
+  "Pat Hoberg": {"k_rate": 0.235, "called_strike_rate": 0.52},
+  "Angel Hernandez": {"k_rate": 0.215, "called_strike_rate": 0.48}
+}
