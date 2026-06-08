@@ -7,6 +7,7 @@ Routes:
   GET /v2/predict  - single-pitcher calc, v2 ensemble + bridge (unified model)
   GET /v2/slate    - ranked +EV edges for a date, v2 ensemble + bridge
   GET /v2/arb      - cross-book strikeout arbitrage scan
+  POST /v2/parlay  - combine per-leg projections into a parlay EV
   GET /backtest    - settle logged predictions vs actual results
 """
 from __future__ import annotations
@@ -16,6 +17,7 @@ from datetime import date as date_cls
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
 from dataclasses import asdict as _asdict
 
@@ -25,6 +27,7 @@ from app.backtest.settle import settle_predictions
 from app.config import settings
 from app.ensemble_pipeline import build_slate_ensemble, predict_pitcher_ensemble
 from app.log.predictions import log_predictions
+from app.parlay_pipeline import LegSpec, build_parlay
 from app.pipeline import build_slate, predict_pitcher
 
 app = FastAPI(title="MLB Strikeout Edge Platform", version="1.0.0")
@@ -160,6 +163,38 @@ def arb(
     and the locked profit.
     """
     return scan_arbitrage(bankroll=bankroll, min_profit_pct=min_profit_pct)
+
+
+class ParlayLegBody(BaseModel):
+    pitcher: str
+    line: float
+    side: str = Field(..., description="'over' or 'under'")
+    odds: float = Field(..., description="Book American odds for this leg's side")
+    date: str | None = Field(None, description="YYYY-MM-DD; defaults to the request date")
+
+
+class ParlayBody(BaseModel):
+    legs: list[ParlayLegBody] = Field(..., min_length=1)
+    date: str | None = Field(None, description="YYYY-MM-DD; defaults to today")
+
+
+@app.post("/v2/parlay")
+async def parlay(body: ParlayBody) -> dict:
+    """Combine per-leg strikeout projections into a parlay EV + stake.
+
+    Each leg's win probability comes from the v2 ensemble projection; you supply
+    the book odds. Legs in the same game are flagged (correlated — the product
+    overstates the true probability)."""
+    specs = [
+        LegSpec(pitcher=l.pitcher, line=l.line, side=l.side, odds=l.odds, date=l.date)
+        for l in body.legs
+    ]
+    try:
+        return await build_parlay(specs, on_date=body.date or _today())
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
 
 @app.get("/backtest")

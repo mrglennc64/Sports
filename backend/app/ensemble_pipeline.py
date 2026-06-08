@@ -74,6 +74,7 @@ async def predict_pitcher_ensemble(
         out["opponent"] = start.opponent_team_name
         out["venue"] = start.venue_name
         out["park"] = park
+        out["game_pk"] = start.game_pk
         return out
     finally:
         if owns:
