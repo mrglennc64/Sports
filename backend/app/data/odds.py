@@ -34,12 +34,36 @@ class PropLine:
     bookmaker: str
 
 
+@dataclass
+class BookPrice:
+    """One book's two-sided strikeout price for a pitcher (for arb scanning)."""
+
+    bookmaker: str
+    line: float
+    over_odds: float
+    under_odds: float
+
+
 class OddsProvider(ABC):
     @abstractmethod
     def list_events(self) -> list[OddsEvent]: ...
 
     @abstractmethod
     def get_strikeout_props(self, event_id: str) -> list[PropLine]: ...
+
+    def get_strikeout_quotes(self, event_id: str) -> dict[str, list[BookPrice]]:
+        """Every book's quote per pitcher (for cross-book arbitrage).
+
+        Default implementation derives single-book quotes from
+        :meth:`get_strikeout_props`; providers that expose all books (e.g.
+        the-odds-api) override this to return the full multi-book set.
+        """
+        out: dict[str, list[BookPrice]] = {}
+        for p in self.get_strikeout_props(event_id):
+            out.setdefault(p.pitcher_name, []).append(
+                BookPrice(p.bookmaker, p.line, p.over_odds, p.under_odds)
+            )
+        return out
 
 
 class TheOddsApiProvider(OddsProvider):
@@ -86,6 +110,35 @@ class TheOddsApiProvider(OddsProvider):
         )
         resp.raise_for_status()
         return self._parse_props(resp.json())
+
+    def get_strikeout_quotes(self, event_id: str) -> dict[str, list[BookPrice]]:
+        """All books' over/under prices per pitcher for one event."""
+        resp = self._client.get(
+            f"/sports/{self.SPORT}/events/{event_id}/odds",
+            params={
+                "apiKey": self._key,
+                "regions": "us",
+                "markets": self.MARKET,
+                "oddsFormat": "american",
+            },
+        )
+        resp.raise_for_status()
+        return self._parse_quotes(resp.json())
+
+    def _parse_quotes(self, payload: dict) -> dict[str, list[BookPrice]]:
+        out: dict[str, list[BookPrice]] = {}
+        for bm in payload.get("bookmakers", []):
+            book = bm.get("key", "")
+            for market in bm.get("markets", []):
+                if market.get("key") != self.MARKET:
+                    continue
+                for pitcher, (line, over, under) in _pair_outcomes(
+                    market.get("outcomes", [])
+                ).items():
+                    out.setdefault(pitcher, []).append(
+                        BookPrice(book, line, over, under)
+                    )
+        return out
 
     def _parse_props(self, payload: dict) -> list[PropLine]:
         # Index bookmakers by key for preferred-order lookup.

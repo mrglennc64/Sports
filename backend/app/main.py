@@ -6,6 +6,7 @@ Routes:
   GET /slate       - ranked +EV edges for a date, multiplier model (v1)
   GET /v2/predict  - single-pitcher calc, v2 ensemble + bridge (unified model)
   GET /v2/slate    - ranked +EV edges for a date, v2 ensemble + bridge
+  GET /v2/arb      - cross-book strikeout arbitrage scan
   GET /backtest    - settle logged predictions vs actual results
 """
 from __future__ import annotations
@@ -18,6 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from dataclasses import asdict as _asdict
 
+from app.arb_pipeline import scan_arbitrage
 from app.backtest.metrics import summarize
 from app.backtest.settle import settle_predictions
 from app.config import settings
@@ -144,6 +146,20 @@ async def slate_v2(
         ]
         result["count"] = len(result["rows"])
     return result
+
+
+@app.get("/v2/arb")
+def arb(
+    bankroll: float = Query(100.0, description="Total stake to split across both legs"),
+    min_profit_pct: float = Query(0.0, description="Min locked profit fraction, e.g. 0.01 = 1%"),
+) -> dict:
+    """Scan the current slate for cross-book strikeout arbitrage (same-line two-way).
+
+    Arbs are rare and short-lived — this is an inefficiency detector, not a
+    guaranteed-income feed. Each opportunity lists the two books, the stake split,
+    and the locked profit.
+    """
+    return scan_arbitrage(bankroll=bankroll, min_profit_pct=min_profit_pct)
 
 
 @app.get("/backtest")
