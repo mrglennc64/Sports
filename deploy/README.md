@@ -47,6 +47,30 @@ nano /etc/mlb-edge.env              # change odds key / thresholds
 curl -fsSL https://raw.githubusercontent.com/mrglennc64/strike/main/deploy/bootstrap.sh | bash
 ```
 
+## Daily line snapshot (builds the backtest dataset)
+
+There is no free source of *historical* strikeout prop lines, so we accumulate
+our own. `deploy/snapshot.sh` runs `app.data.snapshot`, which appends the day's
+lines to `/opt/strike/data/lines.csv` (idempotent per date) — the file the
+historical backtest (`app.data.history`) reads. Install it once:
+
+```bash
+chmod +x /opt/strike/deploy/snapshot.sh
+# 22:30 UTC ~= 6:30pm ET, just before the bulk of the evening slate.
+( crontab -l 2>/dev/null | grep -v 'deploy/snapshot.sh'; \
+  echo '30 22 * * * /opt/strike/deploy/snapshot.sh >> /opt/strike/data/snapshot.log 2>&1' \
+) | crontab -
+```
+
+Idempotent: re-running the same day only adds pitchers not already captured, so
+the first capture of the day is the one that sticks (your "open-ish/close-ish"
+line depending on when it runs). Check it with `tail /opt/strike/data/snapshot.log`.
+
+> ⚠️ **Quota:** each run makes ~1 odds-API request per game (~15–30/day → up to
+> ~900/month). The the-odds-api **free tier is ~500/month**, so a daily player-prop
+> pull can exceed it. Widen the schedule (e.g. every other day) or upgrade the plan
+> if you start getting 401/429s — they'll show up in `snapshot.log`.
+
 ## Nightly backtest (optional)
 
 Once games complete, settle logged predictions:
