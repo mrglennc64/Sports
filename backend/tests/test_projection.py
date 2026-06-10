@@ -181,6 +181,49 @@ def test_component_weights_must_sum_to_one():
         ComponentWeights(opponent_k_profile=0.50)  # rest stay default -> sum > 1
 
 
+def test_log5_keeps_elite_pitcher_above_naive_average():
+    from app.model.projection import _log5_matchup
+
+    # Ace (30% K) vs a league-average lineup (22%), league 22%.
+    p, o, lg = 0.30, 0.22, 0.22
+    matchup = _log5_matchup(p, o, lg)
+    naive = (p + o) / 2
+    # log5 must NOT regress him toward the lineup the way averaging did...
+    assert matchup > naive
+    # ...and against a league-average opponent the matchup ~= his own rate.
+    assert matchup == pytest.approx(p, abs=0.005)
+
+
+def test_log5_compounds_two_below_average_rates_downward():
+    from app.model.projection import _log5_matchup
+
+    # A weak strikeout pitcher vs a contact-heavy lineup -> below both rates.
+    matchup = _log5_matchup(0.18, 0.18, 0.22)
+    assert matchup < 0.18
+
+
+def test_elite_pitcher_vs_average_lineup_not_dragged_under():
+    # k/9 ~ 11.6 -> pitcher K% ~ 0.30; opponent league-average ~ 0.22.
+    avg_opp = OpponentKProfile(
+        k_pct_vs_rhp=0.22, k_pct_vs_lhp=0.22, k_pct_last_14=0.22,
+        k_pct_last_30=0.22, k_pct_starting_lineup=0.22,
+    )
+    form = PitcherRecentForm(throws=Handedness.R, recent_start_ks=[9, 10, 8, 9, 9], k_per_9_last_30=11.6)
+    inputs = make_inputs(
+        opponent=avg_opp,
+        pitcher_form=form,
+        lineup=LineupStrength(projected_lineup_k_pct=0.22),
+        umpire=None,
+        pitch_mix=None,
+    )
+    result = project(inputs)
+    bf = result.expected_batters_faced
+    # The matchup-based opponent lens should reflect ~the pitcher's own ~30% rate
+    # (not the old naive average of ~26% that manufactured false unders).
+    opp_est = result.component("opponent_k_profile").estimate_ks
+    assert opp_est / bf > 0.27  # well above the 0.26 the average would have given
+
+
 def test_custom_weights_change_projection():
     from app.model import ComponentWeights
 

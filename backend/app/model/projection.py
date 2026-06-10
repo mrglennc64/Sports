@@ -52,6 +52,26 @@ def _expected_batters_faced(innings: float, cfg: ModelConfig) -> float:
     return innings * cfg.batters_per_inning
 
 
+def _log5_matchup(pitcher_k: float, opponent_k: float, league_k: float) -> float:
+    """Combine a pitcher's K rate with an opponent's via the odds-ratio (log5) method.
+
+    Returns the expected per-batter K rate for THIS matchup. Unlike a naive
+    average, an elite strikeout pitcher facing a league-average lineup keeps his
+    elite rate (he is NOT regressed halfway toward the lineup), while two
+    below-average rates compound downward. This is the standard sabermetric way
+    to blend two rates against a league baseline (Bill James log5 / odds ratio).
+
+    Result is bounded to (0, 1); inputs are clamped off the 0/1 boundaries.
+    """
+    eps = 1e-6
+    p = min(max(pitcher_k, eps), 1 - eps)
+    o = min(max(opponent_k, eps), 1 - eps)
+    lg = min(max(league_k, eps), 1 - eps)
+    a = (p * o) / lg
+    b = ((1 - p) * (1 - o)) / (1 - lg)
+    return a / (a + b)
+
+
 def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> ProjectionResult:
     """Run the full ensemble projection for one pitcher in one game."""
     cfg = cfg or ModelConfig()
@@ -60,18 +80,23 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
     bf = _expected_batters_faced(inputs.workload.expected_innings, cfg)
     opp_k = _blended_opponent_k_pct(inputs, cfg)
     pitcher_k = _pitcher_recent_k_pct(inputs, cfg)
-    neutral_k = (opp_k + pitcher_k) / 2.0
-    neutral_estimate = bf * neutral_k
+    lg = cfg.league_avg_k_rate
+    # Combine the pitcher's K rate with the opponent's via log5 (odds ratio), NOT
+    # a naive average — averaging regressed strikeout pitchers toward the lineup's
+    # team rate and made nearly every line look like an under.
+    matchup_k = _log5_matchup(pitcher_k, opp_k, lg)
+    matchup_estimate = bf * matchup_k
 
     components: list[ComponentEstimate] = []
 
-    # 1. Opponent K profile.
+    # 1. Opponent K profile: the pitcher-vs-opponent matchup rate.
     components.append(
         ComponentEstimate(
             name="opponent_k_profile",
             weight=w.opponent_k_profile,
-            estimate_ks=bf * opp_k,
-            detail=f"{bf:.1f} BF x {opp_k:.1%} blended opp K%",
+            estimate_ks=matchup_estimate,
+            detail=f"{bf:.1f} BF x {matchup_k:.1%} matchup K% "
+            f"(pitcher {pitcher_k:.1%} vs opp {opp_k:.1%}, log5)",
         )
     )
 
@@ -92,24 +117,26 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
         )
     )
 
-    # 3. Expected innings (volume anchor).
+    # 3. Expected innings (volume anchor): BF x matchup rate.
     components.append(
         ComponentEstimate(
             name="expected_innings",
             weight=w.expected_innings,
-            estimate_ks=neutral_estimate,
-            detail=f"{bf:.1f} BF x {neutral_k:.1%} neutral K%",
+            estimate_ks=matchup_estimate,
+            detail=f"{bf:.1f} BF x {matchup_k:.1%} matchup K%",
         )
     )
 
-    # 4. Lineup strength: tonight's actual card.
+    # 4. Lineup strength: matchup vs tonight's actual card.
     lineup_k = inputs.lineup.projected_lineup_k_pct
+    lineup_matchup = _log5_matchup(pitcher_k, lineup_k, lg)
     components.append(
         ComponentEstimate(
             name="lineup_strength",
             weight=w.lineup_strength,
-            estimate_ks=bf * lineup_k,
-            detail=f"{bf:.1f} BF x {lineup_k:.1%} projected lineup K%"
+            estimate_ks=bf * lineup_matchup,
+            detail=f"{bf:.1f} BF x {lineup_matchup:.1%} lineup matchup "
+            f"(vs {lineup_k:.1%} lineup K%)"
             + (
                 f" ({inputs.lineup.high_k_hitters_resting} high-K bat(s) resting)"
                 if inputs.lineup.high_k_hitters_resting
@@ -118,18 +145,18 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
         )
     )
 
-    # 5. Umpire factor (nudge on the neutral estimate).
+    # 5. Umpire factor (nudge on the matchup estimate).
     if inputs.umpire is not None:
         ump_factor = inputs.umpire.historical_k_rate / cfg.league_avg_k_rate
-        ump_detail = f"neutral x {ump_factor:.3f} ump K factor"
+        ump_detail = f"matchup x {ump_factor:.3f} ump K factor"
     else:
         ump_factor = 1.0
-        ump_detail = "no umpire data; neutral"
+        ump_detail = "no umpire data; matchup"
     components.append(
         ComponentEstimate(
             name="umpire",
             weight=w.umpire,
-            estimate_ks=neutral_estimate * ump_factor,
+            estimate_ks=matchup_estimate * ump_factor,
             detail=ump_detail,
         )
     )
@@ -142,8 +169,8 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
         ComponentEstimate(
             name="pitch_count",
             weight=w.pitch_count,
-            estimate_ks=eff_bf * neutral_k,
-            detail=f"{eff_innings:.1f} eff IP ({eff_bf:.1f} BF) x {neutral_k:.1%}",
+            estimate_ks=eff_bf * matchup_k,
+            detail=f"{eff_innings:.1f} eff IP ({eff_bf:.1f} BF) x {matchup_k:.1%}",
         )
     )
 
@@ -156,18 +183,18 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
                 / used
             )
             mix_factor = weighted_whiff / cfg.reference_whiff_rate
-            mix_detail = f"neutral x {mix_factor:.3f} (whiff {weighted_whiff:.1%})"
+            mix_detail = f"matchup x {mix_factor:.3f} (whiff {weighted_whiff:.1%})"
         else:
             mix_factor = 1.0
-            mix_detail = "zero pitch usage; neutral"
+            mix_detail = "zero pitch usage; matchup"
     else:
         mix_factor = 1.0
-        mix_detail = "no pitch-mix data; neutral"
+        mix_detail = "no pitch-mix data; matchup"
     components.append(
         ComponentEstimate(
             name="pitch_mix",
             weight=w.pitch_mix,
-            estimate_ks=neutral_estimate * mix_factor,
+            estimate_ks=matchup_estimate * mix_factor,
             detail=mix_detail,
         )
     )
