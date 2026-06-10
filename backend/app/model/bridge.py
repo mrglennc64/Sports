@@ -19,6 +19,7 @@ from __future__ import annotations
 from app.config import Settings
 from app.config import settings as default_settings
 from app.model import poisson
+from app.model.calibration import shrink_to_even
 from app.model.edge import evaluate_prop, prob_to_american
 from app.model.expected_ks import LEAGUE_AVG_K_RATE
 from app.model.insight import build_insight
@@ -48,6 +49,10 @@ def evaluate_projection(
     lam = result.projected_ks
     p_over = poisson.prob_over(lam, line)
     p_under = poisson.prob_under(lam, line)
+    # Pull overconfident probabilities back toward the market (1.0 = off).
+    if settings.prob_shrinkage != 1.0:
+        p_over = shrink_to_even(p_over, settings.prob_shrinkage)
+        p_under = shrink_to_even(p_under, settings.prob_shrinkage)
 
     out: dict = {
         "pitcher": result.pitcher_name,

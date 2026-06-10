@@ -23,6 +23,7 @@ from app.data.client import StatsApiClient
 from app.data.history import load_history_range, load_lines_csv
 from app.model import poisson
 from app.model.backtest import GameOutcome, run_backtest
+from app.model.calibration import shrink_to_even
 from app.model.projection import project
 from app.model.weights import ModelConfig
 
@@ -44,14 +45,22 @@ class GradedBet:
     units: float        # at -110
 
 
-def grade_outcome(go: GameOutcome, cfg: ModelConfig | None = None) -> GradedBet | None:
-    """Lean the model's side on a graded game and score it at -110. None if no line."""
+def grade_outcome(
+    go: GameOutcome, cfg: ModelConfig | None = None, shrink: float = 1.0
+) -> GradedBet | None:
+    """Lean the model's side on a graded game and score it at -110. None if no line.
+
+    ``shrink`` (1.0 = off) pulls the model probability toward 0.5 before measuring
+    edge — symmetric, so it never changes the leaned side or the win/loss, only
+    how big an edge the model claims (and thus which plays clear the +EV bar).
+    """
     if go.line is None:
         return None
     lam = project(go.inputs, cfg).projected_ks
     p_over = poisson.prob_over(lam, go.line)
     p_under = poisson.prob_under(lam, go.line)
     lean, model_prob = ("over", p_over) if p_over >= p_under else ("under", p_under)
+    model_prob = shrink_to_even(model_prob, shrink)
 
     actual = go.actual_ks
     if actual == go.line:
@@ -97,12 +106,14 @@ def calibration_table(bets: list[GradedBet]) -> list[dict]:
     return rows
 
 
-def render_report(start: str, end: str, dataset: list[GameOutcome]) -> str:
-    graded = [g for go in dataset if (g := grade_outcome(go)) is not None]
+def render_report(start: str, end: str, dataset: list[GameOutcome],
+                  shrink: float = 1.0) -> str:
+    graded = [g for go in dataset if (g := grade_outcome(go, shrink=shrink)) is not None]
     acc = run_backtest(dataset).accuracy
 
     lines = []
-    lines.append(f"BACKTEST REPORT  {start} -> {end}")
+    lines.append(f"BACKTEST REPORT  {start} -> {end}"
+                 + (f"   [edge shrink k={shrink:g}]" if shrink != 1.0 else ""))
     lines.append(f"  games graded: {acc.n}   (with a line: {len(graded)})")
     lines.append("")
     lines.append("ACCURACY (model projection vs actual Ks)")
@@ -154,13 +165,14 @@ def _line_date_bounds(path: str) -> tuple[str, str]:
 
 
 async def build_report(start: str, end: str, lines_path: str,
-                       client: StatsApiClient | None = None) -> str:
+                       client: StatsApiClient | None = None,
+                       shrink: float = 1.0) -> str:
     owns = client is None
     client = client or StatsApiClient()
     try:
         lines = load_lines_csv(lines_path)
         dataset = await load_history_range(client, start, end, lines=lines)
-        return render_report(start, end, dataset)
+        return render_report(start, end, dataset, shrink=shrink)
     finally:
         if owns:
             await client.aclose()
@@ -171,11 +183,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--lines", default=default_settings.lines_csv)
     parser.add_argument("--start", default=None)
     parser.add_argument("--end", default=None)
+    parser.add_argument("--shrink", type=float, default=1.0,
+                        help="Pull edges toward the market (1=off, 0.5=half, 0=no bets)")
     args = parser.parse_args(argv)
 
     lo, hi = _line_date_bounds(args.lines)
     start, end = args.start or lo, args.end or hi
-    print(asyncio.run(build_report(start, end, args.lines)))
+    print(asyncio.run(build_report(start, end, args.lines, shrink=args.shrink)))
     return 0
 
 

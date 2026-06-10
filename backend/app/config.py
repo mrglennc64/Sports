@@ -22,6 +22,11 @@ class Settings(BaseSettings):
     kelly_fraction: float = 0.25
     kelly_cap: float = 0.05
     devig_method: str = "shin"  # "shin" | "proportional"
+    # Calibration: shrink model probabilities toward 0.5 before measuring edge.
+    # 1.0 = off; <1 pulls overconfident edges back toward the market. The backtest
+    # showed the model is overconfident above ~5% edge, so this is the lever to
+    # correct it once enough graded data justifies a value.
+    prob_shrinkage: float = 1.0
 
     # Where daily predictions get logged (relative to repo root by default)
     predictions_log: str = "../data/predictions.csv"

@@ -41,6 +41,25 @@ def test_grade_outcome_none_without_line():
     assert grade_outcome(GameOutcome(inputs=make_inputs(), actual_ks=7, line=None)) is None
 
 
+def test_shrink_to_even():
+    from app.model.calibration import shrink_to_even
+
+    assert shrink_to_even(0.70, 1.0) == pytest.approx(0.70)   # off
+    assert shrink_to_even(0.70, 0.0) == pytest.approx(0.50)   # full collapse
+    assert shrink_to_even(0.70, 0.5) == pytest.approx(0.60)   # halve deviation
+    assert 0.0 <= shrink_to_even(0.99, 2.0) <= 1.0            # clamped
+
+
+def test_shrink_reduces_edge_but_keeps_lean_and_outcome():
+    go = GameOutcome(inputs=make_inputs(), actual_ks=8, line=5.5)  # model leans over, wins
+    full = grade_outcome(go, shrink=1.0)
+    shrunk = grade_outcome(go, shrink=0.4)
+    assert shrunk.lean == full.lean == "over"
+    assert shrunk.outcome == full.outcome == "win"     # win/loss unchanged
+    assert shrunk.edge < full.edge                     # edge pulled toward market
+    assert shrunk.model_prob < full.model_prob
+
+
 def test_calibration_table_buckets_and_winrate():
     bets = [
         _bet(0.03, "win"), _bet(0.04, "loss"),          # 0-5%
