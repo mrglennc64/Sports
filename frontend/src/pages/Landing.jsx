@@ -46,6 +46,7 @@ export default function Landing() {
         </p>
         <div className="cta-row">
           <Link to="/app" className="cta">Launch the Engine →</Link>
+          <Link to="/research" className="cta ghost">All-Sports Edge Research</Link>
           <a
             className="cta ghost"
             href="https://github.com/mrglennc64/strike"
