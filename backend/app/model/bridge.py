@@ -120,7 +120,7 @@ def predict_with_ensemble(
     over_odds: float | None = None,
     under_odds: float | None = None,
     park: float = 1.0,
-    low_confidence: bool = False,
+    low_confidence: bool | None = None,
     cfg: ModelConfig | None = None,
     settings: Settings = default_settings,
 ) -> dict:
@@ -128,7 +128,16 @@ def predict_with_ensemble(
 
     The headline opponent K% used for the insight reasons is tonight's
     projected-lineup K% (the framework's most predictive opponent signal).
+
+    ``low_confidence``: None (default) derives it from the season sample —
+    fewer than ``settings.min_recent_starts`` starts this season means the
+    inputs are too thin for a confident verdict (the restored v1 gate).
+    Pass an explicit bool to override.
     """
+    if low_confidence is None:
+        low_confidence = (
+            len(inputs.pitcher_form.recent_start_ks) < settings.min_recent_starts
+        )
     result = project(inputs, cfg)
     return evaluate_projection(
         result,

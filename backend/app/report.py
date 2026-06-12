@@ -23,7 +23,7 @@ from app.data.client import StatsApiClient
 from app.data.history import load_history_range, load_lines_csv
 from app.model import poisson
 from app.model.backtest import GameOutcome, run_backtest
-from app.model.calibration import shrink_to_even
+from app.model.calibration import best_shrink, shrink_to_even
 from app.model.projection import project
 from app.model.weights import ModelConfig
 
@@ -143,6 +143,19 @@ def render_report(start: str, end: str, dataset: list[GameOutcome],
                              f"{r['implied_win']:.0%} vs {r['actual_win']:.0%} | {r['units']:+.2f}")
         else:
             lines.append("  (no +EV plays to bucket yet)")
+
+        # Post-hoc shrink monitor: what k would have best calibrated the RAW
+        # model probabilities on this sample? Compare against the configured
+        # PROB_SHRINKAGE — monitoring only, never auto-applied (small-sample
+        # fits are noise; see app.model.calibration.best_shrink).
+        raw = [g for go in dataset if (g := grade_outcome(go, shrink=1.0)) is not None]
+        pairs = [(b.model_prob, b.outcome == "win") for b in raw if b.outcome != "push"]
+        if pairs:
+            k_opt, _ = best_shrink(pairs)
+            lines.append("")
+            lines.append(f"  post-hoc optimal shrink on this sample: k={k_opt:.2f} "
+                         f"(live PROB_SHRINKAGE={default_settings.prob_shrinkage:g}; "
+                         "monitoring only — converge the live value toward this as n grows)")
 
     n = len(graded)
     lines.append("")

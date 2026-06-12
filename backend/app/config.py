@@ -25,8 +25,15 @@ class Settings(BaseSettings):
     # Calibration: shrink model probabilities toward 0.5 before measuring edge.
     # 1.0 = off; <1 pulls overconfident edges back toward the market. The backtest
     # showed the model is overconfident above ~5% edge, so this is the lever to
-    # correct it once enough graded data justifies a value.
+    # correct it once enough graded data justifies a value. Code default stays
+    # off (tests pin unshrunk math); PRODUCTION sets PROB_SHRINKAGE in
+    # /etc/mlb-edge.env. The weekly report prints the post-hoc optimal k so the
+    # production value can be sanity-checked as the graded sample grows.
     prob_shrinkage: float = 1.0
+    # Low-confidence gate (v1 had MIN_STARTS/MIN_INNINGS; the v2 path dropped
+    # it — restored 2026-06-12): fewer than this many starts this season =>
+    # low_confidence, which caps the verdict and blocks the bet flag.
+    min_recent_starts: int = 5
 
     # Where daily predictions get logged (relative to repo root by default)
     predictions_log: str = "../data/predictions.csv"
