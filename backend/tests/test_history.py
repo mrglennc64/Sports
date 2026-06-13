@@ -20,6 +20,7 @@ import respx
 
 from app.data.client import StatsApiClient
 from app.data.history import (
+    _bullpen_from_ip,
     backtest_range,
     load_history_for_date,
     load_history_range,
@@ -274,6 +275,32 @@ def test_workload_and_k9_come_from_gamelog_not_season_stats():
     assert not any(
         c.request.url.path == "/api/v1/people/1/stats" for c in respx.calls
     )
+
+
+def test_bullpen_leash_neutral_on_thin_sample():
+    # Fewer than MIN_APPEARANCES_FOR_LEASH prior starts -> trust nothing.
+    bp = _bullpen_from_ip(raw_ip_per_start=1.5, games_started=2)
+    assert bp.is_opener is False
+    assert bp.leash_factor == 1.0
+
+
+def test_bullpen_detects_opener_from_low_ip():
+    # An established 1.5 IP/start role over enough starts -> opener, deep cut.
+    bp = _bullpen_from_ip(raw_ip_per_start=1.5, games_started=8)
+    assert bp.is_opener is True
+    assert bp.leash_factor < 0.5
+
+
+def test_bullpen_neutral_for_full_starter():
+    bp = _bullpen_from_ip(raw_ip_per_start=6.1, games_started=12)
+    assert bp.is_opener is False
+    assert bp.leash_factor == 1.0  # capped: never inflates a workhorse
+
+
+def test_bullpen_short_leash_between_opener_and_full():
+    bp = _bullpen_from_ip(raw_ip_per_start=4.4, games_started=10)
+    assert bp.is_opener is False
+    assert 0.7 < bp.leash_factor < 0.9
 
 
 @respx.mock

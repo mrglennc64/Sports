@@ -71,7 +71,7 @@ async def build_projection_inputs(
     pitcher_form = await fetch_pitcher_form(
         client, start.pitcher_id, start.throws, season
     )
-    workload = await fetch_pitcher_workload(client, start.pitcher_id, season)
+    workload, bullpen = await fetch_pitcher_workload(client, start.pitcher_id, season)
 
     # Tonight's actual nine (if posted) drives the starting-lineup K%. The
     # opponent is home exactly when the pitcher's team is NOT (``start.is_home``
@@ -125,6 +125,7 @@ async def build_projection_inputs(
         lineup=lineup,
         umpire=umpire,
         pitch_mix=pitch_mix,
+        bullpen=bullpen,
     )
 
 

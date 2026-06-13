@@ -184,10 +184,13 @@ def test_fetch_pitcher_workload():
     respx.get(f"{BASE}/api/v1/people/543/stats").mock(
         return_value=httpx.Response(200, json=payload)
     )
-    wl = _run(fetch_pitcher_workload(_client(), 543, 2025))
+    wl, bullpen = _run(fetch_pitcher_workload(_client(), 543, 2025))
     assert wl.expected_innings == pytest.approx(6.0)  # 120/20
     assert wl.expected_pitch_count == pytest.approx(6.0 * 16.0)
     assert wl.manager_hook_pitch_count > 0
+    # 6.0 IP/start over 20 starts -> full starter, neutral leash.
+    assert bullpen.is_opener is False
+    assert bullpen.leash_factor == pytest.approx(1.0)
 
 
 @respx.mock
@@ -200,8 +203,27 @@ def test_fetch_pitcher_workload_clamped_spot_starter():
     respx.get(f"{BASE}/api/v1/people/77/stats").mock(
         return_value=httpx.Response(200, json=payload)
     )
-    wl = _run(fetch_pitcher_workload(_client(), 77, 2025))
+    wl, bullpen = _run(fetch_pitcher_workload(_client(), 77, 2025))
     assert wl.expected_innings == pytest.approx(7.0)  # clamped, not 15.7
+    # Only 2 starts -> too thin to trust a leash, stays neutral.
+    assert bullpen.leash_factor == pytest.approx(1.0)
+
+
+@respx.mock
+def test_fetch_pitcher_workload_detects_opener():
+    # 1.4 IP/start over 12 starts -> a genuine opener role.
+    payload = {
+        "stats": [
+            {"splits": [{"stat": {"inningsPitched": "16.2", "gamesStarted": 12}}]}
+        ]
+    }
+    respx.get(f"{BASE}/api/v1/people/88/stats").mock(
+        return_value=httpx.Response(200, json=payload)
+    )
+    wl, bullpen = _run(fetch_pitcher_workload(_client(), 88, 2025))
+    assert wl.expected_innings == pytest.approx(3.0)  # clamped up from 1.39
+    assert bullpen.is_opener is True
+    assert bullpen.leash_factor < 0.5  # raw 1.39/5.5, the clamp can't hide it
 
 
 @respx.mock
@@ -209,8 +231,9 @@ def test_fetch_pitcher_workload_missing_data_neutral():
     respx.get(f"{BASE}/api/v1/people/5/stats").mock(
         return_value=httpx.Response(200, json={"stats": []})
     )
-    wl = _run(fetch_pitcher_workload(_client(), 5, 2025))
+    wl, bullpen = _run(fetch_pitcher_workload(_client(), 5, 2025))
     assert wl.expected_innings == pytest.approx(5.0)  # neutral midpoint of 3-7
+    assert bullpen.leash_factor == pytest.approx(1.0)
 
 
 # --- opponent K profile ------------------------------------------------------

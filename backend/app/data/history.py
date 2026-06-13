@@ -64,6 +64,7 @@ from app.model.backtest import (
     tune_weights,
 )
 from app.model.inputs import (
+    BullpenContext,
     ExpectedWorkload,
     LineupStrength,
     OpponentKProfile,
@@ -83,6 +84,10 @@ MAX_IP_PER_START = 7.0
 NEUTRAL_IP_PER_START = (MIN_IP_PER_START + MAX_IP_PER_START) / 2
 RECENT_STARTS = 5
 K9_WINDOW_DAYS = 30
+# Bullpen / opener leash (the sub-3-IP signal the [3,7] clamp above discards).
+NORMAL_START_IP = 5.5            # a full, healthy start
+OPENER_IP_THRESHOLD = 3.0       # avg IP/start below this => opener / bulk role
+MIN_APPEARANCES_FOR_LEASH = 3   # need this many prior starts before trusting it
 
 
 def _season_of(on_date: str) -> int:
@@ -174,11 +179,14 @@ def _recent_start_ks_before(
 
 def _asof_workload_and_k9(
     splits: list[dict], on_date: str
-) -> tuple[ExpectedWorkload, float]:
-    """As-of workload + K/9, from gameLog appearances BEFORE ``on_date`` only.
+) -> tuple[ExpectedWorkload, float, BullpenContext]:
+    """As-of workload + K/9 + bullpen leash, from appearances BEFORE ``on_date``.
 
     ``expected_innings`` = IP/start over all prior starts (clamped 3-7);
-    ``k_per_9`` is over the prior ``K9_WINDOW_DAYS`` days only.
+    ``k_per_9`` is over the prior ``K9_WINDOW_DAYS`` days only. The
+    ``BullpenContext`` is derived from the RAW (unclamped) IP/start so it can
+    express the opener / short-leash volume cap that the [3,7] clamp on
+    ``expected_innings`` would otherwise erase. All point-in-time.
     """
     prior = _splits_before(splits, on_date)
     cutoff = date.fromisoformat(on_date)
@@ -198,8 +206,10 @@ def _asof_workload_and_k9(
             win_ip += ip
 
     if games_started > 0 and total_ip > 0:
-        ip_per_start = min(MAX_IP_PER_START, max(MIN_IP_PER_START, total_ip / games_started))
+        raw_ip_per_start = total_ip / games_started
+        ip_per_start = min(MAX_IP_PER_START, max(MIN_IP_PER_START, raw_ip_per_start))
     else:
+        raw_ip_per_start = NEUTRAL_IP_PER_START
         ip_per_start = NEUTRAL_IP_PER_START
 
     k_per_9 = (win_k / win_ip * 9.0) if win_ip > 0 else 0.0
@@ -209,7 +219,26 @@ def _asof_workload_and_k9(
         expected_pitch_count=ip_per_start * PITCHES_PER_INNING,
         manager_hook_pitch_count=DEFAULT_HOOK_PITCH_COUNT,
     )
-    return workload, k_per_9
+    bullpen = _bullpen_from_ip(raw_ip_per_start, games_started)
+    return workload, k_per_9, bullpen
+
+
+def _bullpen_from_ip(raw_ip_per_start: float, games_started: int) -> BullpenContext:
+    """Opener / short-leash volume signal from raw IP-per-start. Point-in-time.
+
+    Below ``MIN_APPEARANCES_FOR_LEASH`` prior starts the sample is too thin to
+    trust, so we stay neutral (leash 1.0). Otherwise the leash is the prior
+    volume relative to a normal start, capped at 1.0 (this factor only ever
+    *trims* for low-volume roles; it never inflates a workhorse, since
+    ``expected_innings`` already carries upside volume).
+    """
+    if games_started < MIN_APPEARANCES_FOR_LEASH:
+        return BullpenContext(is_opener=False, leash_factor=1.0)
+    leash = min(1.0, max(0.25, raw_ip_per_start / NORMAL_START_IP))
+    return BullpenContext(
+        is_opener=raw_ip_per_start < OPENER_IP_THRESHOLD,
+        leash_factor=leash,
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -400,7 +429,7 @@ async def _build_asof_inputs(
     umpire_table: UmpireTable | None,
 ) -> ProjectionInputs:
     """Reconstruct a leak-free ``ProjectionInputs`` for one historical start."""
-    workload, k_per_9 = _asof_workload_and_k9(splits, on_date)
+    workload, k_per_9, bullpen = _asof_workload_and_k9(splits, on_date)
     recent_ks = _recent_start_ks_before(splits, on_date)
     form = PitcherRecentForm(
         throws=start.throws,
@@ -436,6 +465,9 @@ async def _build_asof_inputs(
         lineup=lineup,
         umpire=umpire,
         pitch_mix=None,  # season-to-date Savant data would leak; omitted here
+        bullpen=bullpen,
+        # weather/catcher reconstructed by separate as-of fetchers; omitted
+        # here until their historical sources are wired (kept neutral).
     )
 
 

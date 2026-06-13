@@ -25,6 +25,7 @@ from datetime import date, timedelta
 
 from app.data.client import StatsApiClient
 from app.model.inputs import (
+    BullpenContext,
     ExpectedWorkload,
     Handedness,
     LineupStrength,
@@ -36,6 +37,11 @@ from app.model.inputs import (
 # appearances polluting the season line, so we clamp the workload projection.
 MIN_IP_PER_START = 3.0
 MAX_IP_PER_START = 7.0
+# Bullpen / opener leash knobs (mirror app.data.history; the clamp above hides
+# the sub-3-IP opener signal, so the leash is derived from RAW IP/start).
+NORMAL_START_IP = 5.5
+OPENER_IP_THRESHOLD = 3.0
+MIN_APPEARANCES_FOR_LEASH = 3
 
 # Default pitch-count assumptions when we only know expected innings.
 PITCHES_PER_INNING = 16.0
@@ -230,26 +236,42 @@ def _k_per_9_last_30(splits: list[dict]) -> float:
 
 async def fetch_pitcher_workload(
     client: StatsApiClient, pitcher_id: int, season: int
-) -> ExpectedWorkload:
-    """Expected workload from season IP / games started (clamped to 3-7 IP)."""
+) -> tuple[ExpectedWorkload, BullpenContext]:
+    """Expected workload + bullpen leash from season IP / games started.
+
+    ``expected_innings`` is clamped to 3-7 IP; the ``BullpenContext`` is read
+    from the RAW (unclamped) IP/start so an opener or short-leash role — which
+    the clamp would otherwise hide — still trims the strikeout ceiling.
+    """
     payload = await client.get_json(
         f"/api/v1/people/{pitcher_id}/stats",
         params={"stats": "season", "group": "pitching", "season": season},
     )
     stat = _first_split_stat(payload)
-    ip_per_start = (MIN_IP_PER_START + MAX_IP_PER_START) / 2  # neutral fallback
+    raw_ip_per_start = (MIN_IP_PER_START + MAX_IP_PER_START) / 2  # neutral fallback
+    gs = 0
     if stat:
-        gs = stat.get("gamesStarted") or 0
+        gs = int(stat.get("gamesStarted") or 0)
         ip = parse_innings(stat.get("inningsPitched", "0"))
         if gs and ip > 0:
-            ip_per_start = min(MAX_IP_PER_START, max(MIN_IP_PER_START, ip / gs))
+            raw_ip_per_start = ip / gs
 
+    ip_per_start = min(MAX_IP_PER_START, max(MIN_IP_PER_START, raw_ip_per_start))
     expected_pitches = ip_per_start * PITCHES_PER_INNING
-    return ExpectedWorkload(
+    workload = ExpectedWorkload(
         expected_innings=ip_per_start,
         expected_pitch_count=expected_pitches,
         manager_hook_pitch_count=DEFAULT_HOOK_PITCH_COUNT,
     )
+
+    if gs < MIN_APPEARANCES_FOR_LEASH:
+        bullpen = BullpenContext(is_opener=False, leash_factor=1.0)
+    else:
+        leash = min(1.0, max(0.25, raw_ip_per_start / NORMAL_START_IP))
+        bullpen = BullpenContext(
+            is_opener=raw_ip_per_start < OPENER_IP_THRESHOLD, leash_factor=leash
+        )
+    return workload, bullpen
 
 
 # --- opponent K profile ------------------------------------------------------
