@@ -1,0 +1,2903 @@
+{
+  "Adam Beck": {
+    "balanced": {
+      "csr": 0.35185185185185186,
+      "delta_vs_league": 0.018889240226455217,
+      "reliable": true,
+      "taken": 486
+    },
+    "breaking_heavy": {
+      "csr": 0.4083333333333333,
+      "delta_vs_league": 0.06239182333631749,
+      "reliable": true,
+      "taken": 120
+    },
+    "finesse_offspeed": {
+      "csr": 0.25757575757575757,
+      "delta_vs_league": -0.08767956597189591,
+      "reliable": true,
+      "taken": 66
+    },
+    "power": {
+      "csr": 0.19230769230769232,
+      "delta_vs_league": -0.12149840567106754,
+      "reliable": false,
+      "taken": 26
+    },
+    "sinker_contact": {
+      "csr": 0.38,
+      "delta_vs_league": 0.04143790849673201,
+      "reliable": true,
+      "taken": 100
+    }
+  },
+  "Adam Hamari": {
+    "balanced": {
+      "csr": 0.35903614457831323,
+      "delta_vs_league": 0.02607353295291659,
+      "reliable": true,
+      "taken": 415
+    },
+    "breaking_heavy": {
+      "csr": 0.3291139240506329,
+      "delta_vs_league": -0.01682758594638295,
+      "reliable": true,
+      "taken": 158
+    },
+    "finesse_offspeed": {
+      "csr": 0.358974358974359,
+      "delta_vs_league": 0.013719035426705495,
+      "reliable": false,
+      "taken": 39
+    },
+    "power": {
+      "csr": 0.30952380952380953,
+      "delta_vs_league": -0.004282288454950323,
+      "reliable": false,
+      "taken": 42
+    },
+    "sinker_contact": {
+      "csr": 0.3275862068965517,
+      "delta_vs_league": -0.01097588460671628,
+      "reliable": true,
+      "taken": 116
+    }
+  },
+  "Adrian Johnson": {
+    "balanced": {
+      "csr": 0.29878048780487804,
+      "delta_vs_league": -0.034182123820518606,
+      "reliable": true,
+      "taken": 164
+    },
+    "breaking_heavy": {
+      "csr": 0.32222222222222224,
+      "delta_vs_league": -0.023719287774793596,
+      "reliable": true,
+      "taken": 90
+    },
+    "finesse_offspeed": {
+      "csr": 0.45,
+      "delta_vs_league": 0.10474467645234653,
+      "reliable": true,
+      "taken": 60
+    },
+    "power": {
+      "csr": 0.2222222222222222,
+      "delta_vs_league": -0.09158387575653765,
+      "reliable": false,
+      "taken": 9
+    },
+    "sinker_contact": {
+      "csr": 0.2608695652173913,
+      "delta_vs_league": -0.0776925262858767,
+      "reliable": false,
+      "taken": 23
+    }
+  },
+  "Alan Porter": {
+    "balanced": {
+      "csr": 0.3225806451612903,
+      "delta_vs_league": -0.01038196646410633,
+      "reliable": true,
+      "taken": 341
+    },
+    "breaking_heavy": {
+      "csr": 0.3194444444444444,
+      "delta_vs_league": -0.02649706555257142,
+      "reliable": true,
+      "taken": 144
+    },
+    "finesse_offspeed": {
+      "csr": 0.37209302325581395,
+      "delta_vs_league": 0.026837699708160467,
+      "reliable": false,
+      "taken": 43
+    },
+    "power": {
+      "csr": 0.32142857142857145,
+      "delta_vs_league": 0.007622473449811595,
+      "reliable": true,
+      "taken": 56
+    },
+    "sinker_contact": {
+      "csr": 0.35294117647058826,
+      "delta_vs_league": 0.014379084967320266,
+      "reliable": false,
+      "taken": 17
+    }
+  },
+  "Alex MacKay": {
+    "balanced": {
+      "csr": 0.3324396782841823,
+      "delta_vs_league": -0.0005229333412143378,
+      "reliable": true,
+      "taken": 373
+    },
+    "breaking_heavy": {
+      "csr": 0.3719512195121951,
+      "delta_vs_league": 0.02600970951517928,
+      "reliable": true,
+      "taken": 164
+    },
+    "finesse_offspeed": {
+      "csr": 0.4067796610169492,
+      "delta_vs_league": 0.0615243374692957,
+      "reliable": true,
+      "taken": 59
+    },
+    "power": {
+      "csr": 0.45454545454545453,
+      "delta_vs_league": 0.14073935656669467,
+      "reliable": false,
+      "taken": 33
+    },
+    "sinker_contact": {
+      "csr": 0.4074074074074074,
+      "delta_vs_league": 0.06884531590413939,
+      "reliable": true,
+      "taken": 54
+    }
+  },
+  "Alex Tosi": {
+    "balanced": {
+      "csr": 0.30739299610894943,
+      "delta_vs_league": -0.02556961551644721,
+      "reliable": true,
+      "taken": 514
+    },
+    "breaking_heavy": {
+      "csr": 0.34965034965034963,
+      "delta_vs_league": 0.0037088396533337953,
+      "reliable": true,
+      "taken": 143
+    },
+    "finesse_offspeed": {
+      "csr": 0.25,
+      "delta_vs_league": -0.09525532354765348,
+      "reliable": false,
+      "taken": 40
+    },
+    "power": {
+      "csr": 0.29411764705882354,
+      "delta_vs_league": -0.019688450919936318,
+      "reliable": false,
+      "taken": 34
+    },
+    "sinker_contact": {
+      "csr": 0.36507936507936506,
+      "delta_vs_league": 0.026517273576097067,
+      "reliable": true,
+      "taken": 63
+    }
+  },
+  "Alfonso M\u00e1rquez": {
+    "balanced": {
+      "csr": 0.34110787172011664,
+      "delta_vs_league": 0.008145260094719997,
+      "reliable": true,
+      "taken": 343
+    },
+    "breaking_heavy": {
+      "csr": 0.26785714285714285,
+      "delta_vs_league": -0.07808436713987299,
+      "reliable": true,
+      "taken": 168
+    },
+    "finesse_offspeed": {
+      "csr": 0.3508771929824561,
+      "delta_vs_league": 0.00562186943480264,
+      "reliable": true,
+      "taken": 57
+    },
+    "power": {
+      "csr": 0.42105263157894735,
+      "delta_vs_league": 0.10724653360018749,
+      "reliable": false,
+      "taken": 19
+    },
+    "sinker_contact": {
+      "csr": 0.391304347826087,
+      "delta_vs_league": 0.05274225632281898,
+      "reliable": false,
+      "taken": 46
+    }
+  },
+  "Andy Fletcher": {
+    "balanced": {
+      "csr": 0.2997416020671835,
+      "delta_vs_league": -0.033221009558213166,
+      "reliable": true,
+      "taken": 387
+    },
+    "breaking_heavy": {
+      "csr": 0.3627450980392157,
+      "delta_vs_league": 0.016803588042199835,
+      "reliable": true,
+      "taken": 102
+    },
+    "finesse_offspeed": {
+      "csr": 0.4,
+      "delta_vs_league": 0.05474467645234654,
+      "reliable": false,
+      "taken": 10
+    },
+    "power": {
+      "csr": 0.4444444444444444,
+      "delta_vs_league": 0.13063834646568456,
+      "reliable": false,
+      "taken": 18
+    },
+    "sinker_contact": {
+      "csr": 0.36363636363636365,
+      "delta_vs_league": 0.025074272133095654,
+      "reliable": false,
+      "taken": 22
+    }
+  },
+  "Austin Jones": {
+    "balanced": {
+      "csr": 0.3370473537604457,
+      "delta_vs_league": 0.004084742135049058,
+      "reliable": true,
+      "taken": 359
+    },
+    "breaking_heavy": {
+      "csr": 0.40310077519379844,
+      "delta_vs_league": 0.057159265196782605,
+      "reliable": true,
+      "taken": 129
+    },
+    "finesse_offspeed": {
+      "csr": 0.25,
+      "delta_vs_league": -0.09525532354765348,
+      "reliable": false,
+      "taken": 32
+    },
+    "power": {
+      "csr": 0.4666666666666667,
+      "delta_vs_league": 0.15286056868790682,
+      "reliable": false,
+      "taken": 15
+    },
+    "sinker_contact": {
+      "csr": 0.2909090909090909,
+      "delta_vs_league": -0.0476530005941771,
+      "reliable": true,
+      "taken": 55
+    }
+  },
+  "Ben May": {
+    "balanced": {
+      "csr": 0.33534743202416917,
+      "delta_vs_league": 0.0023848203987725247,
+      "reliable": true,
+      "taken": 331
+    },
+    "breaking_heavy": {
+      "csr": 0.36160714285714285,
+      "delta_vs_league": 0.01566563286012701,
+      "reliable": true,
+      "taken": 224
+    },
+    "finesse_offspeed": {
+      "csr": 0.2698412698412698,
+      "delta_vs_league": -0.07541405370638365,
+      "reliable": true,
+      "taken": 63
+    },
+    "power": {
+      "csr": 0.3469387755102041,
+      "delta_vs_league": 0.03313267753144422,
+      "reliable": false,
+      "taken": 49
+    },
+    "sinker_contact": {
+      "csr": 0.3684210526315789,
+      "delta_vs_league": 0.029858961128310935,
+      "reliable": false,
+      "taken": 19
+    }
+  },
+  "Bill Miller": {
+    "balanced": {
+      "csr": 0.35475578406169667,
+      "delta_vs_league": 0.021793172436300023,
+      "reliable": true,
+      "taken": 389
+    },
+    "breaking_heavy": {
+      "csr": 0.30701754385964913,
+      "delta_vs_league": -0.038923966137366706,
+      "reliable": true,
+      "taken": 114
+    },
+    "finesse_offspeed": {
+      "csr": 0.4153846153846154,
+      "delta_vs_league": 0.07012929183696193,
+      "reliable": true,
+      "taken": 65
+    },
+    "power": {
+      "csr": 0.25396825396825395,
+      "delta_vs_league": -0.0598378440105059,
+      "reliable": true,
+      "taken": 63
+    },
+    "sinker_contact": {
+      "csr": 0.42,
+      "delta_vs_league": 0.08143790849673199,
+      "reliable": true,
+      "taken": 50
+    }
+  },
+  "Brennan Miller": {
+    "balanced": {
+      "csr": 0.328125,
+      "delta_vs_league": -0.004837611625396643,
+      "reliable": true,
+      "taken": 384
+    },
+    "breaking_heavy": {
+      "csr": 0.45222929936305734,
+      "delta_vs_league": 0.1062877893660415,
+      "reliable": true,
+      "taken": 157
+    },
+    "finesse_offspeed": {
+      "csr": 0.4057971014492754,
+      "delta_vs_league": 0.06054177790162191,
+      "reliable": true,
+      "taken": 69
+    },
+    "power": {
+      "csr": 0.2553191489361702,
+      "delta_vs_league": -0.058486949042589664,
+      "reliable": false,
+      "taken": 47
+    },
+    "sinker_contact": {
+      "csr": 0.29310344827586204,
+      "delta_vs_league": -0.04545864322740595,
+      "reliable": true,
+      "taken": 58
+    }
+  },
+  "Brian O'Nora": {
+    "balanced": {
+      "csr": 0.384,
+      "delta_vs_league": 0.051037388374603365,
+      "reliable": true,
+      "taken": 250
+    },
+    "breaking_heavy": {
+      "csr": 0.29838709677419356,
+      "delta_vs_league": -0.04755441322282228,
+      "reliable": true,
+      "taken": 124
+    },
+    "finesse_offspeed": {
+      "csr": 0.423728813559322,
+      "delta_vs_league": 0.07847349001166853,
+      "reliable": true,
+      "taken": 59
+    },
+    "power": {
+      "csr": 0.4444444444444444,
+      "delta_vs_league": 0.13063834646568456,
+      "reliable": false,
+      "taken": 36
+    },
+    "sinker_contact": {
+      "csr": 0.27692307692307694,
+      "delta_vs_league": -0.061639014580191054,
+      "reliable": true,
+      "taken": 65
+    }
+  },
+  "Brian Walsh": {
+    "balanced": {
+      "csr": 0.31313131313131315,
+      "delta_vs_league": -0.019831298494083494,
+      "reliable": true,
+      "taken": 297
+    },
+    "breaking_heavy": {
+      "csr": 0.33714285714285713,
+      "delta_vs_league": -0.008798652854158706,
+      "reliable": true,
+      "taken": 175
+    },
+    "finesse_offspeed": {
+      "csr": 0.39622641509433965,
+      "delta_vs_league": 0.050971091546686165,
+      "reliable": true,
+      "taken": 53
+    },
+    "power": {
+      "csr": 0.2727272727272727,
+      "delta_vs_league": -0.04107882525148715,
+      "reliable": false,
+      "taken": 11
+    },
+    "sinker_contact": {
+      "csr": 0.3170731707317073,
+      "delta_vs_league": -0.02148892077156067,
+      "reliable": true,
+      "taken": 82
+    }
+  },
+  "Brock Ballou": {
+    "balanced": {
+      "csr": 0.3385416666666667,
+      "delta_vs_league": 0.005579055041270042,
+      "reliable": true,
+      "taken": 384
+    },
+    "breaking_heavy": {
+      "csr": 0.4024390243902439,
+      "delta_vs_league": 0.05649751439322809,
+      "reliable": true,
+      "taken": 82
+    },
+    "finesse_offspeed": {
+      "csr": 0.36231884057971014,
+      "delta_vs_league": 0.017063517032056663,
+      "reliable": true,
+      "taken": 69
+    },
+    "power": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": 0.019527235354573458,
+      "reliable": false,
+      "taken": 21
+    },
+    "sinker_contact": {
+      "csr": 0.2962962962962963,
+      "delta_vs_league": -0.04226579520697171,
+      "reliable": false,
+      "taken": 27
+    }
+  },
+  "Bruce Dreckman": {
+    "balanced": {
+      "csr": 0.3851508120649652,
+      "delta_vs_league": 0.052188200439568566,
+      "reliable": true,
+      "taken": 431
+    },
+    "breaking_heavy": {
+      "csr": 0.3933333333333333,
+      "delta_vs_league": 0.04739182333631747,
+      "reliable": true,
+      "taken": 150
+    },
+    "finesse_offspeed": {
+      "csr": 0.3880597014925373,
+      "delta_vs_league": 0.04280437794488384,
+      "reliable": true,
+      "taken": 67
+    },
+    "power": {
+      "csr": 0.29850746268656714,
+      "delta_vs_league": -0.01529863529219272,
+      "reliable": true,
+      "taken": 67
+    },
+    "sinker_contact": {
+      "csr": 0.3090909090909091,
+      "delta_vs_league": -0.02947118241235891,
+      "reliable": true,
+      "taken": 55
+    }
+  },
+  "CB Bucknor": {
+    "balanced": {
+      "csr": 0.5,
+      "delta_vs_league": 0.16703738837460336,
+      "reliable": false,
+      "taken": 24
+    },
+    "finesse_offspeed": {
+      "csr": 0.6666666666666666,
+      "delta_vs_league": 0.32141134311901315,
+      "reliable": false,
+      "taken": 3
+    },
+    "power": {
+      "csr": 0.23809523809523808,
+      "delta_vs_league": -0.07571085988352177,
+      "reliable": false,
+      "taken": 21
+    }
+  },
+  "Carlos Torres": {
+    "balanced": {
+      "csr": 0.325,
+      "delta_vs_league": -0.007962611625396632,
+      "reliable": true,
+      "taken": 360
+    },
+    "breaking_heavy": {
+      "csr": 0.375,
+      "delta_vs_league": 0.02905849000298416,
+      "reliable": true,
+      "taken": 152
+    },
+    "finesse_offspeed": {
+      "csr": 0.38461538461538464,
+      "delta_vs_league": 0.039360061067731156,
+      "reliable": true,
+      "taken": 65
+    },
+    "power": {
+      "csr": 0.20833333333333334,
+      "delta_vs_league": -0.10547276464542651,
+      "reliable": false,
+      "taken": 48
+    },
+    "sinker_contact": {
+      "csr": 0.2717391304347826,
+      "delta_vs_league": -0.0668229610684854,
+      "reliable": true,
+      "taken": 92
+    }
+  },
+  "Chad Fairchild": {
+    "balanced": {
+      "csr": 0.33727810650887574,
+      "delta_vs_league": 0.0043154948834790985,
+      "reliable": true,
+      "taken": 338
+    },
+    "breaking_heavy": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.012608176663682524,
+      "reliable": true,
+      "taken": 132
+    },
+    "finesse_offspeed": {
+      "csr": 0.4339622641509434,
+      "delta_vs_league": 0.08870694060328993,
+      "reliable": true,
+      "taken": 106
+    },
+    "power": {
+      "csr": 0.21739130434782608,
+      "delta_vs_league": -0.09641479363093378,
+      "reliable": false,
+      "taken": 23
+    },
+    "sinker_contact": {
+      "csr": 0.24691358024691357,
+      "delta_vs_league": -0.09164851125635443,
+      "reliable": true,
+      "taken": 81
+    }
+  },
+  "Chad Whitson": {
+    "balanced": {
+      "csr": 0.3162162162162162,
+      "delta_vs_league": -0.016746395409180437,
+      "reliable": true,
+      "taken": 370
+    },
+    "breaking_heavy": {
+      "csr": 0.3277777777777778,
+      "delta_vs_league": -0.01816373221923806,
+      "reliable": true,
+      "taken": 180
+    },
+    "finesse_offspeed": {
+      "csr": 0.42857142857142855,
+      "delta_vs_league": 0.08331610502377507,
+      "reliable": false,
+      "taken": 7
+    },
+    "power": {
+      "csr": 0.2903225806451613,
+      "delta_vs_league": -0.023483517333598547,
+      "reliable": false,
+      "taken": 31
+    },
+    "sinker_contact": {
+      "csr": 0.3717948717948718,
+      "delta_vs_league": 0.033232780291603814,
+      "reliable": true,
+      "taken": 78
+    }
+  },
+  "Charlie Ramos": {
+    "balanced": {
+      "csr": 0.3155737704918033,
+      "delta_vs_league": -0.017388841133593347,
+      "reliable": true,
+      "taken": 244
+    },
+    "breaking_heavy": {
+      "csr": 0.3076923076923077,
+      "delta_vs_league": -0.03824920230470813,
+      "reliable": true,
+      "taken": 117
+    },
+    "finesse_offspeed": {
+      "csr": 0.2222222222222222,
+      "delta_vs_league": -0.12303310132543127,
+      "reliable": false,
+      "taken": 9
+    },
+    "power": {
+      "csr": 1.0,
+      "delta_vs_league": 0.6861939020212402,
+      "reliable": false,
+      "taken": 1
+    },
+    "sinker_contact": {
+      "csr": 0.36923076923076925,
+      "delta_vs_league": 0.03066867772750126,
+      "reliable": true,
+      "taken": 65
+    }
+  },
+  "Chris Conroy": {
+    "balanced": {
+      "csr": 0.33962264150943394,
+      "delta_vs_league": 0.0066600298840372996,
+      "reliable": true,
+      "taken": 212
+    },
+    "breaking_heavy": {
+      "csr": 0.37142857142857144,
+      "delta_vs_league": 0.025487061431555602,
+      "reliable": true,
+      "taken": 210
+    },
+    "finesse_offspeed": {
+      "csr": 0.3111111111111111,
+      "delta_vs_league": -0.034144212436542365,
+      "reliable": true,
+      "taken": 90
+    },
+    "power": {
+      "csr": 0.2631578947368421,
+      "delta_vs_league": -0.050648203241917766,
+      "reliable": false,
+      "taken": 19
+    },
+    "sinker_contact": {
+      "csr": 0.27205882352941174,
+      "delta_vs_league": -0.06650326797385625,
+      "reliable": true,
+      "taken": 136
+    }
+  },
+  "Chris Guccione": {
+    "balanced": {
+      "csr": 0.3254237288135593,
+      "delta_vs_league": -0.007538882811837344,
+      "reliable": true,
+      "taken": 295
+    },
+    "breaking_heavy": {
+      "csr": 0.35269709543568467,
+      "delta_vs_league": 0.006755585438668832,
+      "reliable": true,
+      "taken": 241
+    },
+    "finesse_offspeed": {
+      "csr": 0.3548387096774194,
+      "delta_vs_league": 0.009583386129765892,
+      "reliable": true,
+      "taken": 62
+    },
+    "power": {
+      "csr": 0.2916666666666667,
+      "delta_vs_league": -0.022139431312093172,
+      "reliable": false,
+      "taken": 24
+    },
+    "sinker_contact": {
+      "csr": 0.27941176470588236,
+      "delta_vs_league": -0.05915032679738563,
+      "reliable": true,
+      "taken": 68
+    }
+  },
+  "Chris Segal": {
+    "balanced": {
+      "csr": 0.31733333333333336,
+      "delta_vs_league": -0.015629278292063287,
+      "reliable": true,
+      "taken": 375
+    },
+    "breaking_heavy": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.012608176663682524,
+      "reliable": true,
+      "taken": 123
+    },
+    "finesse_offspeed": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.011921990214320166,
+      "reliable": true,
+      "taken": 51
+    },
+    "power": {
+      "csr": 0.3939393939393939,
+      "delta_vs_league": 0.08013329596063407,
+      "reliable": false,
+      "taken": 33
+    },
+    "sinker_contact": {
+      "csr": 0.3466666666666667,
+      "delta_vs_league": 0.008104575163398686,
+      "reliable": true,
+      "taken": 75
+    }
+  },
+  "Clint Vondrak": {
+    "balanced": {
+      "csr": 0.3231850117096019,
+      "delta_vs_league": -0.009777599915794744,
+      "reliable": true,
+      "taken": 427
+    },
+    "breaking_heavy": {
+      "csr": 0.32608695652173914,
+      "delta_vs_league": -0.019854553475276704,
+      "reliable": true,
+      "taken": 138
+    },
+    "finesse_offspeed": {
+      "csr": 0.5,
+      "delta_vs_league": 0.15474467645234652,
+      "reliable": false,
+      "taken": 10
+    },
+    "power": {
+      "csr": 0.4,
+      "delta_vs_league": 0.08619390202124017,
+      "reliable": false,
+      "taken": 35
+    },
+    "sinker_contact": {
+      "csr": 0.4225352112676056,
+      "delta_vs_league": 0.08397311976433763,
+      "reliable": true,
+      "taken": 71
+    }
+  },
+  "Cory Blaser": {
+    "balanced": {
+      "csr": 0.29411764705882354,
+      "delta_vs_league": -0.038844964566573104,
+      "reliable": true,
+      "taken": 374
+    },
+    "breaking_heavy": {
+      "csr": 0.36363636363636365,
+      "delta_vs_league": 0.017694853639347807,
+      "reliable": true,
+      "taken": 55
+    },
+    "finesse_offspeed": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.011921990214320166,
+      "reliable": false,
+      "taken": 30
+    },
+    "power": {
+      "csr": 0.30612244897959184,
+      "delta_vs_league": -0.0076836489991680135,
+      "reliable": false,
+      "taken": 49
+    },
+    "sinker_contact": {
+      "csr": 0.358974358974359,
+      "delta_vs_league": 0.020412267471090983,
+      "reliable": true,
+      "taken": 78
+    }
+  },
+  "D.J. Reyburn": {
+    "balanced": {
+      "csr": 0.31446540880503143,
+      "delta_vs_league": -0.01849720282036521,
+      "reliable": true,
+      "taken": 318
+    },
+    "breaking_heavy": {
+      "csr": 0.4117647058823529,
+      "delta_vs_league": 0.06582319588533708,
+      "reliable": true,
+      "taken": 170
+    },
+    "finesse_offspeed": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.011921990214320166,
+      "reliable": false,
+      "taken": 6
+    },
+    "power": {
+      "csr": 0.4090909090909091,
+      "delta_vs_league": 0.09528481111214926,
+      "reliable": false,
+      "taken": 22
+    },
+    "sinker_contact": {
+      "csr": 0.3709677419354839,
+      "delta_vs_league": 0.03240565043221588,
+      "reliable": true,
+      "taken": 62
+    }
+  },
+  "Dan Bellino": {
+    "balanced": {
+      "csr": 0.3152454780361757,
+      "delta_vs_league": -0.017717133589220946,
+      "reliable": true,
+      "taken": 387
+    },
+    "breaking_heavy": {
+      "csr": 0.2754491017964072,
+      "delta_vs_league": -0.07049240820060865,
+      "reliable": true,
+      "taken": 167
+    },
+    "finesse_offspeed": {
+      "csr": 0.36,
+      "delta_vs_league": 0.014744676452346506,
+      "reliable": true,
+      "taken": 50
+    },
+    "power": {
+      "csr": 0.2826086956521739,
+      "delta_vs_league": -0.031197402326585966,
+      "reliable": false,
+      "taken": 46
+    },
+    "sinker_contact": {
+      "csr": 0.2413793103448276,
+      "delta_vs_league": -0.0971827811584404,
+      "reliable": true,
+      "taken": 87
+    }
+  },
+  "Dan Iassogna": {
+    "balanced": {
+      "csr": 0.32124352331606215,
+      "delta_vs_league": -0.011719088309334491,
+      "reliable": true,
+      "taken": 386
+    },
+    "breaking_heavy": {
+      "csr": 0.2883435582822086,
+      "delta_vs_league": -0.05759795171480725,
+      "reliable": true,
+      "taken": 163
+    },
+    "finesse_offspeed": {
+      "csr": 0.367816091954023,
+      "delta_vs_league": 0.022560768406369502,
+      "reliable": true,
+      "taken": 87
+    },
+    "power": {
+      "csr": 0.4166666666666667,
+      "delta_vs_league": 0.10286056868790683,
+      "reliable": false,
+      "taken": 24
+    },
+    "sinker_contact": {
+      "csr": 0.3783783783783784,
+      "delta_vs_league": 0.03981628687511041,
+      "reliable": false,
+      "taken": 37
+    }
+  },
+  "Dan Merzel": {
+    "balanced": {
+      "csr": 0.3141025641025641,
+      "delta_vs_league": -0.018860047522832546,
+      "reliable": true,
+      "taken": 312
+    },
+    "breaking_heavy": {
+      "csr": 0.30337078651685395,
+      "delta_vs_league": -0.04257072348016189,
+      "reliable": true,
+      "taken": 178
+    },
+    "finesse_offspeed": {
+      "csr": 0.37349397590361444,
+      "delta_vs_league": 0.028238652355960958,
+      "reliable": true,
+      "taken": 83
+    },
+    "power": {
+      "csr": 0.23529411764705882,
+      "delta_vs_league": -0.07851198033170104,
+      "reliable": false,
+      "taken": 34
+    },
+    "sinker_contact": {
+      "csr": 0.41304347826086957,
+      "delta_vs_league": 0.07448138675760158,
+      "reliable": false,
+      "taken": 46
+    }
+  },
+  "David Rackley": {
+    "balanced": {
+      "csr": 0.3568904593639576,
+      "delta_vs_league": 0.023927847738560937,
+      "reliable": true,
+      "taken": 283
+    },
+    "breaking_heavy": {
+      "csr": 0.3259668508287293,
+      "delta_vs_league": -0.019974659168286557,
+      "reliable": true,
+      "taken": 181
+    },
+    "finesse_offspeed": {
+      "csr": 0.3191489361702128,
+      "delta_vs_league": -0.0261063873774407,
+      "reliable": true,
+      "taken": 94
+    },
+    "power": {
+      "csr": 0.38271604938271603,
+      "delta_vs_league": 0.06890995140395617,
+      "reliable": true,
+      "taken": 81
+    },
+    "sinker_contact": {
+      "csr": 0.3157894736842105,
+      "delta_vs_league": -0.022772617819057484,
+      "reliable": true,
+      "taken": 95
+    }
+  },
+  "Derek Thomas": {
+    "balanced": {
+      "csr": 0.35311572700296734,
+      "delta_vs_league": 0.020153115377570696,
+      "reliable": true,
+      "taken": 337
+    },
+    "breaking_heavy": {
+      "csr": 0.3076923076923077,
+      "delta_vs_league": -0.03824920230470813,
+      "reliable": true,
+      "taken": 169
+    },
+    "finesse_offspeed": {
+      "csr": 0.3670886075949367,
+      "delta_vs_league": 0.02183328404728324,
+      "reliable": true,
+      "taken": 79
+    },
+    "power": {
+      "csr": 0.25,
+      "delta_vs_league": -0.06380609797875986,
+      "reliable": false,
+      "taken": 8
+    },
+    "sinker_contact": {
+      "csr": 0.3870967741935484,
+      "delta_vs_league": 0.048534682690280384,
+      "reliable": false,
+      "taken": 31
+    }
+  },
+  "Dexter Kelley": {
+    "balanced": {
+      "csr": 0.34854771784232363,
+      "delta_vs_league": 0.015585106216926992,
+      "reliable": true,
+      "taken": 241
+    },
+    "breaking_heavy": {
+      "csr": 0.32653061224489793,
+      "delta_vs_league": -0.019410897752117906,
+      "reliable": true,
+      "taken": 98
+    },
+    "finesse_offspeed": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.011921990214320166,
+      "reliable": false,
+      "taken": 3
+    },
+    "power": {
+      "csr": 0.6666666666666666,
+      "delta_vs_league": 0.3528605686879068,
+      "reliable": false,
+      "taken": 3
+    },
+    "sinker_contact": {
+      "csr": 0.43478260869565216,
+      "delta_vs_league": 0.09622051719238417,
+      "reliable": false,
+      "taken": 23
+    }
+  },
+  "Dillon Wilson": {
+    "balanced": {
+      "csr": 0.3924050632911392,
+      "delta_vs_league": 0.05944245166574258,
+      "reliable": true,
+      "taken": 79
+    },
+    "breaking_heavy": {
+      "csr": 0.3048780487804878,
+      "delta_vs_league": -0.04106346121652804,
+      "reliable": true,
+      "taken": 82
+    },
+    "finesse_offspeed": {
+      "csr": 0.3157894736842105,
+      "delta_vs_league": -0.029465849863442972,
+      "reliable": false,
+      "taken": 19
+    },
+    "power": {
+      "csr": 0.25,
+      "delta_vs_league": -0.06380609797875986,
+      "reliable": false,
+      "taken": 12
+    },
+    "sinker_contact": {
+      "csr": 0.6666666666666666,
+      "delta_vs_league": 0.32810457516339864,
+      "reliable": false,
+      "taken": 3
+    }
+  },
+  "Doug Eddings": {
+    "balanced": {
+      "csr": 0.3689839572192513,
+      "delta_vs_league": 0.03602134559385467,
+      "reliable": true,
+      "taken": 374
+    },
+    "breaking_heavy": {
+      "csr": 0.45081967213114754,
+      "delta_vs_league": 0.1048781621341317,
+      "reliable": true,
+      "taken": 122
+    },
+    "finesse_offspeed": {
+      "csr": 0.3176470588235294,
+      "delta_vs_league": -0.027608264724124087,
+      "reliable": true,
+      "taken": 85
+    },
+    "power": {
+      "csr": 0.3888888888888889,
+      "delta_vs_league": 0.07508279091012904,
+      "reliable": false,
+      "taken": 18
+    },
+    "sinker_contact": {
+      "csr": 0.45714285714285713,
+      "delta_vs_league": 0.11858076563958914,
+      "reliable": false,
+      "taken": 35
+    }
+  },
+  "Edwin Jimenez": {
+    "balanced": {
+      "csr": 0.35436893203883496,
+      "delta_vs_league": 0.021406320413438318,
+      "reliable": true,
+      "taken": 206
+    },
+    "breaking_heavy": {
+      "csr": 0.4594594594594595,
+      "delta_vs_league": 0.11351794946244365,
+      "reliable": true,
+      "taken": 111
+    },
+    "finesse_offspeed": {
+      "csr": 0.3181818181818182,
+      "delta_vs_league": -0.027073505365835304,
+      "reliable": false,
+      "taken": 44
+    },
+    "power": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": 0.019527235354573458,
+      "reliable": false,
+      "taken": 21
+    },
+    "sinker_contact": {
+      "csr": 0.3372093023255814,
+      "delta_vs_league": -0.0013527891776866086,
+      "reliable": true,
+      "taken": 86
+    }
+  },
+  "Edwin Moscoso": {
+    "balanced": {
+      "csr": 0.27348066298342544,
+      "delta_vs_league": -0.059481948641971205,
+      "reliable": true,
+      "taken": 362
+    },
+    "breaking_heavy": {
+      "csr": 0.330188679245283,
+      "delta_vs_league": -0.015752830751732838,
+      "reliable": true,
+      "taken": 212
+    },
+    "finesse_offspeed": {
+      "csr": 0.2727272727272727,
+      "delta_vs_league": -0.07252805082038077,
+      "reliable": true,
+      "taken": 55
+    },
+    "power": {
+      "csr": 0.3,
+      "delta_vs_league": -0.013806097978759868,
+      "reliable": false,
+      "taken": 20
+    },
+    "sinker_contact": {
+      "csr": 0.3026315789473684,
+      "delta_vs_league": -0.035930512555899574,
+      "reliable": true,
+      "taken": 76
+    }
+  },
+  "Emil Jimenez": {
+    "balanced": {
+      "csr": 0.36187845303867405,
+      "delta_vs_league": 0.02891584141327741,
+      "reliable": true,
+      "taken": 362
+    },
+    "breaking_heavy": {
+      "csr": 0.3258426966292135,
+      "delta_vs_league": -0.020098813367802337,
+      "reliable": true,
+      "taken": 89
+    },
+    "finesse_offspeed": {
+      "csr": 0.35714285714285715,
+      "delta_vs_league": 0.01188753359520367,
+      "reliable": false,
+      "taken": 28
+    },
+    "power": {
+      "csr": 0.36666666666666664,
+      "delta_vs_league": 0.052860568687906784,
+      "reliable": true,
+      "taken": 60
+    },
+    "sinker_contact": {
+      "csr": 0.2826086956521739,
+      "delta_vs_league": -0.0559533958510941,
+      "reliable": false,
+      "taken": 46
+    }
+  },
+  "Erich Bacchus": {
+    "balanced": {
+      "csr": 0.34101382488479265,
+      "delta_vs_league": 0.008051213259396006,
+      "reliable": true,
+      "taken": 434
+    },
+    "breaking_heavy": {
+      "csr": 0.40555555555555556,
+      "delta_vs_league": 0.05961404555853972,
+      "reliable": true,
+      "taken": 180
+    },
+    "finesse_offspeed": {
+      "csr": 0.38461538461538464,
+      "delta_vs_league": 0.039360061067731156,
+      "reliable": false,
+      "taken": 26
+    },
+    "power": {
+      "csr": 0.358974358974359,
+      "delta_vs_league": 0.04516826099559912,
+      "reliable": false,
+      "taken": 39
+    },
+    "sinker_contact": {
+      "csr": 0.3821138211382114,
+      "delta_vs_league": 0.043551729634943415,
+      "reliable": true,
+      "taken": 123
+    }
+  },
+  "Felix Neon": {
+    "balanced": {
+      "csr": 0.24468085106382978,
+      "delta_vs_league": -0.08828176056156686,
+      "reliable": true,
+      "taken": 94
+    },
+    "breaking_heavy": {
+      "csr": 0.33962264150943394,
+      "delta_vs_league": -0.006318868487581897,
+      "reliable": true,
+      "taken": 53
+    },
+    "finesse_offspeed": {
+      "csr": 0.4444444444444444,
+      "delta_vs_league": 0.09918912089679094,
+      "reliable": false,
+      "taken": 18
+    },
+    "power": {
+      "csr": 0.0,
+      "delta_vs_league": -0.31380609797875986,
+      "reliable": false,
+      "taken": 6
+    },
+    "sinker_contact": {
+      "csr": 0.4166666666666667,
+      "delta_vs_league": 0.07810457516339869,
+      "reliable": false,
+      "taken": 24
+    }
+  },
+  "Gabe Morales": {
+    "balanced": {
+      "csr": 0.35714285714285715,
+      "delta_vs_league": 0.024180245517460508,
+      "reliable": true,
+      "taken": 336
+    },
+    "breaking_heavy": {
+      "csr": 0.3652694610778443,
+      "delta_vs_league": 0.019327951080828465,
+      "reliable": true,
+      "taken": 167
+    },
+    "finesse_offspeed": {
+      "csr": 0.4,
+      "delta_vs_league": 0.05474467645234654,
+      "reliable": false,
+      "taken": 25
+    },
+    "power": {
+      "csr": 0.25,
+      "delta_vs_league": -0.06380609797875986,
+      "reliable": false,
+      "taken": 40
+    },
+    "sinker_contact": {
+      "csr": 0.25,
+      "delta_vs_league": -0.08856209150326799,
+      "reliable": false,
+      "taken": 20
+    }
+  },
+  "Hunter Wendelstedt": {
+    "balanced": {
+      "csr": 0.3231707317073171,
+      "delta_vs_league": -0.00979187991807956,
+      "reliable": true,
+      "taken": 328
+    },
+    "breaking_heavy": {
+      "csr": 0.34065934065934067,
+      "delta_vs_league": -0.005282169337675169,
+      "reliable": true,
+      "taken": 182
+    },
+    "finesse_offspeed": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.011921990214320166,
+      "reliable": true,
+      "taken": 63
+    },
+    "sinker_contact": {
+      "csr": 0.3076923076923077,
+      "delta_vs_league": -0.030869783810960283,
+      "reliable": true,
+      "taken": 143
+    }
+  },
+  "Jacob Metz": {
+    "balanced": {
+      "csr": 0.38181818181818183,
+      "delta_vs_league": 0.04885557019278519,
+      "reliable": true,
+      "taken": 165
+    },
+    "breaking_heavy": {
+      "csr": 0.3184713375796178,
+      "delta_vs_league": -0.02747017241739802,
+      "reliable": true,
+      "taken": 157
+    },
+    "finesse_offspeed": {
+      "csr": 0.4716981132075472,
+      "delta_vs_league": 0.1264427896598937,
+      "reliable": true,
+      "taken": 53
+    },
+    "power": {
+      "csr": 0.32,
+      "delta_vs_league": 0.00619390202124015,
+      "reliable": false,
+      "taken": 25
+    },
+    "sinker_contact": {
+      "csr": 0.463768115942029,
+      "delta_vs_league": 0.125206024438761,
+      "reliable": true,
+      "taken": 69
+    }
+  },
+  "James Hoye": {
+    "balanced": {
+      "csr": 0.3094059405940594,
+      "delta_vs_league": -0.02355667103133724,
+      "reliable": true,
+      "taken": 404
+    },
+    "breaking_heavy": {
+      "csr": 0.3680555555555556,
+      "delta_vs_league": 0.02211404555853974,
+      "reliable": true,
+      "taken": 144
+    },
+    "finesse_offspeed": {
+      "csr": 0.3541666666666667,
+      "delta_vs_league": 0.008911343119013204,
+      "reliable": false,
+      "taken": 48
+    },
+    "power": {
+      "csr": 0.4,
+      "delta_vs_league": 0.08619390202124017,
+      "reliable": false,
+      "taken": 10
+    },
+    "sinker_contact": {
+      "csr": 0.3764705882352941,
+      "delta_vs_league": 0.03790849673202612,
+      "reliable": true,
+      "taken": 85
+    }
+  },
+  "James Jean": {
+    "balanced": {
+      "csr": 0.3155080213903743,
+      "delta_vs_league": -0.017454590235022327,
+      "reliable": true,
+      "taken": 374
+    },
+    "breaking_heavy": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.012608176663682524,
+      "reliable": true,
+      "taken": 246
+    },
+    "finesse_offspeed": {
+      "csr": 0.27450980392156865,
+      "delta_vs_league": -0.07074551962608483,
+      "reliable": true,
+      "taken": 51
+    },
+    "power": {
+      "csr": 0.24444444444444444,
+      "delta_vs_league": -0.06936165353431542,
+      "reliable": false,
+      "taken": 45
+    },
+    "sinker_contact": {
+      "csr": 0.35365853658536583,
+      "delta_vs_league": 0.015096445082097842,
+      "reliable": true,
+      "taken": 82
+    }
+  },
+  "Jansen Visconti": {
+    "balanced": {
+      "csr": 0.29896907216494845,
+      "delta_vs_league": -0.0339935394604482,
+      "reliable": true,
+      "taken": 291
+    },
+    "breaking_heavy": {
+      "csr": 0.3944954128440367,
+      "delta_vs_league": 0.04855390284702088,
+      "reliable": true,
+      "taken": 109
+    },
+    "finesse_offspeed": {
+      "csr": 0.3541666666666667,
+      "delta_vs_league": 0.008911343119013204,
+      "reliable": false,
+      "taken": 48
+    },
+    "power": {
+      "csr": 0.3153153153153153,
+      "delta_vs_league": 0.0015092173365554573,
+      "reliable": true,
+      "taken": 111
+    },
+    "sinker_contact": {
+      "csr": 0.3559322033898305,
+      "delta_vs_league": 0.01737011188656251,
+      "reliable": true,
+      "taken": 59
+    }
+  },
+  "Jen Pawol": {
+    "balanced": {
+      "csr": 0.367816091954023,
+      "delta_vs_league": 0.03485348032862634,
+      "reliable": true,
+      "taken": 261
+    },
+    "breaking_heavy": {
+      "csr": 0.24786324786324787,
+      "delta_vs_league": -0.09807826213376797,
+      "reliable": true,
+      "taken": 117
+    },
+    "finesse_offspeed": {
+      "csr": 0.28,
+      "delta_vs_league": -0.06525532354765345,
+      "reliable": false,
+      "taken": 25
+    },
+    "power": {
+      "csr": 0.17647058823529413,
+      "delta_vs_league": -0.13733550974346573,
+      "reliable": false,
+      "taken": 17
+    },
+    "sinker_contact": {
+      "csr": 0.4166666666666667,
+      "delta_vs_league": 0.07810457516339869,
+      "reliable": true,
+      "taken": 60
+    }
+  },
+  "Jeremie Rehak": {
+    "balanced": {
+      "csr": 0.2911111111111111,
+      "delta_vs_league": -0.041851500514285545,
+      "reliable": true,
+      "taken": 450
+    },
+    "breaking_heavy": {
+      "csr": 0.3467741935483871,
+      "delta_vs_league": 0.0008326835513712827,
+      "reliable": true,
+      "taken": 124
+    },
+    "finesse_offspeed": {
+      "csr": 0.4426229508196721,
+      "delta_vs_league": 0.09736762727201864,
+      "reliable": true,
+      "taken": 61
+    },
+    "power": {
+      "csr": 0.3,
+      "delta_vs_league": -0.013806097978759868,
+      "reliable": false,
+      "taken": 20
+    },
+    "sinker_contact": {
+      "csr": 0.3125,
+      "delta_vs_league": -0.026062091503267992,
+      "reliable": false,
+      "taken": 48
+    }
+  },
+  "Jim Wolf": {
+    "balanced": {
+      "csr": 0.38305084745762713,
+      "delta_vs_league": 0.05008823583223049,
+      "reliable": true,
+      "taken": 295
+    },
+    "breaking_heavy": {
+      "csr": 0.36787564766839376,
+      "delta_vs_league": 0.021934137671377918,
+      "reliable": true,
+      "taken": 193
+    },
+    "finesse_offspeed": {
+      "csr": 0.35714285714285715,
+      "delta_vs_league": 0.01188753359520367,
+      "reliable": false,
+      "taken": 28
+    },
+    "power": {
+      "csr": 0.3055555555555556,
+      "delta_vs_league": -0.008250542423204277,
+      "reliable": false,
+      "taken": 36
+    },
+    "sinker_contact": {
+      "csr": 0.36585365853658536,
+      "delta_vs_league": 0.027291567033317365,
+      "reliable": false,
+      "taken": 41
+    }
+  },
+  "John Bacon": {
+    "balanced": {
+      "csr": 0.36807817589576547,
+      "delta_vs_league": 0.035115564270368826,
+      "reliable": true,
+      "taken": 307
+    },
+    "breaking_heavy": {
+      "csr": 0.40625,
+      "delta_vs_league": 0.06030849000298416,
+      "reliable": true,
+      "taken": 64
+    },
+    "finesse_offspeed": {
+      "csr": 0.34375,
+      "delta_vs_league": -0.001505323547653481,
+      "reliable": false,
+      "taken": 32
+    },
+    "power": {
+      "csr": 0.4117647058823529,
+      "delta_vs_league": 0.09795860790359306,
+      "reliable": false,
+      "taken": 17
+    },
+    "sinker_contact": {
+      "csr": 0.64,
+      "delta_vs_league": 0.301437908496732,
+      "reliable": false,
+      "taken": 25
+    }
+  },
+  "John Libka": {
+    "balanced": {
+      "csr": 0.3527777777777778,
+      "delta_vs_league": 0.01981516615238116,
+      "reliable": true,
+      "taken": 360
+    },
+    "breaking_heavy": {
+      "csr": 0.3006134969325153,
+      "delta_vs_league": -0.045328013064500516,
+      "reliable": true,
+      "taken": 163
+    },
+    "finesse_offspeed": {
+      "csr": 0.3380281690140845,
+      "delta_vs_league": -0.00722715453356898,
+      "reliable": true,
+      "taken": 71
+    },
+    "power": {
+      "csr": 0.35,
+      "delta_vs_league": 0.03619390202124012,
+      "reliable": false,
+      "taken": 20
+    },
+    "sinker_contact": {
+      "csr": 0.32941176470588235,
+      "delta_vs_league": -0.009150326797385644,
+      "reliable": true,
+      "taken": 85
+    }
+  },
+  "John Tumpane": {
+    "balanced": {
+      "csr": 0.33242506811989103,
+      "delta_vs_league": -0.000537543505505611,
+      "reliable": true,
+      "taken": 367
+    },
+    "breaking_heavy": {
+      "csr": 0.4517766497461929,
+      "delta_vs_league": 0.10583513974917708,
+      "reliable": true,
+      "taken": 197
+    },
+    "finesse_offspeed": {
+      "csr": 0.42857142857142855,
+      "delta_vs_league": 0.08331610502377507,
+      "reliable": true,
+      "taken": 56
+    },
+    "power": {
+      "csr": 0.43243243243243246,
+      "delta_vs_league": 0.1186263344536726,
+      "reliable": false,
+      "taken": 37
+    },
+    "sinker_contact": {
+      "csr": 0.3225806451612903,
+      "delta_vs_league": -0.01598144634197768,
+      "reliable": true,
+      "taken": 93
+    }
+  },
+  "Jonathan Parra": {
+    "balanced": {
+      "csr": 0.32967032967032966,
+      "delta_vs_league": -0.003292281955066978,
+      "reliable": true,
+      "taken": 182
+    },
+    "breaking_heavy": {
+      "csr": 0.3148148148148148,
+      "delta_vs_league": -0.031126695182201014,
+      "reliable": true,
+      "taken": 108
+    },
+    "finesse_offspeed": {
+      "csr": 0.3764705882352941,
+      "delta_vs_league": 0.03121526468764063,
+      "reliable": true,
+      "taken": 85
+    },
+    "power": {
+      "csr": 0.26666666666666666,
+      "delta_vs_league": -0.047139431312093194,
+      "reliable": false,
+      "taken": 30
+    },
+    "sinker_contact": {
+      "csr": 0.2916666666666667,
+      "delta_vs_league": -0.04689542483660131,
+      "reliable": false,
+      "taken": 48
+    }
+  },
+  "Jordan Baker": {
+    "balanced": {
+      "csr": 0.34877384196185285,
+      "delta_vs_league": 0.015811230336456206,
+      "reliable": true,
+      "taken": 367
+    },
+    "breaking_heavy": {
+      "csr": 0.2767857142857143,
+      "delta_vs_league": -0.06915579571130154,
+      "reliable": true,
+      "taken": 112
+    },
+    "finesse_offspeed": {
+      "csr": 0.3684210526315789,
+      "delta_vs_league": 0.023165729083925446,
+      "reliable": false,
+      "taken": 19
+    },
+    "power": {
+      "csr": 0.3793103448275862,
+      "delta_vs_league": 0.06550424684882633,
+      "reliable": true,
+      "taken": 58
+    },
+    "sinker_contact": {
+      "csr": 0.38596491228070173,
+      "delta_vs_league": 0.04740282077743374,
+      "reliable": true,
+      "taken": 57
+    }
+  },
+  "Junior Valentine": {
+    "balanced": {
+      "csr": 0.3229571984435798,
+      "delta_vs_league": -0.010005413181816858,
+      "reliable": true,
+      "taken": 257
+    },
+    "breaking_heavy": {
+      "csr": 0.37012987012987014,
+      "delta_vs_league": 0.024188360132854303,
+      "reliable": true,
+      "taken": 154
+    },
+    "finesse_offspeed": {
+      "csr": 0.20689655172413793,
+      "delta_vs_league": -0.13835877182351555,
+      "reliable": false,
+      "taken": 29
+    },
+    "power": {
+      "csr": 0.28,
+      "delta_vs_league": -0.03380609797875983,
+      "reliable": true,
+      "taken": 75
+    },
+    "sinker_contact": {
+      "csr": 0.3904109589041096,
+      "delta_vs_league": 0.0518488674008416,
+      "reliable": true,
+      "taken": 146
+    }
+  },
+  "Lance Barksdale": {
+    "balanced": {
+      "csr": 0.3256578947368421,
+      "delta_vs_league": -0.007304716888554552,
+      "reliable": true,
+      "taken": 304
+    },
+    "breaking_heavy": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.012608176663682524,
+      "reliable": true,
+      "taken": 84
+    },
+    "finesse_offspeed": {
+      "csr": 0.2876712328767123,
+      "delta_vs_league": -0.05758409067094117,
+      "reliable": true,
+      "taken": 73
+    },
+    "power": {
+      "csr": 0.2727272727272727,
+      "delta_vs_league": -0.04107882525148715,
+      "reliable": false,
+      "taken": 44
+    },
+    "sinker_contact": {
+      "csr": 0.3582089552238806,
+      "delta_vs_league": 0.019646863720612584,
+      "reliable": true,
+      "taken": 134
+    }
+  },
+  "Lance Barrett": {
+    "balanced": {
+      "csr": 0.3381742738589212,
+      "delta_vs_league": 0.005211662233524539,
+      "reliable": true,
+      "taken": 482
+    },
+    "breaking_heavy": {
+      "csr": 0.3141025641025641,
+      "delta_vs_league": -0.03183894589445174,
+      "reliable": true,
+      "taken": 156
+    },
+    "finesse_offspeed": {
+      "csr": 0.32558139534883723,
+      "delta_vs_league": -0.01967392819881625,
+      "reliable": true,
+      "taken": 86
+    },
+    "power": {
+      "csr": 0.5714285714285714,
+      "delta_vs_league": 0.25762247344981154,
+      "reliable": false,
+      "taken": 7
+    },
+    "sinker_contact": {
+      "csr": 0.38461538461538464,
+      "delta_vs_league": 0.046053293112116644,
+      "reliable": true,
+      "taken": 52
+    }
+  },
+  "Laz Diaz": {
+    "balanced": {
+      "csr": 0.3114754098360656,
+      "delta_vs_league": -0.021487201789331056,
+      "reliable": true,
+      "taken": 366
+    },
+    "breaking_heavy": {
+      "csr": 0.3130434782608696,
+      "delta_vs_league": -0.03289803173614625,
+      "reliable": true,
+      "taken": 230
+    },
+    "finesse_offspeed": {
+      "csr": 0.1935483870967742,
+      "delta_vs_league": -0.1517069364508793,
+      "reliable": false,
+      "taken": 31
+    },
+    "power": {
+      "csr": 0.2903225806451613,
+      "delta_vs_league": -0.023483517333598547,
+      "reliable": false,
+      "taken": 31
+    },
+    "sinker_contact": {
+      "csr": 0.2619047619047619,
+      "delta_vs_league": -0.07665732959850607,
+      "reliable": true,
+      "taken": 126
+    }
+  },
+  "Louie Krupa": {
+    "balanced": {
+      "csr": 0.2932692307692308,
+      "delta_vs_league": -0.03969338085616586,
+      "reliable": true,
+      "taken": 208
+    },
+    "breaking_heavy": {
+      "csr": 0.40425531914893614,
+      "delta_vs_league": 0.058313809151920304,
+      "reliable": false,
+      "taken": 47
+    },
+    "finesse_offspeed": {
+      "csr": 0.16666666666666666,
+      "delta_vs_league": -0.17858865688098682,
+      "reliable": false,
+      "taken": 12
+    },
+    "power": {
+      "csr": 0.4090909090909091,
+      "delta_vs_league": 0.09528481111214926,
+      "reliable": false,
+      "taken": 22
+    },
+    "sinker_contact": {
+      "csr": 0.43137254901960786,
+      "delta_vs_league": 0.09281045751633987,
+      "reliable": true,
+      "taken": 51
+    }
+  },
+  "Malachi Moore": {
+    "balanced": {
+      "csr": 0.3357664233576642,
+      "delta_vs_league": 0.0028038117322675693,
+      "reliable": true,
+      "taken": 411
+    },
+    "breaking_heavy": {
+      "csr": 0.42011834319526625,
+      "delta_vs_league": 0.07417683319825041,
+      "reliable": true,
+      "taken": 169
+    },
+    "finesse_offspeed": {
+      "csr": 0.30526315789473685,
+      "delta_vs_league": -0.039992165652916634,
+      "reliable": true,
+      "taken": 95
+    },
+    "power": {
+      "csr": 0.2459016393442623,
+      "delta_vs_league": -0.06790445863449757,
+      "reliable": true,
+      "taken": 61
+    },
+    "sinker_contact": {
+      "csr": 0.3855421686746988,
+      "delta_vs_league": 0.04698007717143082,
+      "reliable": true,
+      "taken": 83
+    }
+  },
+  "Manny Gonzalez": {
+    "balanced": {
+      "csr": 0.41194029850746267,
+      "delta_vs_league": 0.07897768688206602,
+      "reliable": true,
+      "taken": 335
+    },
+    "breaking_heavy": {
+      "csr": 0.3431952662721893,
+      "delta_vs_league": -0.0027462437248265137,
+      "reliable": true,
+      "taken": 169
+    },
+    "finesse_offspeed": {
+      "csr": 0.34615384615384615,
+      "delta_vs_league": 0.0008985226061926643,
+      "reliable": true,
+      "taken": 156
+    },
+    "power": {
+      "csr": 0.35555555555555557,
+      "delta_vs_league": 0.04174945757679571,
+      "reliable": false,
+      "taken": 45
+    },
+    "sinker_contact": {
+      "csr": 0.34782608695652173,
+      "delta_vs_league": 0.009263995453253737,
+      "reliable": false,
+      "taken": 46
+    }
+  },
+  "Mark Ripperger": {
+    "balanced": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": 0.00037072170793667203,
+      "reliable": true,
+      "taken": 435
+    },
+    "breaking_heavy": {
+      "csr": 0.3505747126436782,
+      "delta_vs_league": 0.004633202646662338,
+      "reliable": true,
+      "taken": 174
+    },
+    "finesse_offspeed": {
+      "csr": 0.3283582089552239,
+      "delta_vs_league": -0.016897114592429596,
+      "reliable": true,
+      "taken": 67
+    },
+    "power": {
+      "csr": 0.38095238095238093,
+      "delta_vs_league": 0.06714628297362107,
+      "reliable": false,
+      "taken": 42
+    },
+    "sinker_contact": {
+      "csr": 0.37209302325581395,
+      "delta_vs_league": 0.033530931752545956,
+      "reliable": false,
+      "taken": 43
+    }
+  },
+  "Mark Wegner": {
+    "balanced": {
+      "csr": 0.3438320209973753,
+      "delta_vs_league": 0.010869409371978667,
+      "reliable": true,
+      "taken": 381
+    },
+    "breaking_heavy": {
+      "csr": 0.36597938144329895,
+      "delta_vs_league": 0.020037871446283106,
+      "reliable": true,
+      "taken": 194
+    },
+    "finesse_offspeed": {
+      "csr": 0.2736842105263158,
+      "delta_vs_league": -0.07157111302133767,
+      "reliable": true,
+      "taken": 95
+    },
+    "power": {
+      "csr": 0.3157894736842105,
+      "delta_vs_league": 0.0019833757054506518,
+      "reliable": false,
+      "taken": 19
+    },
+    "sinker_contact": {
+      "csr": 0.328125,
+      "delta_vs_league": -0.010437091503267992,
+      "reliable": true,
+      "taken": 64
+    }
+  },
+  "Marvin Hudson": {
+    "balanced": {
+      "csr": 0.31343283582089554,
+      "delta_vs_league": -0.019529775804501104,
+      "reliable": true,
+      "taken": 268
+    },
+    "breaking_heavy": {
+      "csr": 0.2949640287769784,
+      "delta_vs_league": -0.050977481220037424,
+      "reliable": true,
+      "taken": 139
+    },
+    "finesse_offspeed": {
+      "csr": 0.31958762886597936,
+      "delta_vs_league": -0.025667694681674125,
+      "reliable": true,
+      "taken": 97
+    },
+    "power": {
+      "csr": 0.36666666666666664,
+      "delta_vs_league": 0.052860568687906784,
+      "reliable": false,
+      "taken": 30
+    },
+    "sinker_contact": {
+      "csr": 0.323943661971831,
+      "delta_vs_league": -0.014618429531436994,
+      "reliable": true,
+      "taken": 71
+    }
+  },
+  "Mike Estabrook": {
+    "balanced": {
+      "csr": 0.33222591362126247,
+      "delta_vs_league": -0.0007366980041341731,
+      "reliable": true,
+      "taken": 301
+    },
+    "breaking_heavy": {
+      "csr": 0.391304347826087,
+      "delta_vs_league": 0.045362837829071134,
+      "reliable": true,
+      "taken": 161
+    },
+    "finesse_offspeed": {
+      "csr": 0.40540540540540543,
+      "delta_vs_league": 0.06015008185775195,
+      "reliable": true,
+      "taken": 74
+    },
+    "power": {
+      "csr": 0.4444444444444444,
+      "delta_vs_league": 0.13063834646568456,
+      "reliable": false,
+      "taken": 18
+    },
+    "sinker_contact": {
+      "csr": 0.32407407407407407,
+      "delta_vs_league": -0.014488017429193922,
+      "reliable": true,
+      "taken": 108
+    }
+  },
+  "Mike Muchlinski": {
+    "balanced": {
+      "csr": 0.31339031339031337,
+      "delta_vs_league": -0.019572298235083274,
+      "reliable": true,
+      "taken": 351
+    },
+    "breaking_heavy": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.012608176663682524,
+      "reliable": true,
+      "taken": 237
+    },
+    "finesse_offspeed": {
+      "csr": 0.3,
+      "delta_vs_league": -0.04525532354765349,
+      "reliable": false,
+      "taken": 40
+    },
+    "power": {
+      "csr": 0.375,
+      "delta_vs_league": 0.06119390202124014,
+      "reliable": false,
+      "taken": 8
+    },
+    "sinker_contact": {
+      "csr": 0.31896551724137934,
+      "delta_vs_league": -0.019596574261888655,
+      "reliable": true,
+      "taken": 116
+    }
+  },
+  "Nate Tomlinson": {
+    "balanced": {
+      "csr": 0.3414043583535109,
+      "delta_vs_league": 0.008441746728114263,
+      "reliable": true,
+      "taken": 413
+    },
+    "breaking_heavy": {
+      "csr": 0.4206896551724138,
+      "delta_vs_league": 0.07474814517539796,
+      "reliable": true,
+      "taken": 145
+    },
+    "finesse_offspeed": {
+      "csr": 0.23529411764705882,
+      "delta_vs_league": -0.10996120590059466,
+      "reliable": true,
+      "taken": 51
+    },
+    "power": {
+      "csr": 0.2,
+      "delta_vs_league": -0.11380609797875985,
+      "reliable": false,
+      "taken": 20
+    },
+    "sinker_contact": {
+      "csr": 0.2719298245614035,
+      "delta_vs_league": -0.06663226694186447,
+      "reliable": true,
+      "taken": 114
+    }
+  },
+  "Nestor Ceja": {
+    "balanced": {
+      "csr": 0.31094527363184077,
+      "delta_vs_league": -0.022017337993555874,
+      "reliable": true,
+      "taken": 402
+    },
+    "breaking_heavy": {
+      "csr": 0.3233082706766917,
+      "delta_vs_league": -0.022633239320324128,
+      "reliable": true,
+      "taken": 133
+    },
+    "finesse_offspeed": {
+      "csr": 0.29850746268656714,
+      "delta_vs_league": -0.04674786086108634,
+      "reliable": true,
+      "taken": 67
+    },
+    "power": {
+      "csr": 0.34782608695652173,
+      "delta_vs_league": 0.03401998897776187,
+      "reliable": false,
+      "taken": 23
+    },
+    "sinker_contact": {
+      "csr": 0.36904761904761907,
+      "delta_vs_league": 0.030485527544351076,
+      "reliable": true,
+      "taken": 84
+    }
+  },
+  "Nic Lentz": {
+    "balanced": {
+      "csr": 0.30272108843537415,
+      "delta_vs_league": -0.03024152319002249,
+      "reliable": true,
+      "taken": 588
+    },
+    "breaking_heavy": {
+      "csr": 0.33663366336633666,
+      "delta_vs_league": -0.009307846630679184,
+      "reliable": true,
+      "taken": 101
+    },
+    "finesse_offspeed": {
+      "csr": 0.38461538461538464,
+      "delta_vs_league": 0.039360061067731156,
+      "reliable": false,
+      "taken": 26
+    },
+    "power": {
+      "csr": 0.3142857142857143,
+      "delta_vs_league": 0.00047961630695442237,
+      "reliable": false,
+      "taken": 35
+    },
+    "sinker_contact": {
+      "csr": 0.2153846153846154,
+      "delta_vs_league": -0.1231774761186526,
+      "reliable": true,
+      "taken": 65
+    }
+  },
+  "Nick Mahrley": {
+    "balanced": {
+      "csr": 0.3557951482479784,
+      "delta_vs_league": 0.02283253662258178,
+      "reliable": true,
+      "taken": 371
+    },
+    "breaking_heavy": {
+      "csr": 0.3855421686746988,
+      "delta_vs_league": 0.039600658677682976,
+      "reliable": true,
+      "taken": 83
+    },
+    "finesse_offspeed": {
+      "csr": 0.47368421052631576,
+      "delta_vs_league": 0.12842888697866228,
+      "reliable": false,
+      "taken": 38
+    },
+    "power": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": 0.019527235354573458,
+      "reliable": false,
+      "taken": 18
+    },
+    "sinker_contact": {
+      "csr": 0.28125,
+      "delta_vs_league": -0.05731209150326799,
+      "reliable": true,
+      "taken": 64
+    }
+  },
+  "Paul Clemons": {
+    "balanced": {
+      "csr": 0.31390134529147984,
+      "delta_vs_league": -0.019061266333916804,
+      "reliable": true,
+      "taken": 223
+    },
+    "breaking_heavy": {
+      "csr": 0.37130801687763715,
+      "delta_vs_league": 0.02536650688062131,
+      "reliable": true,
+      "taken": 237
+    },
+    "finesse_offspeed": {
+      "csr": 0.2926829268292683,
+      "delta_vs_league": -0.052572396718385206,
+      "reliable": false,
+      "taken": 41
+    },
+    "power": {
+      "csr": 0.325,
+      "delta_vs_league": 0.011193902021240154,
+      "reliable": false,
+      "taken": 40
+    },
+    "sinker_contact": {
+      "csr": 0.43137254901960786,
+      "delta_vs_league": 0.09281045751633987,
+      "reliable": true,
+      "taken": 102
+    }
+  },
+  "Quinn Wolcott": {
+    "balanced": {
+      "csr": 0.37044967880085655,
+      "delta_vs_league": 0.03748706717545991,
+      "reliable": true,
+      "taken": 467
+    },
+    "breaking_heavy": {
+      "csr": 0.3192488262910798,
+      "delta_vs_league": -0.026692683705936027,
+      "reliable": true,
+      "taken": 213
+    },
+    "finesse_offspeed": {
+      "csr": 0.4,
+      "delta_vs_league": 0.05474467645234654,
+      "reliable": true,
+      "taken": 70
+    },
+    "power": {
+      "csr": 0.2727272727272727,
+      "delta_vs_league": -0.04107882525148715,
+      "reliable": false,
+      "taken": 22
+    },
+    "sinker_contact": {
+      "csr": 0.35,
+      "delta_vs_league": 0.011437908496731986,
+      "reliable": false,
+      "taken": 40
+    }
+  },
+  "Ramon De Jesus": {
+    "balanced": {
+      "csr": 0.30864197530864196,
+      "delta_vs_league": -0.024320636316754685,
+      "reliable": true,
+      "taken": 243
+    },
+    "breaking_heavy": {
+      "csr": 0.4142857142857143,
+      "delta_vs_league": 0.06834420428869847,
+      "reliable": true,
+      "taken": 140
+    },
+    "finesse_offspeed": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.011921990214320166,
+      "reliable": false,
+      "taken": 36
+    },
+    "power": {
+      "csr": 0.35135135135135137,
+      "delta_vs_league": 0.037545253372591514,
+      "reliable": false,
+      "taken": 37
+    },
+    "sinker_contact": {
+      "csr": 0.25,
+      "delta_vs_league": -0.08856209150326799,
+      "reliable": false,
+      "taken": 48
+    }
+  },
+  "Rob Drake": {
+    "balanced": {
+      "csr": 0.3972602739726027,
+      "delta_vs_league": 0.06429766234720607,
+      "reliable": true,
+      "taken": 438
+    },
+    "breaking_heavy": {
+      "csr": 0.328042328042328,
+      "delta_vs_league": -0.017899181954687815,
+      "reliable": true,
+      "taken": 189
+    },
+    "finesse_offspeed": {
+      "csr": 0.4117647058823529,
+      "delta_vs_league": 0.06650938233469944,
+      "reliable": true,
+      "taken": 68
+    },
+    "power": {
+      "csr": 0.36,
+      "delta_vs_league": 0.04619390202124013,
+      "reliable": false,
+      "taken": 25
+    },
+    "sinker_contact": {
+      "csr": 0.375,
+      "delta_vs_league": 0.03643790849673201,
+      "reliable": false,
+      "taken": 48
+    }
+  },
+  "Roberto Ortiz": {
+    "balanced": {
+      "csr": 0.26506024096385544,
+      "delta_vs_league": -0.0679023706615412,
+      "reliable": true,
+      "taken": 332
+    },
+    "breaking_heavy": {
+      "csr": 0.26744186046511625,
+      "delta_vs_league": -0.07849964953189958,
+      "reliable": true,
+      "taken": 86
+    },
+    "finesse_offspeed": {
+      "csr": 0.27956989247311825,
+      "delta_vs_league": -0.06568543107453523,
+      "reliable": true,
+      "taken": 93
+    },
+    "power": {
+      "csr": 0.2978723404255319,
+      "delta_vs_league": -0.015933757553227956,
+      "reliable": false,
+      "taken": 47
+    },
+    "sinker_contact": {
+      "csr": 0.35443037974683544,
+      "delta_vs_league": 0.015868288243567452,
+      "reliable": true,
+      "taken": 79
+    }
+  },
+  "Ron Kulpa": {
+    "balanced": {
+      "csr": 0.35526315789473684,
+      "delta_vs_league": 0.022300546269340193,
+      "reliable": true,
+      "taken": 228
+    },
+    "breaking_heavy": {
+      "csr": 0.3387096774193548,
+      "delta_vs_league": -0.007231832577661024,
+      "reliable": true,
+      "taken": 124
+    },
+    "finesse_offspeed": {
+      "csr": 0.3142857142857143,
+      "delta_vs_league": -0.0309696092619392,
+      "reliable": false,
+      "taken": 35
+    },
+    "power": {
+      "csr": 0.25,
+      "delta_vs_league": -0.06380609797875986,
+      "reliable": false,
+      "taken": 12
+    },
+    "sinker_contact": {
+      "csr": 0.2857142857142857,
+      "delta_vs_league": -0.052847805788982294,
+      "reliable": false,
+      "taken": 14
+    }
+  },
+  "Ryan Additon": {
+    "balanced": {
+      "csr": 0.4117647058823529,
+      "delta_vs_league": 0.07880209425695628,
+      "reliable": true,
+      "taken": 289
+    },
+    "breaking_heavy": {
+      "csr": 0.3511450381679389,
+      "delta_vs_league": 0.005203528170923066,
+      "reliable": true,
+      "taken": 131
+    },
+    "finesse_offspeed": {
+      "csr": 0.3173076923076923,
+      "delta_vs_league": -0.02794763123996119,
+      "reliable": true,
+      "taken": 104
+    },
+    "power": {
+      "csr": 0.2982456140350877,
+      "delta_vs_league": -0.015560483943672154,
+      "reliable": true,
+      "taken": 57
+    },
+    "sinker_contact": {
+      "csr": 0.304,
+      "delta_vs_league": -0.034562091503268,
+      "reliable": true,
+      "taken": 125
+    }
+  },
+  "Ryan Blakney": {
+    "balanced": {
+      "csr": 0.31470588235294117,
+      "delta_vs_league": -0.018256729272455474,
+      "reliable": true,
+      "taken": 340
+    },
+    "breaking_heavy": {
+      "csr": 0.4,
+      "delta_vs_league": 0.05405849000298418,
+      "reliable": true,
+      "taken": 140
+    },
+    "finesse_offspeed": {
+      "csr": 0.32142857142857145,
+      "delta_vs_league": -0.02382675211908203,
+      "reliable": true,
+      "taken": 84
+    },
+    "power": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": 0.019527235354573458,
+      "reliable": false,
+      "taken": 18
+    },
+    "sinker_contact": {
+      "csr": 0.32926829268292684,
+      "delta_vs_league": -0.009293798820341148,
+      "reliable": true,
+      "taken": 82
+    }
+  },
+  "Ryan Wills": {
+    "balanced": {
+      "csr": 0.3096774193548387,
+      "delta_vs_league": -0.02328519227055792,
+      "reliable": true,
+      "taken": 310
+    },
+    "breaking_heavy": {
+      "csr": 0.36942675159235666,
+      "delta_vs_league": 0.023485241595340822,
+      "reliable": true,
+      "taken": 157
+    },
+    "finesse_offspeed": {
+      "csr": 0.3076923076923077,
+      "delta_vs_league": -0.03756301585534577,
+      "reliable": false,
+      "taken": 13
+    },
+    "power": {
+      "csr": 0.4067796610169492,
+      "delta_vs_league": 0.09297356303818932,
+      "reliable": true,
+      "taken": 59
+    },
+    "sinker_contact": {
+      "csr": 0.3177570093457944,
+      "delta_vs_league": -0.02080508215747362,
+      "reliable": true,
+      "taken": 107
+    }
+  },
+  "Scott Barry": {
+    "balanced": {
+      "csr": 0.34104046242774566,
+      "delta_vs_league": 0.008077850802349018,
+      "reliable": true,
+      "taken": 346
+    },
+    "breaking_heavy": {
+      "csr": 0.3493150684931507,
+      "delta_vs_league": 0.003373558496134854,
+      "reliable": true,
+      "taken": 146
+    },
+    "finesse_offspeed": {
+      "csr": 0.4166666666666667,
+      "delta_vs_league": 0.0714113431190132,
+      "reliable": true,
+      "taken": 60
+    },
+    "power": {
+      "csr": 0.21052631578947367,
+      "delta_vs_league": -0.10327978218928618,
+      "reliable": false,
+      "taken": 38
+    },
+    "sinker_contact": {
+      "csr": 0.2857142857142857,
+      "delta_vs_league": -0.052847805788982294,
+      "reliable": false,
+      "taken": 42
+    }
+  },
+  "Sean Barber": {
+    "balanced": {
+      "csr": 0.30158730158730157,
+      "delta_vs_league": -0.03137531003809507,
+      "reliable": true,
+      "taken": 378
+    },
+    "breaking_heavy": {
+      "csr": 0.3149171270718232,
+      "delta_vs_league": -0.03102438292519266,
+      "reliable": true,
+      "taken": 181
+    },
+    "finesse_offspeed": {
+      "csr": 0.35294117647058826,
+      "delta_vs_league": 0.007685852922934777,
+      "reliable": true,
+      "taken": 51
+    },
+    "power": {
+      "csr": 0.2807017543859649,
+      "delta_vs_league": -0.03310434359279496,
+      "reliable": true,
+      "taken": 57
+    },
+    "sinker_contact": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.0052287581699346775,
+      "reliable": false,
+      "taken": 15
+    }
+  },
+  "Shane Livensparger": {
+    "balanced": {
+      "csr": 0.3069306930693069,
+      "delta_vs_league": -0.026031918556089717,
+      "reliable": true,
+      "taken": 303
+    },
+    "breaking_heavy": {
+      "csr": 0.38961038961038963,
+      "delta_vs_league": 0.04366887961337379,
+      "reliable": true,
+      "taken": 154
+    },
+    "finesse_offspeed": {
+      "csr": 0.3968253968253968,
+      "delta_vs_league": 0.05157007327774332,
+      "reliable": true,
+      "taken": 63
+    },
+    "power": {
+      "csr": 0.18181818181818182,
+      "delta_vs_league": -0.13198791616057803,
+      "reliable": false,
+      "taken": 22
+    },
+    "sinker_contact": {
+      "csr": 0.25510204081632654,
+      "delta_vs_league": -0.08346005068694146,
+      "reliable": true,
+      "taken": 98
+    }
+  },
+  "Steven Jaschinski": {
+    "balanced": {
+      "csr": 0.3609022556390977,
+      "delta_vs_league": 0.02793964401370108,
+      "reliable": true,
+      "taken": 133
+    },
+    "breaking_heavy": {
+      "csr": 0.20689655172413793,
+      "delta_vs_league": -0.1390449582728779,
+      "reliable": false,
+      "taken": 29
+    },
+    "finesse_offspeed": {
+      "csr": 0.2545454545454545,
+      "delta_vs_league": -0.09070986900219896,
+      "reliable": true,
+      "taken": 55
+    },
+    "power": {
+      "csr": 0.2,
+      "delta_vs_league": -0.11380609797875985,
+      "reliable": false,
+      "taken": 5
+    },
+    "sinker_contact": {
+      "csr": 0.42857142857142855,
+      "delta_vs_league": 0.09000933706816056,
+      "reliable": true,
+      "taken": 70
+    }
+  },
+  "Stu Scheurwater": {
+    "balanced": {
+      "csr": 0.32193732193732194,
+      "delta_vs_league": -0.011025289688074702,
+      "reliable": true,
+      "taken": 351
+    },
+    "breaking_heavy": {
+      "csr": 0.27225130890052357,
+      "delta_vs_league": -0.07369020109649227,
+      "reliable": true,
+      "taken": 191
+    },
+    "finesse_offspeed": {
+      "csr": 0.3870967741935484,
+      "delta_vs_league": 0.041841450645894895,
+      "reliable": false,
+      "taken": 31
+    },
+    "power": {
+      "csr": 0.32,
+      "delta_vs_league": 0.00619390202124015,
+      "reliable": true,
+      "taken": 50
+    },
+    "sinker_contact": {
+      "csr": 0.2698412698412698,
+      "delta_vs_league": -0.06872082166199817,
+      "reliable": true,
+      "taken": 63
+    }
+  },
+  "Todd Tichenor": {
+    "balanced": {
+      "csr": 0.32158590308370044,
+      "delta_vs_league": -0.011376708541696201,
+      "reliable": true,
+      "taken": 454
+    },
+    "breaking_heavy": {
+      "csr": 0.36363636363636365,
+      "delta_vs_league": 0.017694853639347807,
+      "reliable": true,
+      "taken": 88
+    },
+    "finesse_offspeed": {
+      "csr": 0.375,
+      "delta_vs_league": 0.02974467645234652,
+      "reliable": false,
+      "taken": 8
+    },
+    "power": {
+      "csr": 0.28125,
+      "delta_vs_league": -0.03255609797875986,
+      "reliable": false,
+      "taken": 32
+    },
+    "sinker_contact": {
+      "csr": 0.46938775510204084,
+      "delta_vs_league": 0.13082566359877285,
+      "reliable": false,
+      "taken": 49
+    }
+  },
+  "Tom Hanahan": {
+    "balanced": {
+      "csr": 0.3493975903614458,
+      "delta_vs_league": 0.016434978736049155,
+      "reliable": true,
+      "taken": 415
+    },
+    "breaking_heavy": {
+      "csr": 0.35517241379310344,
+      "delta_vs_league": 0.009230903796087597,
+      "reliable": true,
+      "taken": 290
+    },
+    "finesse_offspeed": {
+      "csr": 0.375,
+      "delta_vs_league": 0.02974467645234652,
+      "reliable": false,
+      "taken": 24
+    },
+    "power": {
+      "csr": 0.2608695652173913,
+      "delta_vs_league": -0.05293653276136856,
+      "reliable": false,
+      "taken": 46
+    },
+    "sinker_contact": {
+      "csr": 0.3968253968253968,
+      "delta_vs_league": 0.05826330532212881,
+      "reliable": true,
+      "taken": 63
+    }
+  },
+  "Tripp Gibson": {
+    "balanced": {
+      "csr": 0.3533834586466165,
+      "delta_vs_league": 0.02042084702121988,
+      "reliable": true,
+      "taken": 399
+    },
+    "breaking_heavy": {
+      "csr": 0.3448275862068966,
+      "delta_vs_league": -0.0011139237901192645,
+      "reliable": true,
+      "taken": 203
+    },
+    "finesse_offspeed": {
+      "csr": 0.3170731707317073,
+      "delta_vs_league": -0.02818215281594616,
+      "reliable": false,
+      "taken": 41
+    },
+    "power": {
+      "csr": 0.24390243902439024,
+      "delta_vs_league": -0.06990365895436962,
+      "reliable": false,
+      "taken": 41
+    },
+    "sinker_contact": {
+      "csr": 0.34234234234234234,
+      "delta_vs_league": 0.0037802508390743506,
+      "reliable": true,
+      "taken": 111
+    }
+  },
+  "Tyler Jones": {
+    "balanced": {
+      "csr": 0.31100478468899523,
+      "delta_vs_league": -0.021957826936401414,
+      "reliable": true,
+      "taken": 209
+    },
+    "breaking_heavy": {
+      "csr": 0.3508771929824561,
+      "delta_vs_league": 0.004935682985440282,
+      "reliable": true,
+      "taken": 57
+    },
+    "finesse_offspeed": {
+      "csr": 0.2909090909090909,
+      "delta_vs_league": -0.054346232638562586,
+      "reliable": true,
+      "taken": 55
+    },
+    "power": {
+      "csr": 0.2777777777777778,
+      "delta_vs_league": -0.03602832020098207,
+      "reliable": false,
+      "taken": 18
+    },
+    "sinker_contact": {
+      "csr": 0.25675675675675674,
+      "delta_vs_league": -0.08180533474651125,
+      "reliable": true,
+      "taken": 74
+    }
+  },
+  "Vic Carapazza": {
+    "balanced": {
+      "csr": 0.34,
+      "delta_vs_league": 0.007037388374603382,
+      "reliable": true,
+      "taken": 400
+    },
+    "breaking_heavy": {
+      "csr": 0.31390134529147984,
+      "delta_vs_league": -0.032040164705536,
+      "reliable": true,
+      "taken": 223
+    },
+    "finesse_offspeed": {
+      "csr": 0.3805309734513274,
+      "delta_vs_league": 0.035275649903673933,
+      "reliable": true,
+      "taken": 113
+    },
+    "power": {
+      "csr": 0.42105263157894735,
+      "delta_vs_league": 0.10724653360018749,
+      "reliable": false,
+      "taken": 19
+    },
+    "sinker_contact": {
+      "csr": 0.36046511627906974,
+      "delta_vs_league": 0.02190302477580175,
+      "reliable": true,
+      "taken": 86
+    }
+  },
+  "Will Little": {
+    "balanced": {
+      "csr": 0.33489461358313816,
+      "delta_vs_league": 0.0019320019577415137,
+      "reliable": true,
+      "taken": 427
+    },
+    "breaking_heavy": {
+      "csr": 0.36879432624113473,
+      "delta_vs_league": 0.02285281624411889,
+      "reliable": true,
+      "taken": 141
+    },
+    "finesse_offspeed": {
+      "csr": 0.3,
+      "delta_vs_league": -0.04525532354765349,
+      "reliable": true,
+      "taken": 60
+    },
+    "power": {
+      "csr": 0.25,
+      "delta_vs_league": -0.06380609797875986,
+      "reliable": true,
+      "taken": 64
+    },
+    "sinker_contact": {
+      "csr": 0.3333333333333333,
+      "delta_vs_league": -0.0052287581699346775,
+      "reliable": true,
+      "taken": 81
+    }
+  },
+  "Willie Traynor": {
+    "balanced": {
+      "csr": 0.29958677685950413,
+      "delta_vs_league": -0.03337583476589251,
+      "reliable": true,
+      "taken": 484
+    },
+    "breaking_heavy": {
+      "csr": 0.22868217054263565,
+      "delta_vs_league": -0.11725933945438019,
+      "reliable": true,
+      "taken": 258
+    },
+    "finesse_offspeed": {
+      "csr": 0.2608695652173913,
+      "delta_vs_league": -0.08438575833026218,
+      "reliable": true,
+      "taken": 69
+    },
+    "power": {
+      "csr": 0.18181818181818182,
+      "delta_vs_league": -0.13198791616057803,
+      "reliable": false,
+      "taken": 22
+    },
+    "sinker_contact": {
+      "csr": 0.323943661971831,
+      "delta_vs_league": -0.014618429531436994,
+      "reliable": true,
+      "taken": 71
+    }
+  },
+  "_meta": {
+    "end_date": "2026-06-10",
+    "games": 941,
+    "generated": "2026-06-11T14:09:39.438570+00:00",
+    "start_date": "2026-04-01",
+    "taken_pitches": 57851
+  }
+}

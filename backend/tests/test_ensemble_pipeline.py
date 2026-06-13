@@ -100,7 +100,7 @@ def test_predict_pitcher_ensemble_with_odds():
     assert "edge" in out
     assert out["recommendation"] in {"Strong Play", "Lean", "No Bet", "Pass"}
     # All seven ensemble lenses are present in the breakdown.
-    assert len(out["components"]) == 7
+    assert len(out["components"]) == 10
 
 
 @respx.mock

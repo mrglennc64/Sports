@@ -199,6 +199,66 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
         )
     )
 
+    # 8. Bullpen / opener leash: a VOLUME cap the book is slow to price.
+    if inputs.bullpen is not None:
+        leash = inputs.bullpen.leash_factor
+        if inputs.bullpen.is_opener:
+            leash_detail = f"OPENER — volume x {leash:.2f}"
+        elif leash < 1.0:
+            leash_detail = f"short leash — volume x {leash:.2f}"
+        else:
+            leash_detail = f"full start — volume x {leash:.2f}"
+    else:
+        leash = 1.0
+        leash_detail = "no bullpen data; matchup"
+    components.append(
+        ComponentEstimate(
+            name="bullpen_leash",
+            weight=w.bullpen_leash,
+            estimate_ks=matchup_estimate * leash,
+            detail=leash_detail,
+        )
+    )
+
+    # 9. Weather (small K nudge; domes neutral).
+    if inputs.weather is not None and not inputs.weather.is_dome:
+        wx = inputs.weather.k_factor
+        wx_detail = f"matchup x {wx:.3f} weather"
+        if inputs.weather.temperature_f is not None:
+            wx_detail += f" ({inputs.weather.temperature_f:.0f}F)"
+    elif inputs.weather is not None and inputs.weather.is_dome:
+        wx = 1.0
+        wx_detail = "dome; neutral"
+    else:
+        wx = 1.0
+        wx_detail = "no weather data; matchup"
+    components.append(
+        ComponentEstimate(
+            name="weather",
+            weight=w.weather,
+            estimate_ks=matchup_estimate * wx,
+            detail=wx_detail,
+        )
+    )
+
+    # 10. Catcher framing (steals/loses called strikes -> nudges Ks).
+    if inputs.catcher is not None:
+        cf = inputs.catcher.k_factor
+        cf_detail = f"matchup x {cf:.3f} framing"
+        if inputs.catcher.framing_runs is not None:
+            cf_detail += f" ({inputs.catcher.framing_runs:+.0f} runs)"
+    else:
+        cf = 1.0
+        cf_detail = "no framing data; matchup"
+    components.append(
+        ComponentEstimate(
+            name="catcher_framing",
+            weight=w.catcher_framing,
+            estimate_ks=matchup_estimate * cf,
+            detail=cf_detail,
+        )
+    )
+
     projected = sum(c.weight * c.estimate_ks for c in components)
 
     return ProjectionResult(

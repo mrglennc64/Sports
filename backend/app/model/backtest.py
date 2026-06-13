@@ -48,6 +48,9 @@ _WEIGHT_FIELDS = (
     "umpire",
     "pitch_count",
     "pitch_mix",
+    "bullpen_leash",
+    "weather",
+    "catcher_framing",
 )
 
 

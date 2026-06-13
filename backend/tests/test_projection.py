@@ -65,7 +65,7 @@ def test_projection_is_realistic():
     assert result.expected_batters_faced == pytest.approx(5.8 * 4.3)
 
 
-def test_all_seven_components_present():
+def test_all_components_present():
     result = project(make_inputs())
     names = {c.name for c in result.components}
     assert names == {
@@ -76,6 +76,9 @@ def test_all_seven_components_present():
         "umpire",
         "pitch_count",
         "pitch_mix",
+        "bullpen_leash",
+        "weather",
+        "catcher_framing",
     }
 
 
@@ -237,6 +240,9 @@ def test_custom_weights_change_projection():
             umpire=0.0,
             pitch_count=0.0,
             pitch_mix=0.0,
+            bullpen_leash=0.0,
+            weather=0.0,
+            catcher_framing=0.0,
         )
     )
     result = project(make_inputs(), cfg)

@@ -42,13 +42,19 @@ class OpponentBlendWeights(BaseModel):
 class ComponentWeights(BaseModel):
     """Top-level ensemble weights (the v2 formula). Should sum to ~1.0."""
 
-    opponent_k_profile: float = Field(0.30, ge=0)
-    pitcher_recent_form: float = Field(0.25, ge=0)
-    expected_innings: float = Field(0.20, ge=0)
-    lineup_strength: float = Field(0.10, ge=0)
+    opponent_k_profile: float = Field(0.26, ge=0)
+    pitcher_recent_form: float = Field(0.22, ge=0)
+    expected_innings: float = Field(0.18, ge=0)
+    lineup_strength: float = Field(0.09, ge=0)
     umpire: float = Field(0.05, ge=0)
-    pitch_count: float = Field(0.05, ge=0)
-    pitch_mix: float = Field(0.05, ge=0)
+    pitch_count: float = Field(0.04, ge=0)
+    pitch_mix: float = Field(0.04, ge=0)
+    # New edge-hunting factors (2026-06-13): late-breaking inputs the book is
+    # slow to price. All neutral (factor 1.0) when their data is absent, so the
+    # projection degrades gracefully to the prior 7-factor behaviour.
+    bullpen_leash: float = Field(0.04, ge=0)
+    weather: float = Field(0.04, ge=0)
+    catcher_framing: float = Field(0.04, ge=0)
 
     @model_validator(mode="after")
     def _sums_to_one(self) -> "ComponentWeights":
@@ -66,6 +72,9 @@ class ComponentWeights(BaseModel):
             "umpire": self.umpire,
             "pitch_count": self.pitch_count,
             "pitch_mix": self.pitch_mix,
+            "bullpen_leash": self.bullpen_leash,
+            "weather": self.weather,
+            "catcher_framing": self.catcher_framing,
         }
 
 

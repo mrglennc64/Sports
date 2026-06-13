@@ -38,7 +38,7 @@ def test_bridge_half_line_probs_sum_to_one():
 def test_bridge_without_odds_omits_edge():
     out = predict_with_ensemble(make_inputs(), line=6.5)
     assert "edge" not in out
-    assert "components" in out and len(out["components"]) == 7
+    assert "components" in out and len(out["components"]) == 10
 
 
 def test_bridge_with_odds_produces_edge_and_verdict():

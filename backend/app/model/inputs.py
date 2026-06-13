@@ -96,6 +96,50 @@ class PitchMixMatchup(BaseModel):
     pitches: list[PitchUsage] = Field(default_factory=list)
 
 
+class BullpenContext(BaseModel):
+    """Opener / short-leash signal — a VOLUME edge books are slow to price.
+
+    If tonight's "starter" is really an opener (1-2 innings) or on a short
+    leash coming off injury / a piggyback plan, his strikeout ceiling is
+    capped no matter how good the matchup. ``leash_factor`` is the fraction
+    of a normal start's volume expected (1.0 = full normal start, 0.35 = an
+    opener, ~0.8 = a short leash). Derived point-in-time from recent
+    innings-per-start and the probable-pitcher role, never from tonight's
+    result.
+    """
+
+    is_opener: bool = False
+    leash_factor: float = Field(1.0, gt=0, le=1.2)
+
+
+class WeatherContext(BaseModel):
+    """First-pitch weather at the park. Small but real K effect.
+
+    Cold air and high wind modestly suppress contact quality; the net K
+    effect is minor, so this is a low-weight nudge. ``k_factor`` is the
+    multiplier on the matchup K rate (1.0 = neutral ~72F calm). Domes are
+    always neutral.
+    """
+
+    temperature_f: float | None = None
+    wind_mph: float | None = None
+    is_dome: bool = False
+    k_factor: float = Field(1.0, gt=0)
+
+
+class CatcherFraming(BaseModel):
+    """Tonight's catcher's pitch-framing skill — steals/loses called strikes.
+
+    A plus framer (e.g. +10 framing runs/yr) expands the effective zone and
+    nudges Ks up; a poor framer the reverse. ``k_factor`` is the multiplier
+    on the matchup K rate (1.0 = league-average framer). Season-to-date
+    framing must be reconstructed as-of the game date in the historical path.
+    """
+
+    framing_runs: float | None = None
+    k_factor: float = Field(1.0, gt=0)
+
+
 class ProjectionInputs(BaseModel):
     """The full bundle of inputs for one pitcher in one game."""
 
@@ -106,3 +150,6 @@ class ProjectionInputs(BaseModel):
     lineup: LineupStrength
     umpire: UmpireProfile | None = None
     pitch_mix: PitchMixMatchup | None = None
+    bullpen: BullpenContext | None = None
+    weather: WeatherContext | None = None
+    catcher: CatcherFraming | None = None
