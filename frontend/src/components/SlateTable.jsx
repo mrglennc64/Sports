@@ -38,11 +38,20 @@ export default function SlateTable({ rows }) {
           const g = edgeGrade(r.edge);
           const sideOdds = r.side === "over" ? r.over_odds : r.under_odds;
           return (
-            <tr key={i} className={r.bet ? "bet" : r.low_confidence ? "lowconf" : ""}>
+            <tr
+              key={i}
+              className={
+                r.selected ? "carded" : r.bet ? "bet" : r.low_confidence ? "lowconf" : ""
+              }
+            >
               <td><span className={`grade ${g.cls}`}>{g.label}</span></td>
               <td className="pitcher">
+                {r.selected && <span className="tag tag-card">⭐ #{r.card_rank}</span>}
                 {r.pitcher}
-                {r.bet && <span className="tag tag-bet">BET</span>}
+                {r.bet && !r.selected && <span className="tag tag-bet">BET</span>}
+                {r.bet && !r.selected && r.card_excluded && (
+                  <span className="tag tag-low" title={r.card_excluded}>off card</span>
+                )}
                 {r.low_confidence && <span className="tag tag-low">low sample</span>}
               </td>
               <td>{r.opponent}</td>

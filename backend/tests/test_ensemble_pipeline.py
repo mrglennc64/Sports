@@ -150,7 +150,7 @@ def test_v2_predict_route_404_on_lookup_error(monkeypatch):
 
 
 def test_v2_slate_route_applies_min_edge_filter(monkeypatch):
-    async def fake(date):
+    async def fake(date, **kwargs):
         return {
             "date": date,
             "count": 3,

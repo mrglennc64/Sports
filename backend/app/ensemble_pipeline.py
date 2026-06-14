@@ -22,6 +22,8 @@ from app.data.park import park_factor
 from app.data.savant import SavantClient
 from app.data.umpires import UmpireTable, load_umpire_table
 from app.model.bridge import predict_with_ensemble
+from app.model.inputs import ProjectionInputs
+from app.model.selection import input_completeness, select_card
 
 
 def _load_umpires(settings: Settings) -> UmpireTable | None:
@@ -98,6 +100,17 @@ def _match_prop(start: ProbableStart, props: list[PropLine]) -> PropLine | None:
     return None
 
 
+def _completeness(inputs: ProjectionInputs, settings: Settings) -> float:
+    """How fully-supported this projection is — feeds the card completeness gate."""
+    form = inputs.pitcher_form
+    return input_completeness(
+        starts_ok=len(form.recent_start_ks) >= settings.min_recent_starts,
+        has_umpire=inputs.umpire is not None,
+        has_whiff=form.csw_pct is not None or form.swinging_strike_pct is not None,
+        has_pitch_mix=inputs.pitch_mix is not None and bool(inputs.pitch_mix.pitches),
+    )
+
+
 async def build_slate_ensemble(
     date: str,
     *,
@@ -106,12 +119,24 @@ async def build_slate_ensemble(
     umpire_table: UmpireTable | None = None,
     savant: SavantClient | None = None,
     settings: Settings = default_settings,
+    max_bets: int = 4,
+    max_per_game: int = 1,
+    select_min_edge: float = 0.05,
+    select_max_edge: float = 0.20,
+    min_completeness: float = 0.5,
 ) -> dict:
     """Ranked +EV pitcher-strikeout edges for ``date`` via the ensemble bridge.
 
     Every probable start is projected; starts matched to a sportsbook prop also
     get a de-vigged edge + Kelly + verdict. Rows are returned with the priced
     edges first (highest edge first), then the projection-only rows.
+
+    A small **bet card** is also selected (:func:`app.model.selection.select_card`):
+    the top ``max_bets`` priced bets inside the ``[select_min_edge,
+    select_max_edge]`` band, diversified to ``max_per_game`` per game and gated by
+    input ``min_completeness``. Card rows carry ``selected=True`` + ``card_rank``;
+    other bets carry ``card_excluded`` with the reason. This is the "bet these N,
+    not all 20" view for a small bankroll.
     """
     owns = client is None
     client = client or StatsApiClient()
@@ -144,6 +169,8 @@ async def build_slate_ensemble(
             out["opponent"] = start.opponent_team_name
             out["venue"] = start.venue_name
             out["park"] = park
+            out["game_pk"] = start.game_pk
+            out["completeness"] = round(_completeness(inputs, settings), 3)
             if prop is not None:
                 out["bookmaker"] = prop.bookmaker
                 out["status"] = "ok"
@@ -156,12 +183,23 @@ async def build_slate_ensemble(
                 unpriced.append(out)
 
         priced.sort(key=lambda r: r.get("edge", float("-inf")), reverse=True)
+        card = select_card(
+            priced,
+            max_bets=max_bets,
+            max_per_game=max_per_game,
+            min_edge=select_min_edge,
+            max_edge=select_max_edge,
+            min_completeness=min_completeness,
+        )
         rows = priced + unpriced
         return {
             "date": date,
             "count": len(rows),
             "evaluated": len(priced),
             "bets": sum(1 for r in priced if r.get("bet")),
+            "skipped": len(unpriced),
+            "card_size": len(card),
+            "card": card,
             "rows": rows,
         }
     finally:

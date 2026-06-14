@@ -5,7 +5,7 @@ export async function fetchSlate(date, minEdge) {
   const params = new URLSearchParams();
   if (date) params.set("date", date);
   if (minEdge != null && minEdge !== "") params.set("min_edge", minEdge);
-  const res = await fetch(`${BASE}/slate?${params.toString()}`);
+  const res = await fetch(`${BASE}/v2/slate?${params.toString()}`);
   if (!res.ok) throw new Error(`slate request failed: ${res.status}`);
   return res.json();
 }

@@ -7,6 +7,9 @@ export default function SimpleCards({ rows }) {
     .filter((r) => r.status === "ok")
     .sort(
       (a, b) =>
+        // carded plays first, then by signal strength, then edge
+        (a.selected ? 0 : 1) - (b.selected ? 0 : 1) ||
+        (a.card_rank ?? 99) - (b.card_rank ?? 99) ||
         (SIGNAL_RANK[a.signal] ?? 3) - (SIGNAL_RANK[b.signal] ?? 3) ||
         b.edge - a.edge
     );
@@ -16,10 +19,14 @@ export default function SimpleCards({ rows }) {
   return (
     <div className="cards">
       {cards.map((r, i) => (
-        <div key={i} className={`card sig-${r.signal}`}>
+        <div key={i} className={`card sig-${r.signal}${r.selected ? " carded" : ""}`}>
           <div className="card-top">
             <span className="card-signal">{SIGNAL_EMOJI[r.signal]} {r.recommendation}</span>
-            <span className="card-conf">{r.confidence} confidence</span>
+            {r.selected ? (
+              <span className="card-badge">⭐ Card #{r.card_rank}</span>
+            ) : (
+              <span className="card-conf">{r.confidence} confidence</span>
+            )}
           </div>
           <div className="card-pick">
             {r.pitcher} <b>{r.side?.toUpperCase()} {r.line} Ks</b>

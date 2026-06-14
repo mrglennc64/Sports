@@ -140,9 +140,24 @@ async def predict_v2(
 async def slate_v2(
     date: str | None = Query(None, description="YYYY-MM-DD; defaults to today"),
     min_edge: float | None = Query(None, description="Filter: only rows with edge >= this"),
+    max_bets: int = Query(4, ge=1, description="Card: max bets to flag"),
+    max_per_game: int = Query(1, ge=1, description="Card: max bets from one game"),
+    select_min_edge: float = Query(0.05, description="Card: min edge to be eligible"),
+    select_max_edge: float = Query(0.20, description="Card: cap on edge (above = likely model error)"),
+    min_completeness: float = Query(0.5, ge=0, le=1, description="Card: min input-completeness score"),
 ) -> dict:
-    """Ranked +EV pitcher-strikeout edges for a date via the v2 ensemble bridge."""
-    result = await build_slate_ensemble(date or _today())
+    """Ranked +EV pitcher-strikeout edges for a date via the v2 ensemble bridge.
+
+    Also returns a diversified ``card`` of the top ``max_bets`` plays for a small
+    bankroll (edge band + per-game cap + input-completeness gate)."""
+    result = await build_slate_ensemble(
+        date or _today(),
+        max_bets=max_bets,
+        max_per_game=max_per_game,
+        select_min_edge=select_min_edge,
+        select_max_edge=select_max_edge,
+        min_completeness=min_completeness,
+    )
     if min_edge is not None:
         result["rows"] = [
             r for r in result["rows"]

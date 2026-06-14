@@ -78,6 +78,7 @@ table.slate {
 .slate tr:last-child td { border-bottom: 0; }
 .slate tr.bet { background: rgba(31, 111, 235, 0.08); }
 .slate tr.lowconf { opacity: 0.55; }
+.slate tr.carded { background: rgba(240, 185, 11, 0.12); box-shadow: inset 3px 0 0 #f0b90b; }
 
 .pitcher { font-weight: 600; }
 .tag {
@@ -90,6 +91,7 @@ table.slate {
 }
 .tag-bet { background: var(--bet); color: #fff; }
 .tag-low { background: #30363d; color: var(--muted); }
+.tag-card { background: #f0b90b; color: #1a1a00; margin-left: 0; margin-right: 8px; }
 
 .side-over { color: #58a6ff; }
 .side-under { color: #d29922; }
@@ -127,9 +129,11 @@ table.slate {
 .card.sig-strong { border-left-color: var(--pos); }
 .card.sig-lean { border-left-color: #d29922; }
 .card.sig-avoid { border-left-color: #6e7681; opacity: 0.8; }
+.card.carded { border-color: #f0b90b; border-left-color: #f0b90b; box-shadow: 0 0 0 1px #f0b90b; opacity: 1; }
 .card-top { display: flex; justify-content: space-between; align-items: baseline; }
 .card-signal { font-weight: 700; }
 .card-conf { color: var(--muted); font-size: 12px; }
+.card-badge { background: #f0b90b; color: #1a1a00; font-weight: 700; font-size: 11px; padding: 1px 7px; border-radius: 4px; }
 .card-pick { margin: 8px 0 2px; font-size: 15px; }
 .card-vs { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
 .card-reasons { margin: 0 0 10px; padding-left: 18px; color: var(--text); font-size: 13px; }

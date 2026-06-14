@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [betsOnly, setBetsOnly] = useState(false);
+  const [cardOnly, setCardOnly] = useState(false);
   const [mode, setMode] = useState("simple"); // "simple" | "pro"
 
   async function load(d) {
@@ -35,7 +36,8 @@ export default function Dashboard() {
   }, []);
 
   let rows = data?.rows ?? [];
-  if (betsOnly) rows = rows.filter((r) => r.bet);
+  if (cardOnly) rows = rows.filter((r) => r.selected);
+  else if (betsOnly) rows = rows.filter((r) => r.bet);
 
   return (
     <div className="app">
@@ -70,6 +72,14 @@ export default function Dashboard() {
           />
           Sharp bets only
         </label>
+        <label className="toggle">
+          <input
+            type="checkbox"
+            checked={cardOnly}
+            onChange={(e) => setCardOnly(e.target.checked)}
+          />
+          Today's card only
+        </label>
         <div className="modes">
           <button
             className={mode === "simple" ? "active" : ""}
@@ -92,6 +102,7 @@ export default function Dashboard() {
         <div className="summary">
           <span><b>{data.evaluated}</b> evaluated</span>
           <span><b>{data.bets}</b> flagged bets</span>
+          <span>⭐ <b>{data.card_size}</b> on the card</span>
           <span><b>{data.skipped}</b> skipped (no prop / no stats)</span>
         </div>
       )}
