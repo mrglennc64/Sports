@@ -133,9 +133,11 @@ def test_theoddsapi_requires_key():
 
 # --- odds-api.io adapter ------------------------------------------------------
 
-# Mirrors the documented odds-api.io shape: bookmakers -> [{name, odds:[{label,
-# hdp, over, under}]}] with DECIMAL price strings. Each row already carries both
-# sides at one line. DraftKings is more preferred than FanDuel in DEFAULT_BOOKS.
+# Mirrors the LIVE odds-api.io shape (verified 2026-06-15): all props sit in one
+# market named "Player Props"; the prop TYPE is in each row's label as
+# "Pitcher Name (Prop Type)". Pitcher Ks = "(Pitcher Strikeouts)" (two-sided);
+# batter Ks = "(Total Strikeouts)" (often over-only) and must be excluded. Prices
+# are DECIMAL strings. DraftKings is more preferred than FanDuel in DEFAULT_BOOKS.
 IO_PROPS_PAYLOAD = {
     "id": 123,
     "home": "Philadelphia Phillies",
@@ -143,22 +145,24 @@ IO_PROPS_PAYLOAD = {
     "bookmakers": {
         "FanDuel": [
             {
-                "name": "Player Props - Pitcher Strikeouts",
-                "odds": [{"label": "Aaron Nola", "hdp": 5.5, "over": "1.95", "under": "1.85"}],
+                "name": "Player Props",
+                "odds": [
+                    {"label": "Aaron Nola (Pitcher Strikeouts)", "hdp": 5.5, "over": "1.95", "under": "1.85"}
+                ],
             }
         ],
         "DraftKings": [
             {
-                "name": "Player Props - Strikeouts",
+                "name": "Player Props",
                 "odds": [
-                    {"label": "Aaron Nola", "hdp": 5.5, "over": "2.00", "under": "1.80"},
-                    {"label": "Bryce Elder", "hdp": 4.5, "over": "1.90", "under": "1.90"},
+                    {"label": "Aaron Nola (Pitcher Strikeouts)", "hdp": 5.5, "over": "2.00", "under": "1.80"},
+                    {"label": "Bryce Elder (Pitcher Strikeouts)", "hdp": 4.5, "over": "1.90", "under": "1.90"},
+                    # batter strikeout prop -> excluded (wrong type, over-only)
+                    {"label": "Bryce Harper (Total Strikeouts)", "hdp": 0.5, "over": "1.49"},
+                    # non-strikeout prop -> excluded
+                    {"label": "J.T. Realmuto (Singles)", "hdp": 0.5, "over": "1.98", "under": "1.73"},
                 ],
-            },
-            {  # non-strikeout market is ignored
-                "name": "Player Props - Hits Allowed",
-                "odds": [{"label": "Aaron Nola", "hdp": 5.5, "over": "1.9", "under": "1.9"}],
-            },
+            }
         ],
     },
 }
@@ -196,13 +200,16 @@ def test_io_props_converts_decimal_and_prefers_book():
     p = OddsApiIoProvider("KEY", client=httpx.Client(base_url=IO_BASE))
     by_name = {pl.pitcher_name: pl for pl in p.get_strikeout_props("123")}
 
-    nola = by_name["Aaron Nola"]
+    nola = by_name["Aaron Nola"]  # label parenthetical stripped to clean name
     assert nola.bookmaker == "draftkings"  # preferred over fanduel
     assert nola.line == 5.5
     assert nola.over_odds == pytest.approx(100.0)   # decimal 2.00
     assert nola.under_odds == pytest.approx(-125.0)  # decimal 1.80
     # even-money 1.90 both sides -> symmetric American
     assert by_name["Bryce Elder"].over_odds == pytest.approx(-111.111, rel=1e-3)
+    # batter "Total Strikeouts" and non-strikeout props are excluded
+    assert "Bryce Harper" not in by_name
+    assert "J.T. Realmuto" not in by_name
 
 
 @respx.mock
@@ -223,11 +230,12 @@ def test_io_props_drops_incomplete_rows():
         "bookmakers": {
             "DraftKings": [
                 {
-                    "name": "Player Props - Strikeouts",
+                    "name": "Player Props",
                     "odds": [
-                        {"label": "No Under", "hdp": 6.5, "over": "1.9"},  # missing under
-                        {"label": "Bad Price", "hdp": 5.5, "over": "1.00", "under": "1.9"},  # dec<=1
-                        {"label": "No Line", "over": "1.9", "under": "1.9"},  # missing hdp
+                        {"label": "No Under (Pitcher Strikeouts)", "hdp": 6.5, "over": "1.9"},  # missing under
+                        {"label": "Bad Price (Pitcher Strikeouts)", "hdp": 5.5, "over": "1.00", "under": "1.9"},  # dec<=1
+                        {"label": "No Line (Pitcher Strikeouts)", "over": "1.9", "under": "1.9"},  # missing hdp
+                        {"label": "No Type Marker", "hdp": 5.5, "over": "1.9", "under": "1.9"},  # no "(...)"
                     ],
                 }
             ]

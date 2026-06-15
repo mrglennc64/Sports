@@ -9,6 +9,7 @@ The abstract ``OddsProvider`` boundary means either can be swapped in without to
 """
 from __future__ import annotations
 
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
@@ -200,18 +201,26 @@ def _pair_outcomes(outcomes: list[dict]) -> dict[str, tuple[float, float, float]
 class OddsApiIoProvider(OddsProvider):
     """Adapter for odds-api.io (the UUID-key service).
 
-    Shape differs from the-odds-api: events are keyed by ``sport``+``league``
-    slugs; odds come back grouped ``bookmakers -> [{name, odds:[{label, hdp,
-    over, under}]}]`` where each prop row already carries BOTH sides at one line
-    (no Over/Under pairing needed) and prices are DECIMAL strings (converted to
-    American here so the downstream de-vig/Kelly stack is provider-agnostic).
+    Shape differs from the-odds-api (verified against the live API 2026-06-15):
+    events are keyed by ``sport``+``league`` slugs; odds come back grouped
+    ``bookmakers -> {BookName: [{name, odds:[{label, hdp, over, under}]}]}``.
+    All player props live in ONE market named ``"Player Props"`` — the prop TYPE
+    is embedded in each row's ``label`` as ``"Pitcher Name (Prop Type)"``, e.g.
+    ``"Ryan Gusto (Pitcher Strikeouts)"``. Pitcher Ks are ``"(Pitcher Strikeouts)"``
+    and carry both sides; batter Ks are ``"(Total Strikeouts)"`` (often over-only)
+    and are excluded. Each row already pairs both sides at one line (no Over/Under
+    matching needed); prices are DECIMAL strings, converted to American here so the
+    downstream de-vig/Kelly stack stays provider-agnostic.
     """
 
     BASE_URL = "https://api.odds-api.io/v3"
     SPORT = "baseball"
     LEAGUE = "usa-mlb"
-    # odds-api.io expects book names in this exact casing on the request.
-    IO_BOOKS = ("DraftKings", "FanDuel", "BetMGM", "Caesars", "Bovada", "BetRivers")
+    PROPS_MARKET = "player props"      # market name (case-insensitive contains)
+    STRIKEOUT_TYPE = "pitcher strikeout"  # label parenthetical (excludes "total strikeouts")
+    # odds-api.io expects book names in this exact casing on the request. The free
+    # tier caps a request at 2 bookmakers (3+ -> 403), so request the top two only.
+    IO_BOOKS = ("DraftKings", "FanDuel")
 
     def __init__(
         self,
@@ -283,10 +292,10 @@ class OddsApiIoProvider(OddsProvider):
         for raw_book, markets in (payload.get("bookmakers") or {}).items():
             book = _norm_io_book(raw_book)
             for market in markets or []:
-                if "strikeout" not in (market.get("name") or "").lower():
+                if self.PROPS_MARKET not in (market.get("name") or "").lower():
                     continue
                 for o in market.get("odds") or []:
-                    row = _parse_io_row(o)
+                    row = _parse_io_row(o, self.STRIKEOUT_TYPE)
                     if row is not None:
                         out.setdefault(book, []).append(row)
         return out
@@ -297,15 +306,29 @@ def _norm_io_book(name: str) -> str:
     return (name or "").lower().replace(" ", "")
 
 
-def _parse_io_row(o: dict) -> tuple[str, float, float, float] | None:
+def _split_io_label(label: str) -> tuple[str, str]:
+    """'Ryan Gusto (Pitcher Strikeouts)' -> ('Ryan Gusto', 'Pitcher Strikeouts').
+
+    Returns ('', '') if the trailing '(Prop Type)' marker is absent.
+    """
+    m = re.search(r"^(.*?)\s*\(([^)]*)\)\s*$", label or "")
+    if not m:
+        return "", ""
+    return m.group(1).strip(), m.group(2).strip()
+
+
+def _parse_io_row(o: dict, want_type: str) -> tuple[str, float, float, float] | None:
     """One {label, hdp, over, under} row -> (pitcher, line, over_am, under_am).
 
-    Skips rows missing a name, line, or either side (de-vig needs the pair).
-    Decimal price strings are converted to American.
+    Keeps only rows whose label prop-type contains ``want_type`` (e.g. pitcher
+    strikeouts, excluding batter "Total Strikeouts"). Skips rows missing a name,
+    line, or either side (de-vig needs the pair). Decimal prices -> American.
     """
-    pitcher = o.get("label")
+    pitcher, prop_type = _split_io_label(o.get("label", ""))
+    if not pitcher or want_type not in prop_type.lower():
+        return None
     point = o.get("hdp")
-    if not pitcher or point is None:
+    if point is None:
         return None
     over_am = _io_price_to_american(o.get("over"))
     under_am = _io_price_to_american(o.get("under"))
