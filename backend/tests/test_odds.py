@@ -3,7 +3,14 @@ import pytest
 import respx
 
 from app.data.names import names_match, normalize_name
-from app.data.odds import TheOddsApiProvider, get_provider, UnconfiguredProvider
+from app.data.odds import (
+    OddsApiIoProvider,
+    TheOddsApiProvider,
+    UnconfiguredProvider,
+    get_provider,
+)
+
+IO_BASE = "https://api.odds-api.io/v3"
 
 BASE = "https://api.the-odds-api.com/v4"
 
@@ -114,7 +121,7 @@ def test_props_drops_unpaired_side():
 
 def test_get_provider_selection():
     assert isinstance(get_provider("theoddsapi", "hex", ""), TheOddsApiProvider)
-    assert isinstance(get_provider("oddsapiio", "", "uuid"), UnconfiguredProvider)
+    assert isinstance(get_provider("oddsapiio", "", "uuid"), OddsApiIoProvider)
     with pytest.raises(ValueError):
         get_provider("nope", "", "")
 
@@ -122,3 +129,115 @@ def test_get_provider_selection():
 def test_theoddsapi_requires_key():
     with pytest.raises(ValueError):
         TheOddsApiProvider("")
+
+
+# --- odds-api.io adapter ------------------------------------------------------
+
+# Mirrors the documented odds-api.io shape: bookmakers -> [{name, odds:[{label,
+# hdp, over, under}]}] with DECIMAL price strings. Each row already carries both
+# sides at one line. DraftKings is more preferred than FanDuel in DEFAULT_BOOKS.
+IO_PROPS_PAYLOAD = {
+    "id": 123,
+    "home": "Philadelphia Phillies",
+    "away": "Atlanta Braves",
+    "bookmakers": {
+        "FanDuel": [
+            {
+                "name": "Player Props - Pitcher Strikeouts",
+                "odds": [{"label": "Aaron Nola", "hdp": 5.5, "over": "1.95", "under": "1.85"}],
+            }
+        ],
+        "DraftKings": [
+            {
+                "name": "Player Props - Strikeouts",
+                "odds": [
+                    {"label": "Aaron Nola", "hdp": 5.5, "over": "2.00", "under": "1.80"},
+                    {"label": "Bryce Elder", "hdp": 4.5, "over": "1.90", "under": "1.90"},
+                ],
+            },
+            {  # non-strikeout market is ignored
+                "name": "Player Props - Hits Allowed",
+                "odds": [{"label": "Aaron Nola", "hdp": 5.5, "over": "1.9", "under": "1.9"}],
+            },
+        ],
+    },
+}
+
+
+@respx.mock
+def test_io_list_events():
+    respx.get(f"{IO_BASE}/events").mock(
+        return_value=httpx.Response(
+            200,
+            json=[
+                {
+                    "id": 123,
+                    "home": "Philadelphia Phillies",
+                    "away": "Atlanta Braves",
+                    "date": "2026-06-15T17:36:00Z",
+                    "status": "pending",
+                }
+            ],
+        )
+    )
+    p = OddsApiIoProvider("KEY", client=httpx.Client(base_url=IO_BASE))
+    events = p.list_events()
+    assert len(events) == 1
+    assert events[0].event_id == "123"  # ints are stringified
+    assert events[0].home_team == "Philadelphia Phillies"
+    assert events[0].commence_time == "2026-06-15T17:36:00Z"
+
+
+@respx.mock
+def test_io_props_converts_decimal_and_prefers_book():
+    respx.get(f"{IO_BASE}/odds").mock(
+        return_value=httpx.Response(200, json=IO_PROPS_PAYLOAD)
+    )
+    p = OddsApiIoProvider("KEY", client=httpx.Client(base_url=IO_BASE))
+    by_name = {pl.pitcher_name: pl for pl in p.get_strikeout_props("123")}
+
+    nola = by_name["Aaron Nola"]
+    assert nola.bookmaker == "draftkings"  # preferred over fanduel
+    assert nola.line == 5.5
+    assert nola.over_odds == pytest.approx(100.0)   # decimal 2.00
+    assert nola.under_odds == pytest.approx(-125.0)  # decimal 1.80
+    # even-money 1.90 both sides -> symmetric American
+    assert by_name["Bryce Elder"].over_odds == pytest.approx(-111.111, rel=1e-3)
+
+
+@respx.mock
+def test_io_quotes_keeps_all_books():
+    respx.get(f"{IO_BASE}/odds").mock(
+        return_value=httpx.Response(200, json=IO_PROPS_PAYLOAD)
+    )
+    p = OddsApiIoProvider("KEY", client=httpx.Client(base_url=IO_BASE))
+    quotes = p.get_strikeout_quotes("123")
+    nola_books = {q.bookmaker for q in quotes["Aaron Nola"]}
+    assert nola_books == {"draftkings", "fanduel"}
+
+
+@respx.mock
+def test_io_props_drops_incomplete_rows():
+    payload = {
+        "id": 9,
+        "bookmakers": {
+            "DraftKings": [
+                {
+                    "name": "Player Props - Strikeouts",
+                    "odds": [
+                        {"label": "No Under", "hdp": 6.5, "over": "1.9"},  # missing under
+                        {"label": "Bad Price", "hdp": 5.5, "over": "1.00", "under": "1.9"},  # dec<=1
+                        {"label": "No Line", "over": "1.9", "under": "1.9"},  # missing hdp
+                    ],
+                }
+            ]
+        },
+    }
+    respx.get(f"{IO_BASE}/odds").mock(return_value=httpx.Response(200, json=payload))
+    p = OddsApiIoProvider("KEY", client=httpx.Client(base_url=IO_BASE))
+    assert p.get_strikeout_props("9") == []
+
+
+def test_io_requires_key():
+    with pytest.raises(ValueError):
+        OddsApiIoProvider("")
