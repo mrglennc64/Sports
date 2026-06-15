@@ -5,6 +5,8 @@ backend/.env
 # data / logs
 data/*.csv
 data/*.parquet
+data/*.duckdb
+data/*.log
 
 # python
 __pycache__/
