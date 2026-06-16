@@ -92,6 +92,18 @@ class ModelConfig(BaseModel):
     league_avg_k_rate: float = Field(0.22, gt=0, lt=1)
     reference_whiff_rate: float = Field(0.25, gt=0, lt=1)
 
+    # Type-matchup synthesis blend (analytics archetype model). 0.0 = OFF (the
+    # 7-factor ensemble is unchanged). >0 blends the final lambda toward the
+    # archetype-regressed matchup: lambda = (1-w)*ensemble + w*type_matchup.
+    # Separate from the sum-to-1 component weights on purpose. Needs pitcher_id
+    # on the inputs + the exported priors file, else it's a no-op.
+    type_matchup_weight: float = Field(0.0, ge=0, le=1)
+    type_matchup_shrink_pa: float = Field(
+        1600.0, gt=0,
+        description="EB strength (in PAs) regressing a pitcher toward his archetype; "
+        "the synthesis backtest's out-of-sample optimum.",
+    )
+
     # Betting evaluation.
     edge_threshold_ks: float = Field(
         0.5,

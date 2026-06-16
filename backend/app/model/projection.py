@@ -25,6 +25,7 @@ from statistics import mean
 
 from .inputs import ProjectionInputs
 from .result import BetEvaluation, ComponentEstimate, Lean, ProjectionResult
+from .type_matchup import type_matchup_lambda
 from .weights import ModelConfig
 
 
@@ -260,6 +261,33 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
     )
 
     projected = sum(c.weight * c.estimate_ks for c in components)
+
+    # Optional type-matchup synthesis blend (flag-gated; default weight 0 = off).
+    # Regresses the pitcher toward his archetype (sample-weighted) and re-runs the
+    # opponent matchup via log5 — the OOS-validated analytics synthesis. No-op when
+    # the weight is 0, no pitcher_id, or priors/archetype are unavailable, so the
+    # 7-factor ensemble behaviour is unchanged unless explicitly enabled.
+    tmw = cfg.type_matchup_weight
+    if tmw > 0 and inputs.pitcher_id is not None:
+        lam_type = type_matchup_lambda(
+            pitcher_id=inputs.pitcher_id,
+            recent_k_rate=pitcher_k,
+            opp_k_rate=opp_k,
+            expected_bf=bf,
+            n_starts=len(inputs.pitcher_form.recent_start_ks),
+            league_k=lg,
+            shrink_pa=cfg.type_matchup_shrink_pa,
+        )
+        if lam_type is not None:
+            components.append(
+                ComponentEstimate(
+                    name="type_matchup",
+                    weight=tmw,
+                    estimate_ks=lam_type,
+                    detail=f"archetype-regressed matchup, blended {tmw:.0%}",
+                )
+            )
+            projected = (1 - tmw) * projected + tmw * lam_type
 
     return ProjectionResult(
         pitcher_name=inputs.pitcher_name,

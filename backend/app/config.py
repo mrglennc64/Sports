@@ -51,5 +51,10 @@ class Settings(BaseSettings):
     # (the v2 framework: recent form + lineup + workload + umpire + ...).
     expected_ks_model: str = "ensemble"
 
+    # Type-matchup synthesis (analytics/): path to the exported archetype priors.
+    # The blend WEIGHT lives in ModelConfig.type_matchup_weight (default 0 = off);
+    # this is just where the prior file is found. Missing file -> blend is a no-op.
+    type_priors_path: str = "app/data/type_priors.json"
+
 
 settings = Settings()

@@ -144,6 +144,9 @@ class ProjectionInputs(BaseModel):
     """The full bundle of inputs for one pitcher in one game."""
 
     pitcher_name: str
+    # Optional MLB player id — lets the type-matchup synthesis look up the
+    # pitcher's archetype. None disables the blend for this start (no-op).
+    pitcher_id: int | None = None
     opponent: OpponentKProfile
     pitcher_form: PitcherRecentForm
     workload: ExpectedWorkload

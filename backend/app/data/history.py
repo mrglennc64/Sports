@@ -459,6 +459,7 @@ async def _build_asof_inputs(
 
     return ProjectionInputs(
         pitcher_name=start.pitcher_name,
+        pitcher_id=start.pitcher_id,
         opponent=opponent,
         pitcher_form=form,
         workload=workload,
