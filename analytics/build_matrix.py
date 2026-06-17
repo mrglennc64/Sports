@@ -70,7 +70,11 @@ def main() -> None:
                round((n_1b+n_2b+n_3b+n_hr)::DOUBLE
                      / nullif(n_pa - n_bb - n_ibb - n_hbp - n_sf - n_sh, 0), 4) AS ba,
                round((n_1b + 2*n_2b + 3*n_3b + 4*n_hr)::DOUBLE
-                     / nullif(n_pa - n_bb - n_ibb - n_hbp - n_sf - n_sh, 0), 4) AS slg
+                     / nullif(n_pa - n_bb - n_ibb - n_hbp - n_sf - n_sh, 0), 4) AS slg,
+               -- OBP = (H + BB + HBP) / (AB + BB + HBP + SF). The official
+               -- denominator excludes sacrifice BUNTS, so AB+BB+HBP+SF = PA - SH.
+               round((n_1b + n_2b + n_3b + n_hr + n_bb + n_ibb + n_hbp)::DOUBLE
+                     / nullif(n_pa - n_sh, 0), 4) AS obp
         FROM matchup_outcomes m
         JOIN pitcher_archetypes_v2 pl ON pl.season={REF_SEASON} AND pl.cluster=m.pitcher_cluster
         JOIN batter_archetypes_v2  bl ON bl.season={REF_SEASON} AND bl.cluster=m.batter_cluster
@@ -89,7 +93,7 @@ def main() -> None:
           f"HR%={base[2]:.1%}  HIT%={base[3]:.1%}\n")
 
     print("Most extreme cells (min n_pa 300):")
-    for metric in ("k_pct", "hr_pct", "hit_pct", "bb_pct"):
+    for metric in ("k_pct", "hr_pct", "hit_pct", "bb_pct", "obp"):
         hi = con.execute(f"""SELECT pitcher_type,batter_type,{metric},n_pa
             FROM matchup_rates WHERE n_pa>=300 ORDER BY {metric} DESC LIMIT 1""").fetchone()
         lo = con.execute(f"""SELECT pitcher_type,batter_type,{metric},n_pa
