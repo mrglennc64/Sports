@@ -16,6 +16,13 @@ class Settings(BaseSettings):
     odds_provider: str = "theoddsapi"  # "theoddsapi" | "oddsapiio"
     odds_api_key_theoddsapi: str = ""
     odds_api_key_io: str = ""
+    # the-odds-api region sets. The SLATE (single best book per pitcher) uses a
+    # single region to conserve quota; the ARB/CLV quotes path pulls wide
+    # (us,us2,eu => ~12 books incl. Pinnacle) so cross-book comparison + a sharp
+    # reference line are available. Each region ~1x request cost, so wide quotes
+    # are ~3x — fine on-demand (/v2/arb), too costly for a frequent cron on free tier.
+    odds_regions_props: str = "us"
+    odds_regions_quotes: str = "us,us2,eu"
 
     # Edge / staking
     min_edge: float = 0.03

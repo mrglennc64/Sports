@@ -81,11 +81,18 @@ class TheOddsApiProvider(OddsProvider):
         api_key: str,
         client: httpx.Client | None = None,
         preferred_books: tuple[str, ...] = DEFAULT_BOOKS,
+        regions_props: str = "us",
+        regions_quotes: str = "us",
     ):
         if not api_key:
             raise ValueError("the-odds-api key is required")
         self._key = api_key
         self._books = preferred_books
+        # Region sets are separate so the multi-book ARB/CLV path can pull wide
+        # (us,us2,eu -> ~12 books incl. Pinnacle) while the daily SLATE stays on a
+        # single region to conserve the-odds-api quota (each region ~1x cost).
+        self._regions_props = regions_props
+        self._regions_quotes = regions_quotes
         self._client = client or httpx.Client(base_url=self.BASE_URL, timeout=15.0)
 
     def list_events(self) -> list[OddsEvent]:
@@ -108,7 +115,7 @@ class TheOddsApiProvider(OddsProvider):
             f"/sports/{self.SPORT}/events/{event_id}/odds",
             params={
                 "apiKey": self._key,
-                "regions": "us",
+                "regions": self._regions_props,
                 "markets": self.MARKET,
                 "oddsFormat": "american",
             },
@@ -122,7 +129,7 @@ class TheOddsApiProvider(OddsProvider):
             f"/sports/{self.SPORT}/events/{event_id}/odds",
             params={
                 "apiKey": self._key,
-                "regions": "us",
+                "regions": self._regions_quotes,
                 "markets": self.MARKET,
                 "oddsFormat": "american",
             },
@@ -372,9 +379,20 @@ class UnconfiguredProvider(OddsProvider):
         self._fail()
 
 
-def get_provider(provider: str, theoddsapi_key: str, io_key: str) -> OddsProvider:
+def get_provider(
+    provider: str,
+    theoddsapi_key: str,
+    io_key: str,
+    regions_props: str | None = None,
+    regions_quotes: str | None = None,
+) -> OddsProvider:
     if provider == "theoddsapi":
-        return TheOddsApiProvider(theoddsapi_key)
+        from app.config import settings as _s
+        return TheOddsApiProvider(
+            theoddsapi_key,
+            regions_props=regions_props or _s.odds_regions_props,
+            regions_quotes=regions_quotes or _s.odds_regions_quotes,
+        )
     if provider == "oddsapiio":
         return OddsApiIoProvider(io_key)
     raise ValueError(f"unknown odds provider: {provider!r}")
