@@ -39,6 +39,8 @@ BATTER_METRICS = [
     "oz_swing_percent", "oz_contact_percent", "iz_contact_percent",
     "exit_velocity_avg", "launch_angle_avg", "sweet_spot_percent",
     "barrel_batted_rate", "hard_hit_percent",
+    # spray direction (batted-ball pull/center/oppo) -> pull-heavy / oppo types
+    "pull_percent", "straightaway_percent", "opposite_percent",
 ]
 PITCHER_METRICS = [
     "pa", "k_percent", "bb_percent", "whiff_percent", "swing_percent",
@@ -102,6 +104,10 @@ def store(table: str, metrics: list[str], rows: list[dict], season: int) -> int:
     con.execute(
         f"CREATE TABLE IF NOT EXISTS {table} ({coldefs}, PRIMARY KEY (player_id, season))"
     )
+    # Migrate: add any metric columns introduced since the table was created
+    # (DuckDB ADD COLUMN IF NOT EXISTS is a no-op when the column already exists).
+    for c in metrics:
+        con.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {c} DOUBLE")
     con.execute(f"DELETE FROM {table} WHERE season = ?", [season])
     con.executemany(
         f"INSERT INTO {table} ({','.join(cols)}) VALUES ({','.join(['?'] * len(cols))})",
