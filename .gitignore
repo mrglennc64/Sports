@@ -18,3 +18,9 @@ venv/
 # node
 node_modules/
 frontend/dist/
+
+# June raw-data workspace (large DuckDB + logs; keep ingest.py/README only)
+June/*.duckdb
+June/*.log
+June/*.csv
+June/*.json

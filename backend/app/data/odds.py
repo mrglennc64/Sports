@@ -386,6 +386,7 @@ def get_provider(
     regions_props: str | None = None,
     regions_quotes: str | None = None,
 ) -> OddsProvider:
+    # US-focused providers
     if provider == "theoddsapi":
         from app.config import settings as _s
         return TheOddsApiProvider(
@@ -395,4 +396,21 @@ def get_provider(
         )
     if provider == "oddsapiio":
         return OddsApiIoProvider(io_key)
+    
+    # EU-focused providers (CSV importer, live scrapers)
+    if provider in ("csv", "betano", "bet365", "unibet"):
+        from app.config import settings as _s
+        from app.data.european_odds import get_european_provider
+        
+        kwargs = {}
+        if provider == "csv":
+            kwargs["csv_path"] = _s.odds_csv_path
+        elif provider == "bet365":
+            kwargs["headless"] = True
+        
+        eu_provider = get_european_provider(provider, **kwargs)
+        if eu_provider is None:
+            raise ValueError(f"failed to initialize European provider: {provider!r}")
+        return eu_provider
+    
     raise ValueError(f"unknown odds provider: {provider!r}")

@@ -1,0 +1,29 @@
+logged_at,date,pitcher,pitcher_id,opponent,venue,expected_ks,line,bookmaker,side,model_prob,fair_prob,over_odds,under_odds,edge,kelly,bet,low_confidence
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Shane Drohan,675660,Colorado Rockies,Coors Field,7.432,3.5,draftkings,over,0.9382,0.5751,-153,120,0.3631,0.05,False,True
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Luis Castillo,622491,Detroit Tigers,Comerica Park,5.77,4.5,draftkings,over,0.6829,0.4725,-101,-126,0.2105,0.05,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Sandy Alcantara,645261,Tampa Bay Rays,loanDepot park,3.798,4.5,draftkings,under,0.6682,0.4934,-116,-110,0.1748,0.05,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Joey Cantillo,676282,Texas Rangers,Globe Life Field,4.374,5.5,draftkings,under,0.7243,0.5769,121,-154,0.1474,0.05,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Bubba Chandler,696149,Atlanta Braves,Truist Park,4.181,4.5,draftkings,under,0.5935,0.4525,-137,107,0.141,0.05,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Mike Burrows,681347,Athletics,Daikin Park,4.695,5.5,draftkings,under,0.6693,0.5495,108,-138,0.1198,0.05,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,José Soriano,667755,Los Angeles Dodgers,UNIQLO Field at Dodger Stadium,5.868,4.5,draftkings,over,0.6969,0.5795,-156,122,0.1175,0.05,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Shane Baz,669358,Toronto Blue Jays,Rogers Centre,4.475,4.5,draftkings,under,0.5368,0.4249,-153,120,0.1119,0.0377,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Griffin Jax,643377,Miami Marlins,loanDepot park,4.661,3.5,draftkings,over,0.6841,0.5913,-164,128,0.0928,0.0415,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Randy Vásquez,681190,New York Mets,Petco Park,4.25,3.5,draftkings,over,0.6137,0.5231,-124,-103,0.0906,0.0337,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Trevor McDonald,686790,Chicago Cubs,Wrigley Field,4.824,4.5,draftkings,over,0.5281,0.4416,112,-143,0.0865,0.0267,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Jameson Taillon,592791,San Francisco Giants,Wrigley Field,4.395,4.5,draftkings,under,0.5522,0.4846,-120,-106,0.0676,0.0194,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Cade Cavalli,676917,Arizona Diamondbacks,Chase Field,5.114,4.5,draftkings,over,0.5792,0.5165,-121,-106,0.0628,0.0175,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Aaron Nola,605400,Chicago White Sox,Citizens Bank Park,5.695,5.5,draftkings,over,0.5042,0.4416,112,-143,0.0626,0.0154,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Jacob deGrom,594798,Cleveland Guardians,Globe Life Field,5.918,6.5,draftkings,under,0.6195,0.5584,112,-143,0.0611,0.0188,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Jack Flaherty,656427,Seattle Mariners,Comerica Park,5.631,5.5,draftkings,under,0.5067,0.4476,-140,109,0.0591,0.0135,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Kevin Gausman,592332,Baltimore Orioles,Rogers Centre,5.974,6.5,draftkings,under,0.6105,0.5544,110,-141,0.0561,0.0153,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Rhett Lowder,695076,St. Louis Cardinals,Busch Stadium,3.224,3.5,draftkings,under,0.5973,0.5445,106,-135,0.0528,0.0134,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Noah Cameron,702070,Minnesota Twins,Target Field,5.176,4.5,draftkings,over,0.5899,0.5382,-132,103,0.0517,0.0121,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Bryce Elder,693821,Pittsburgh Pirates,Truist Park,5.383,4.5,draftkings,over,0.624,0.5733,-152,119,0.0507,0.0131,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Gage Jump,695611,Houston Astros,Daikin Park,4.809,4.5,draftkings,under,0.4746,0.4312,-149,117,0.0434,0.0064,False,True
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Michael McGreevy,700241,Cincinnati Reds,Busch Stadium,4.019,4.5,draftkings,under,0.6251,0.5855,125,-160,0.0397,0.0063,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Michael Soroka,647336,Washington Nationals,Chase Field,5.214,4.5,draftkings,over,0.5963,0.5631,-146,114,0.0332,0.0017,True,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Cam Schlittler,693645,Boston Red Sox,Yankee Stadium,6.318,6.5,draftkings,over,0.4446,0.4153,125,-159,0.0293,0.0001,False,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Emmet Sheehan,686218,Los Angeles Angels,UNIQLO Field at Dodger Stadium,6.221,6.5,draftkings,under,0.5708,0.5516,109,-139,0.0192,0.0,False,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Ranger Suarez,624133,New York Yankees,Yankee Stadium,5.281,5.5,draftkings,over,0.4332,0.4213,122,-155,0.0119,0.0,False,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Connor Prielipp,687570,Kansas City Royals,Target Field,4.964,4.5,draftkings,over,0.5531,0.5445,-135,106,0.0086,0.0,False,False
+2026-06-07T11:44:20.261738+00:00,2026-06-07,Kyle Freeland,607536,Milwaukee Brewers,Coors Field,3.745,3.5,draftkings,over,0.5151,0.5132,-119,-107,0.0019,0.0,False,False

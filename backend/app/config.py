@@ -13,9 +13,13 @@ class Settings(BaseSettings):
     )
 
     # Odds provider selection + keys
-    odds_provider: str = "theoddsapi"  # "theoddsapi" | "oddsapiio"
+    # Options: "theoddsapi" (default, US books), "oddsapiio" (secondary, US books),
+    # or EU-focused: "csv" (manual CSV import), "betano", "bet365", "unibet" (live scrapers)
+    odds_provider: str = "theoddsapi"
     odds_api_key_theoddsapi: str = ""
     odds_api_key_io: str = ""
+    # CSV importer path (used when odds_provider="csv")
+    odds_csv_path: str = ""
     # the-odds-api region sets. The SLATE (single best book per pitcher) uses a
     # single region to conserve quota; the ARB/CLV quotes path pulls wide
     # (us,us2,eu => ~12 books incl. Pinnacle) so cross-book comparison + a sharp

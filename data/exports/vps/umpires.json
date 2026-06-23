@@ -1,0 +1,454 @@
+{
+  "Adam Beck": {
+    "k_rate": 0.2272,
+    "n_games": 74,
+    "n_pa": 5519
+  },
+  "Adam Hamari": {
+    "k_rate": 0.2334,
+    "n_games": 76,
+    "n_pa": 5656
+  },
+  "Adrian Johnson": {
+    "k_rate": 0.2152,
+    "n_games": 68,
+    "n_pa": 5171
+  },
+  "Alan Porter": {
+    "k_rate": 0.2258,
+    "n_games": 73,
+    "n_pa": 5488
+  },
+  "Alex MacKay": {
+    "k_rate": 0.2352,
+    "n_games": 69,
+    "n_pa": 5171
+  },
+  "Alex Tosi": {
+    "k_rate": 0.2176,
+    "n_games": 75,
+    "n_pa": 5657
+  },
+  "Alfonso M\u00e1rquez": {
+    "k_rate": 0.2138,
+    "n_games": 74,
+    "n_pa": 5561
+  },
+  "Andy Fletcher": {
+    "k_rate": 0.2135,
+    "n_games": 70,
+    "n_pa": 5522
+  },
+  "Austin Jones": {
+    "k_rate": 0.2322,
+    "n_games": 45,
+    "n_pa": 3372
+  },
+  "Ben May": {
+    "k_rate": 0.2088,
+    "n_games": 71,
+    "n_pa": 5412
+  },
+  "Bill Miller": {
+    "k_rate": 0.2338,
+    "n_games": 78,
+    "n_pa": 5872
+  },
+  "Brennan Miller": {
+    "k_rate": 0.2317,
+    "n_games": 75,
+    "n_pa": 5546
+  },
+  "Brian Knight": {
+    "k_rate": 0.1979,
+    "n_games": 16,
+    "n_pa": 1213
+  },
+  "Brian O'Nora": {
+    "k_rate": 0.2212,
+    "n_games": 64,
+    "n_pa": 4791
+  },
+  "Brian Walsh": {
+    "k_rate": 0.225,
+    "n_games": 77,
+    "n_pa": 5853
+  },
+  "Brock Ballou": {
+    "k_rate": 0.2235,
+    "n_games": 45,
+    "n_pa": 3401
+  },
+  "Bruce Dreckman": {
+    "k_rate": 0.216,
+    "n_games": 66,
+    "n_pa": 4978
+  },
+  "CB Bucknor": {
+    "k_rate": 0.2325,
+    "n_games": 59,
+    "n_pa": 4461
+  },
+  "Carlos Torres": {
+    "k_rate": 0.2195,
+    "n_games": 73,
+    "n_pa": 5498
+  },
+  "Chad Fairchild": {
+    "k_rate": 0.2116,
+    "n_games": 68,
+    "n_pa": 5199
+  },
+  "Chad Whitson": {
+    "k_rate": 0.2198,
+    "n_games": 61,
+    "n_pa": 4517
+  },
+  "Charlie Ramos": {
+    "k_rate": 0.2217,
+    "n_games": 71,
+    "n_pa": 5358
+  },
+  "Chris Conroy": {
+    "k_rate": 0.2231,
+    "n_games": 65,
+    "n_pa": 4936
+  },
+  "Chris Guccione": {
+    "k_rate": 0.2252,
+    "n_games": 63,
+    "n_pa": 4835
+  },
+  "Chris Segal": {
+    "k_rate": 0.2302,
+    "n_games": 72,
+    "n_pa": 5364
+  },
+  "Clint Vondrak": {
+    "k_rate": 0.2047,
+    "n_games": 72,
+    "n_pa": 5598
+  },
+  "Cory Blaser": {
+    "k_rate": 0.2304,
+    "n_games": 69,
+    "n_pa": 5031
+  },
+  "D.J. Reyburn": {
+    "k_rate": 0.2228,
+    "n_games": 70,
+    "n_pa": 5243
+  },
+  "Dan Bellino": {
+    "k_rate": 0.2169,
+    "n_games": 74,
+    "n_pa": 5644
+  },
+  "Dan Iassogna": {
+    "k_rate": 0.2218,
+    "n_games": 73,
+    "n_pa": 5509
+  },
+  "Dan Merzel": {
+    "k_rate": 0.2244,
+    "n_games": 70,
+    "n_pa": 5268
+  },
+  "David Rackley": {
+    "k_rate": 0.2248,
+    "n_games": 77,
+    "n_pa": 5773
+  },
+  "Derek Thomas": {
+    "k_rate": 0.2206,
+    "n_games": 62,
+    "n_pa": 4738
+  },
+  "Doug Eddings": {
+    "k_rate": 0.2284,
+    "n_games": 79,
+    "n_pa": 5924
+  },
+  "Edwin Jimenez": {
+    "k_rate": 0.2255,
+    "n_games": 55,
+    "n_pa": 4076
+  },
+  "Edwin Moscoso": {
+    "k_rate": 0.229,
+    "n_games": 74,
+    "n_pa": 5581
+  },
+  "Emil Jimenez": {
+    "k_rate": 0.2304,
+    "n_games": 73,
+    "n_pa": 5547
+  },
+  "Erich Bacchus": {
+    "k_rate": 0.219,
+    "n_games": 70,
+    "n_pa": 5296
+  },
+  "Gabe Morales": {
+    "k_rate": 0.2232,
+    "n_games": 75,
+    "n_pa": 5615
+  },
+  "Hunter Wendelstedt": {
+    "k_rate": 0.2192,
+    "n_games": 47,
+    "n_pa": 3518
+  },
+  "Jacob Metz": {
+    "k_rate": 0.2275,
+    "n_games": 38,
+    "n_pa": 2857
+  },
+  "James Hoye": {
+    "k_rate": 0.2209,
+    "n_games": 71,
+    "n_pa": 5309
+  },
+  "James Jean": {
+    "k_rate": 0.1993,
+    "n_games": 43,
+    "n_pa": 3301
+  },
+  "Jansen Visconti": {
+    "k_rate": 0.2162,
+    "n_games": 75,
+    "n_pa": 5657
+  },
+  "Jeremie Rehak": {
+    "k_rate": 0.2268,
+    "n_games": 68,
+    "n_pa": 5118
+  },
+  "Jeremy Riggs": {
+    "k_rate": 0.2341,
+    "n_games": 17,
+    "n_pa": 1320
+  },
+  "Jim Wolf": {
+    "k_rate": 0.222,
+    "n_games": 64,
+    "n_pa": 4792
+  },
+  "John Bacon": {
+    "k_rate": 0.2211,
+    "n_games": 64,
+    "n_pa": 4727
+  },
+  "John Libka": {
+    "k_rate": 0.2233,
+    "n_games": 73,
+    "n_pa": 5473
+  },
+  "John Tumpane": {
+    "k_rate": 0.2213,
+    "n_games": 72,
+    "n_pa": 5436
+  },
+  "Jonathan Parra": {
+    "k_rate": 0.2223,
+    "n_games": 35,
+    "n_pa": 2667
+  },
+  "Jordan Baker": {
+    "k_rate": 0.2205,
+    "n_games": 73,
+    "n_pa": 5465
+  },
+  "Junior Valentine": {
+    "k_rate": 0.2344,
+    "n_games": 63,
+    "n_pa": 4787
+  },
+  "Lance Barksdale": {
+    "k_rate": 0.2183,
+    "n_games": 77,
+    "n_pa": 5836
+  },
+  "Lance Barrett": {
+    "k_rate": 0.2175,
+    "n_games": 77,
+    "n_pa": 5861
+  },
+  "Larry Vanover": {
+    "k_rate": 0.2359,
+    "n_games": 28,
+    "n_pa": 2094
+  },
+  "Laz Diaz": {
+    "k_rate": 0.2279,
+    "n_games": 75,
+    "n_pa": 5762
+  },
+  "Malachi Moore": {
+    "k_rate": 0.2174,
+    "n_games": 74,
+    "n_pa": 5643
+  },
+  "Manny Gonzalez": {
+    "k_rate": 0.2157,
+    "n_games": 67,
+    "n_pa": 5006
+  },
+  "Mark Carlson": {
+    "k_rate": 0.2166,
+    "n_games": 34,
+    "n_pa": 2586
+  },
+  "Mark Ripperger": {
+    "k_rate": 0.2195,
+    "n_games": 76,
+    "n_pa": 5712
+  },
+  "Mark Wegner": {
+    "k_rate": 0.2287,
+    "n_games": 67,
+    "n_pa": 5155
+  },
+  "Marvin Hudson": {
+    "k_rate": 0.2215,
+    "n_games": 67,
+    "n_pa": 5047
+  },
+  "Mike Estabrook": {
+    "k_rate": 0.2425,
+    "n_games": 73,
+    "n_pa": 5360
+  },
+  "Mike Muchlinski": {
+    "k_rate": 0.2211,
+    "n_games": 72,
+    "n_pa": 5442
+  },
+  "Nate Tomlinson": {
+    "k_rate": 0.2274,
+    "n_games": 70,
+    "n_pa": 5251
+  },
+  "Nestor Ceja": {
+    "k_rate": 0.2314,
+    "n_games": 72,
+    "n_pa": 5427
+  },
+  "Nic Lentz": {
+    "k_rate": 0.2117,
+    "n_games": 72,
+    "n_pa": 5494
+  },
+  "Nick Mahrley": {
+    "k_rate": 0.2216,
+    "n_games": 65,
+    "n_pa": 4936
+  },
+  "Paul Clemons": {
+    "k_rate": 0.2221,
+    "n_games": 73,
+    "n_pa": 5420
+  },
+  "Phil Cuzzi": {
+    "k_rate": 0.2349,
+    "n_games": 61,
+    "n_pa": 4465
+  },
+  "Quinn Wolcott": {
+    "k_rate": 0.2179,
+    "n_games": 73,
+    "n_pa": 5517
+  },
+  "Ramon De Jesus": {
+    "k_rate": 0.2223,
+    "n_games": 73,
+    "n_pa": 5532
+  },
+  "Rob Drake": {
+    "k_rate": 0.2337,
+    "n_games": 47,
+    "n_pa": 3500
+  },
+  "Roberto Ortiz": {
+    "k_rate": 0.2174,
+    "n_games": 70,
+    "n_pa": 5244
+  },
+  "Ron Kulpa": {
+    "k_rate": 0.2531,
+    "n_games": 30,
+    "n_pa": 2240
+  },
+  "Ryan Additon": {
+    "k_rate": 0.2264,
+    "n_games": 71,
+    "n_pa": 5380
+  },
+  "Ryan Blakney": {
+    "k_rate": 0.2331,
+    "n_games": 70,
+    "n_pa": 5182
+  },
+  "Ryan Wills": {
+    "k_rate": 0.2253,
+    "n_games": 71,
+    "n_pa": 5437
+  },
+  "Scott Barry": {
+    "k_rate": 0.2082,
+    "n_games": 64,
+    "n_pa": 4895
+  },
+  "Sean Barber": {
+    "k_rate": 0.2163,
+    "n_games": 70,
+    "n_pa": 5387
+  },
+  "Shane Livensparger": {
+    "k_rate": 0.208,
+    "n_games": 49,
+    "n_pa": 3688
+  },
+  "Stu Scheurwater": {
+    "k_rate": 0.2254,
+    "n_games": 74,
+    "n_pa": 5581
+  },
+  "Todd Tichenor": {
+    "k_rate": 0.2184,
+    "n_games": 73,
+    "n_pa": 5422
+  },
+  "Tom Hanahan": {
+    "k_rate": 0.2232,
+    "n_games": 70,
+    "n_pa": 5373
+  },
+  "Tony Randazzo": {
+    "k_rate": 0.232,
+    "n_games": 56,
+    "n_pa": 4160
+  },
+  "Tripp Gibson": {
+    "k_rate": 0.2188,
+    "n_games": 68,
+    "n_pa": 5210
+  },
+  "Vic Carapazza": {
+    "k_rate": 0.2261,
+    "n_games": 80,
+    "n_pa": 6067
+  },
+  "Will Little": {
+    "k_rate": 0.2328,
+    "n_games": 62,
+    "n_pa": 4592
+  },
+  "Willie Traynor": {
+    "k_rate": 0.2252,
+    "n_games": 28,
+    "n_pa": 2202
+  },
+  "_comment": "Home-plate umpire K tendencies computed from MLB Stats API HP-umpire assignments x pa_events_reg (2024-2026 regular season). k_rate = strikeouts per PA in that umpire's games (league avg ~0.22). Min 15 games. Generated by analytics/compile_umpires.py.",
+  "_league_average_k_rate": 0.22
+}

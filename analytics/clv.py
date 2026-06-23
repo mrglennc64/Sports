@@ -60,9 +60,11 @@ def main(argv: list[str]) -> int:
         return 0
 
     # group by (date, pitcher) -> earliest & latest capture
+    # the capture feed names the column "player"; tolerate "pitcher" too
     g = defaultdict(list)
     for r in rows:
-        g[(r["date"], r["pitcher"])].append(r)
+        name = r.get("player") or r.get("pitcher") or ""
+        g[(r["date"], name)].append(r)
 
     moves = []  # (date, pitcher, line_open, line_close, fair_open, fair_close)
     for (date, pit), caps in g.items():
