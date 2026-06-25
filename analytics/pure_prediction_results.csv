@@ -1,0 +1,54 @@
+Metric,Value,Interpretation
+Total Predictions,2296,Pitcher starts in 2026 test set
+Train Period,2024-2025,
+Test Period,2026,
+
+Overall Accuracy,,,
+MAE,1.672,Average miss in strikeouts per start
+RMSE,2.083,Root mean squared error
+Correlation,0.479,Pearson r (0-1 scale)
+Calibration Slope,0.241,Should be 1.0 for perfect calibration
+Overall Bias,+0.234,Slight overprediction on average
+Spread Ratio,0.502,Predictions vs actuals variance (want 1.0)
+
+Baseline Comparison,,,
+League MAE,1.786,Dumb baseline (league average)
+League RMSE,2.227,
+League Correlation,0.346,
+Your MAE Improvement,-6.4%,Better than baseline
+Your RMSE Improvement,-6.5%,Better than baseline
+Your Correlation Improvement,+38.4%,Better than baseline
+
+Error Distribution,,,
+10th Percentile Error,-2.49,Underpredicted by 2.5 K
+25th Percentile Error,-1.07,
+Median Error,+0.38,
+75th Percentile Error,+1.70,
+90th Percentile Error,+2.74,Overpredicted by 2.7 K
+
+Absolute Errors,,,
+50% within,1.42,Half of predictions within 1.42 K
+75% within,2.39,
+90% within,3.41,
+
+Prediction Spread,,,
+Prediction Std Dev,1.18,
+Actual Std Dev,2.36,
+Ratio,0.50,UNDERCONFIDENT - predictions too compressed
+
+Accuracy by Prediction Level,,,
+Pred 2-3K (N=143),+0.32 bias,Slight overprediction
+Pred 3-4K (N=337),+0.32 bias,
+Pred 4-5K (N=806),+0.10 bias,Best calibrated range
+Pred 5-6K (N=599),+0.22 bias,
+Pred 6-7K (N=288),+0.38 bias,
+Pred 7-8K (N=108),+0.48 bias,
+Pred 8-9K (N=12),+0.90 bias,Worst - high overprediction
+
+Key Finding,,,
+Main Issue,UNDERCONFIDENT,Predictions compress toward mean (4-5K) while actuals span 0-15K
+Spread Ratio,0.50,Actuals vary 2x more than predictions
+Recommendation,Use individual player IDs not types,Or reduce empirical Bayes shrinkage
+
+Test Date,2026-06-25,
+Scripts,pure_prediction_test.py | prediction_diagnostics.py | tune_shrinkage.py,
