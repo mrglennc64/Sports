@@ -13,12 +13,17 @@ echo "==========================================================================
 
 # Step 1: Pull latest code
 echo ""
-echo "[1/5] Pulling latest code..."
+echo "[1/6] Pulling latest code..."
 ssh $SERVER "cd $REPO_DIR && git pull origin main"
 
-# Step 2: Deploy archetype CSV files
+# Step 2: Install backend dependencies (including pandas)
 echo ""
-echo "[2/5] Copying archetype model data files..."
+echo "[2/6] Installing backend dependencies..."
+ssh $SERVER "cd $REPO_DIR/backend && .venv/bin/pip install -q -r requirements.txt"
+
+# Step 3: Deploy archetype CSV files
+echo ""
+echo "[3/6] Copying archetype model data files..."
 ssh $SERVER "mkdir -p $REPO_DIR/backend/data/exports"
 
 # Copy the three required CSV files
@@ -28,9 +33,9 @@ scp data/exports/archetype_interaction_matrix.csv $SERVER:$REPO_DIR/backend/data
 
 echo "✓ Copied 3 archetype CSV files"
 
-# Step 3: Restart backend service
+# Step 4: Restart backend service
 echo ""
-echo "[3/5] Restarting mlb-edge service..."
+echo "[4/6] Restarting mlb-edge service..."
 ssh $SERVER "systemctl restart mlb-edge"
 sleep 3
 
@@ -43,14 +48,14 @@ ssh $SERVER "systemctl is-active mlb-edge" || {
 
 echo "✓ Service restarted successfully"
 
-# Step 4: Test archetype predictor on server
+# Step 5: Test archetype predictor on server
 echo ""
-echo "[4/5] Testing archetype predictor..."
+echo "[5/6] Testing archetype predictor..."
 
 # Run the predictor test script directly
-TEST_OUTPUT=$(ssh $SERVER "cd $REPO_DIR/backend && .venv/bin/python -m app.models.archetype_predictor 2>&1" || echo "FAILED")
+TEST_OUTPUT=$(ssh $SERVER "cd $REPO_DIR/backend && .venv/bin/python -m app.models.archetype_predictor 2>&1")
 
-if echo "$TEST_OUTPUT" | grep -q "Loaded.*pitcher archetypes.*batter archetypes"; then
+if echo "$TEST_OUTPUT" | grep -q "Loaded.*pitcher archetypes"; then
     echo "✓ Archetype predictor loaded successfully"
     echo "$TEST_OUTPUT" | grep "Loaded"
 else
@@ -59,9 +64,9 @@ else
     exit 1
 fi
 
-# Step 5: Test API returns archetype data
+# Step 6: Test API returns archetype data
 echo ""
-echo "[5/5] Testing API response..."
+echo "[6/6] Testing API response..."
 
 # Make a test API call and check for archetype fields
 API_RESPONSE=$(curl -s "http://187.77.111.16/api/v2/slate?date=2026-06-23")

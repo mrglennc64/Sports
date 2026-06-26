@@ -1,0 +1,21 @@
+Pitcher,Opponent,Line,Pick,Exp_KS,Actual_KS,IP,Bet_Result,Pred_Error,Grade,Flagged,Notes
+Zac Gallen,St. Louis Cardinals,3.5,UNDER,2.35,,,,,A,YES,Need to find in screenshot
+Bubba Chandler,Seattle Mariners,4.5,UNDER,4.11,,,,,A,YES,
+Michael McGreevy,Arizona Diamondbacks,2.5,UNDER,2.45,,,,,A,YES,
+Matthew Boyd,New York Mets,4.5,OVER,5.20,,,,,A,YES,
+Cam Schlitter,Boston Red Sox,6.5,OVER,6.80,,,,,B,YES,
+Christopher Sánchez,Washington Nationals,6.5,OVER,6.58,,,,,B,YES,
+Cade Cavalli,Philadelphia Phillies,4.5,UNDER,5.01,,,,,C,YES,
+Troy Melton,Houston Astros,4.5,UNDER,3.59,,,,,C,YES,
+Jeffrey Springs,San Francisco Giants,4.5,UNDER,4.42,,,,,C,YES,
+Kevin Gausman,Texas Rangers,6.5,OVER,6.05,,,,,,NO,
+MacKenzie Gore,Toronto Blue Jays,4.5,UNDER,5.26,,,,,,NO,
+Freddy Peralta,Chicago Cubs,5.5,UNDER,4.54,,,,,,NO,
+Tatuya Imai,Detroit Tigers,5.5,UNDER,5.06,,,,,,NO,
+Connelly Early,New York Yankees,5.5,OVER,6.13,,,,,,NO,
+Landen Roupp,Athletics,6.5,UNDER,5.83,,,,,,NO,
+
+# From MLB.com screenshot visible pitchers (partial - need to match names):
+# Scherzer vs Phillies: looks like IP shown
+# Springs vs someone
+# Need to carefully match pitcher names from screenshot boxes to app predictions

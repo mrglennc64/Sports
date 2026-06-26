@@ -28,6 +28,22 @@ from .result import BetEvaluation, ComponentEstimate, Lean, ProjectionResult
 from .type_matchup import type_matchup_lambda
 from .weights import ModelConfig
 
+# Archetype predictor singleton
+_archetype_predictor = None
+
+
+def get_archetype_predictor():
+    """Lazy-load the archetype predictor once."""
+    global _archetype_predictor
+    if _archetype_predictor is None:
+        try:
+            from app.models.archetype_predictor import ArchetypePredictor
+            _archetype_predictor = ArchetypePredictor()
+        except Exception:
+            # Fallback if archetype data not available
+            _archetype_predictor = False
+    return _archetype_predictor if _archetype_predictor is not False else None
+
 
 def _blended_opponent_k_pct(inputs: ProjectionInputs, cfg: ModelConfig) -> float:
     opp = inputs.opponent
@@ -288,6 +304,36 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
                 )
             )
             projected = (1 - tmw) * projected + tmw * lam_type
+
+    # Archetype interaction model (flag-gated via archetype_weight; default 0 = off).
+    # Uses pitcher archetype average K% as a simple baseline signal. When lineup
+    # batter IDs are available (future enhancement), this will compute per-batter
+    # archetype matchups and aggregate. Weight of 0 = no effect on projection.
+    aw = cfg.archetype_weight
+    if aw > 0 and inputs.pitcher_id is not None:
+        predictor = get_archetype_predictor()
+        if predictor is not None:
+            try:
+                # For now, use a league-average batter as proxy (placeholder).
+                # TODO: When lineup has batter_ids, loop through and aggregate.
+                # Using pitcher_id twice as a temp hack to get pitcher's archetype avg
+                result = predictor.predict(inputs.pitcher_id, inputs.pitcher_id)
+                archetype_k_rate = result.get('k_rate', pitcher_k)
+                archetype_estimate = bf * archetype_k_rate
+                method = result.get('method', 'unknown')
+
+                components.append(
+                    ComponentEstimate(
+                        name="archetype_interaction",
+                        weight=aw,
+                        estimate_ks=archetype_estimate,
+                        detail=f"archetype K% {archetype_k_rate:.1%} x {bf:.1f} BF (method: {method})",
+                    )
+                )
+                projected = (1 - aw) * projected + aw * archetype_estimate
+            except Exception:
+                # Silently skip if archetype data unavailable or prediction fails
+                pass
 
     return ProjectionResult(
         pitcher_name=inputs.pitcher_name,

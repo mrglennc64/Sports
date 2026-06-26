@@ -1,0 +1,66 @@
+====================================================================================================
+ARCHETYPE vs TYPE-BASED MODEL: HEAD-TO-HEAD COMPARISON
+====================================================================================================
+
+Test Set: 2026 (176,332 PAs)
+Training: (2024, 2025)
+Shrinkage (Type model): 200.0
+
+====================================================================================================
+PA-LEVEL METRICS
+====================================================================================================
+
+Metric               Archetype       Type-Based      Winner         
+----------------------------------------------------------------------
+Coverage             100.0%          100.0%          Type-Based     
+MAE                  0.3389          0.3407          Archetype      
+RMSE                 0.4087          0.4096          Archetype      
+Brier Score          0.1670          0.1678          Archetype      
+Log Loss             0.5148          0.5170          Archetype      
+Calibration Slope    1.0383          1.0604          Type-Based     
+Correlation          0.1243          0.1057          Archetype      
+
+Baseline (League Avg) 0.3443
+
+MAE Improvement vs Baseline:
+  Archetype: +1.6%
+  Type-Based: +1.1%
+
+====================================================================================================
+GAME-LEVEL METRICS (Starts with min 12 BF)
+====================================================================================================
+
+Metric               Archetype       Type-Based      Winner         
+----------------------------------------------------------------------
+MAE (game-level)     3.9283          3.9807          Archetype      
+RMSE (game-level)    5.1299          5.1891          Archetype      
+Correlation          0.6823          0.6754          Archetype      
+
+====================================================================================================
+INTERPRETATION
+====================================================================================================
+
+PA-Level Performance:
+  - Archetype MAE 0.3389 means avg error of 33.9pp per PA
+  - Type-Based MAE 0.3407 means avg error of 34.1pp per PA
+  - For 27 BF start, expected error: Archetype=9.15K, Type=9.20K
+
+Calibration:
+  - Archetype slope 1.038 (1.0 = perfect)
+  - Type-Based slope 1.060
+  - Archetype is better calibrated
+
+Coverage:
+  - Archetype: 100.0% (uses archetype method when available, fallback otherwise)
+  - Type-Based: 100.0% (always has prediction via shrinkage)
+
+
+====================================================================================================
+RECOMMENDATION
+====================================================================================================
+
+USE ARCHETYPE MODEL
+Reason: wins on both PA-level and game-level MAE
+
+
+====================================================================================================
