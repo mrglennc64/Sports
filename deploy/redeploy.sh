@@ -13,32 +13,40 @@ echo "==========================================================================
 
 # Step 1: Git pull latest code
 echo ""
-echo "[1/6] Pulling latest code from repository..."
+echo "[1/7] Pulling latest code from repository..."
 ssh $SERVER "cd $REPO_DIR && git pull origin main"
 
-# Step 2: Rebuild backend virtualenv (in case dependencies changed)
+# Step 2: Deploy archetype model CSV files
 echo ""
-echo "[2/6] Updating backend dependencies..."
+echo "[2/7] Deploying archetype model data..."
+ssh $SERVER "mkdir -p $REPO_DIR/backend/data/exports"
+scp data/exports/pitcher_archetypes.csv $SERVER:$REPO_DIR/backend/data/exports/
+scp data/exports/batter_archetypes.csv $SERVER:$REPO_DIR/backend/data/exports/
+scp data/exports/archetype_interaction_matrix.csv $SERVER:$REPO_DIR/backend/data/exports/
+
+# Step 3: Rebuild backend virtualenv (in case dependencies changed)
+echo ""
+echo "[3/7] Updating backend dependencies..."
 ssh $SERVER "cd $REPO_DIR/backend && .venv/bin/pip install -q -r requirements.txt"
 
-# Step 3: Rebuild frontend with correct API base
+# Step 4: Rebuild frontend with correct API base
 echo ""
-echo "[3/6] Rebuilding frontend..."
+echo "[4/7] Rebuilding frontend..."
 ssh $SERVER "cd $REPO_DIR/frontend && VITE_API_BASE=/api npm install && npm run build"
 
-# Step 4: Copy built frontend to nginx directory
+# Step 5: Copy built frontend to nginx directory
 echo ""
-echo "[4/6] Deploying frontend assets..."
+echo "[5/7] Deploying frontend assets..."
 ssh $SERVER "rm -rf /var/www/strike && mkdir -p /var/www/strike && cp -r $REPO_DIR/frontend/dist/* /var/www/strike/"
 
-# Step 5: Restart backend service
+# Step 6: Restart backend service
 echo ""
-echo "[5/6] Restarting backend service..."
+echo "[6/7] Restarting backend service..."
 ssh $SERVER "systemctl restart mlb-edge"
 
-# Step 6: Verify services
+# Step 7: Verify services
 echo ""
-echo "[6/6] Verifying deployment..."
+echo "[7/7] Verifying deployment..."
 sleep 2
 
 # Check if service is running

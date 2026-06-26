@@ -6,3 +6,4 @@ pydantic-settings>=2.7
 python-dotenv>=1.0
 pytest>=8.3
 respx>=0.22
+pandas>=2.0.0
