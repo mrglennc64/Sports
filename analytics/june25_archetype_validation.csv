@@ -1,0 +1,17 @@
+pitcher,team,predicted_k,actual_k,batters_faced,error,method,abs_error,prediction_direction,actual_direction,direction_correct
+Bryce Miller,Seattle Mariners,5.4626,11,22,-5.5374,archetype,5.5374,UNDER,OVER,False
+Tatsuya Imai,Houston Astros,4.785349999999999,10,21,-5.214650000000001,global_fallback,5.214650000000001,UNDER,OVER,False
+Connelly Early,Boston Red Sox,5.468971428571428,9,24,-3.531028571428572,global_fallback,3.531028571428572,UNDER,OVER,False
+Cam Schlittler,New York Yankees,5.6968452380952375,9,25,-3.3031547619047625,global_fallback,3.3031547619047625,OVER,OVER,True
+Ian Seymour,Tampa Bay Rays,4.785349999999999,7,21,-2.2146500000000007,global_fallback,2.2146500000000007,UNDER,OVER,False
+Cade Cavalli,Washington Nationals,5.6968452380952375,7,25,-1.3031547619047625,global_fallback,1.3031547619047625,OVER,OVER,True
+Landen Roupp,San Francisco Giants,5.468971428571428,6,24,-0.5310285714285721,global_fallback,0.5310285714285721,UNDER,OVER,False
+Jeffrey Springs,Athletics,4.785349999999999,6,21,-1.2146500000000007,global_fallback,1.2146500000000007,UNDER,OVER,False
+Troy Melton,Detroit Tigers,4.55747619047619,6,20,-1.4425238095238102,global_fallback,1.4425238095238102,UNDER,OVER,False
+Cristopher Sánchez,Philadelphia Phillies,5.6968452380952375,6,25,-0.30315476190476254,global_fallback,0.30315476190476254,OVER,OVER,True
+Freddy Peralta,New York Mets,6.223199999999999,5,24,1.2231999999999994,archetype,1.2231999999999994,OVER,UNDER,False
+MacKenzie Gore,Texas Rangers,6.2075,5,25,1.2074999999999996,archetype,1.2074999999999996,OVER,UNDER,False
+Kevin Gausman,Toronto Blue Jays,8.3272,4,28,4.3271999999999995,archetype,4.3271999999999995,OVER,UNDER,False
+Bubba Chandler,Pittsburgh Pirates,5.241097619047618,4,23,1.2410976190476184,global_fallback,1.2410976190476184,UNDER,UNDER,True
+Matthew Boyd,Chicago Cubs,5.2143,4,21,1.2142999999999997,archetype,1.2142999999999997,UNDER,UNDER,True
+Seth Lugo,Kansas City Royals,4.6080000000000005,3,24,1.6080000000000005,archetype,1.6080000000000005,UNDER,UNDER,True

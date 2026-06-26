@@ -152,6 +152,20 @@ async def build_slate_ensemble(
         priced: list[dict] = []
         unpriced: list[dict] = []
         for start in starts:
+            # Skip prediction if probable pitcher not announced (show as TBD in frontend)
+            if not start.pitcher_id or start.pitcher_name == "TBD":
+                # Return minimal info to show game in UI with TBD status
+                tbd_out = {
+                    "pitcher": "TBD",
+                    "opponent": start.opponent_team_name,
+                    "venue": start.venue_name,
+                    "game_pk": start.game_pk,
+                    "status": "probable_not_announced",
+                    "message": "Probable pitcher not yet announced"
+                }
+                unpriced.append(tbd_out)
+                continue
+
             inputs = await build_projection_inputs(
                 client, start, date, umpire_table=umpire_table, savant=savant
             )

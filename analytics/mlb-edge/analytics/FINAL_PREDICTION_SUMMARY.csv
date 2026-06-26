@@ -1,0 +1,65 @@
+Test,Model,N,MAE,RMSE,Correlation,Spread_Ratio,Bias,Key_Finding
+Baseline,League average,2296,1.786,2.227,0.346,N/A,N/A,Dumb baseline - every PA = league K%
+Original,Type-based matchup,2296,1.672,2.083,0.479,0.502,+0.234,BEST MAE and correlation
+Attempt 1,Individual player IDs,2296,1.693,2.127,0.439,0.430,+0.188,Worse MAE & correlation (overfitting)
+Attempt 2,Individual + H/A + Umpire,2296,1.715,2.155,0.420,0.489,+0.206,Further degradation from added noise
+Calibrated,Type-based + variance inflation,2296,1.922,2.422,0.479,1.004,+0.234,Perfect spread but +15% MAE penalty
+
+FINAL RECOMMENDATION,,,,,,,
+Use for betting,Type-based matchup,2296,1.672,2.083,0.479,0.502,+0.234,Best prediction accuracy
+Use for intervals,Type-based + 2.0x inflation,2296,1.922,2.422,0.479,1.004,+0.234,Perfect calibration for confidence bands
+
+,,,,,,,
+Key Learnings,,,,,,,
+1. Complexity hurts,Individual IDs worse than types,,,,,Overfitting to individual player noise
+2. Adjustments add noise,Home/away and umpire effects degraded performance,,,,,Sample sizes too small or effects are real but noisy
+3. Types generalize better,Coarser grouping prevents overfitting,,,,,Empirical Bayes on types works better than on individuals
+4. Underconfidence is structural,Not fixed by shrinkage tuning (0-1000 tested),,,,,Matchup rate approach compresses inherently
+5. Inflation fixes spread,But at 15% MAE cost,,,,,Use alpha=2.0 only when calibration > accuracy
+
+What Actually Worked,,,,,,,
+Type-based clustering,6 pitcher types x 8 batter types = 48 cells,,,,,Better than 400+ individual players
+Empirical Bayes shrinkage,SHRINK=200 toward pitcher-type marginal,,,,,Reduces overfitting to small samples
+Matchup rates,Per-PA probability summed over batters faced,,,,,Avoids forecasting innings pitched
+
+What Didn't Work,,,,,,,
+Individual player IDs,More parameters = more overfitting,,,,,MAE 1.672 -> 1.693 (+1.3% worse)
+Home/away splits,Too noisy or sample sizes insufficient,,,,,MAE 1.693 -> 1.715 (+1.3% worse)
+Umpire K-zone effects,Effect exists but can't reliably predict it,,,,,Only helped for aces (N=13)
+Reducing shrinkage,Tested 0 to 1000 - minimal effect,,,,,Problem is model structure not parameter
+
+Tier Analysis,,,,,,,
+Aces (6.5+ K),N=13 only,13,1.249,,0.599,0.360,,Small sample - don't overinterpret
+Mid (5-6.5 K),Hardest to predict,1030,1.795,,0.262,0.321,,Lowest correlation
+Low (< 5 K),Most starts,1253,1.613,,0.378,0.408,,Moderate correlation
+
+Variance Inflation Results,,,,,,,
+Alpha,Spread_Ratio,MAE,Effect,,,,
+0.8,0.402,1.684,More compressed,,,,
+1.0,0.502,1.672,Original (no change),,,,
+1.5,0.753,1.731,Partial calibration,,,,
+2.0,1.004,1.922,Perfect calibration (+15% MAE),,,,
+
+Formula for Calibration,,,,,,,
+pred_calibrated,= mean + alpha * (pred_raw - mean),,,,,Where alpha=2.0 for spread_ratio=1.0
+Example,If mean=4.5 and pred_raw=5.5,,,,,Then pred_calibrated = 4.5 + 2.0*(5.5-4.5) = 6.5
+
+When to Use Each Model,,,,,,,
+For betting decisions,Use original type-based (MAE=1.672),,,,,Maximizes prediction accuracy
+For confidence intervals,Use calibrated (alpha=2.0),,,,,Spread matches actual variance
+For ranking pitchers,Either works (correlation=0.479 both),,,,,Inflation doesn't change order
+
+Implementation,,,,,,,
+Type-based model,backtest_matchup.py with SHRINK=200,,,,,Already implemented and tested
+Calibration layer,Apply alpha=2.0 post-processing,,,,,pred_final = mean + 2*(pred_raw - mean)
+
+Bottom Line,,,,,,,
+WINNER,Original type-based matchup model,,,,,MAE=1.672 beats all alternatives
+Beats baseline by,6.4% MAE reduction,,,,,vs league-average (1.786 -> 1.672)
+Correlation,0.479 = moderate predictive power,,,,,Better than coin flip but far from perfect
+Still underconfident,Spread ratio 0.502 (want 1.0),,,,,Can fix with alpha=2.0 but MAE cost
+DON'T add complexity,Individual IDs and adjustments hurt,,,,,Simpler type-based model wins
+
+Test Date,2026-06-25,,,,,,
+Scripts,"pure_prediction_test.py, improved_prediction_test.py, variance_inflation_test.py",,,,,,
+Data,2024-2025 train / 2026 test,,,,,,

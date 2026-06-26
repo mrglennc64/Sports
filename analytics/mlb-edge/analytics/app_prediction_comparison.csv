@@ -1,0 +1,66 @@
+Question,App Betting Approach,Pure Prediction Approach
+What does it measure?,Win rate on edge-flagged bets,Forecast accuracy (expected vs actual K)
+Success metric,Hit rate > 52.4% (beat juice),Low MAE (close to 1.67 baseline)
+Uses odds/lines?,YES - core to edge calculation,NO - just predicts strikeouts
+Considers expected value?,YES - flags +EV bets only,NO - evaluates all equally
+Sample size,Only flagged bets (~9 from screenshot),All pitchers (~15 from screenshot)
+Goal,Make money,Be accurate
+Can succeed independently?,Yes - could profit even with high MAE,Yes - accurate but still lose to efficient lines
+
+June 23 Screenshot Data,,,
+Total pitchers predicted,15,,
+Flagged for betting,9,,
+Unflagged,6,,
+Grade A bets,4,,
+Grade B bets,2,,
+Grade C bets,3,,
+
+How to Validate,,,
+Step 1,Get actual K totals from Baseball Reference,,
+Step 2,Fill in validate_june23_manual.csv,,
+Step 3,Run validate_june23_results.py,,
+Output,Betting hit rate + prediction MAE,,
+
+Database Status,,,
+Latest date available,2026-06-14,,
+Screenshot date,2026-06-23,,
+Auto-validation,NOT POSSIBLE - no data yet,,
+Solution,Manual entry from Baseball Reference,,
+
+Baseline Expectations,,,
+Model MAE (test set),1.672 K,,
+Good June 23 MAE,1.5 - 1.9 K (normal variance),,
+Breakeven hit rate,52.4% (at -110 juice),,
+Good hit rate,55%+ (indicates real edge),,
+Ideal scenario,Flagged MAE < unflagged MAE,,
+
+Four Possible Outcomes,,,
+1. Good betting + good predictions,Hit rate >52.4% AND MAE <1.8,Best case - app working
+2. Good betting + bad predictions,Hit rate >52.4% AND MAE >2.0,Lucky or line-relative skill
+3. Bad betting + good predictions,Hit rate <52.4% AND MAE <1.8,Accurate but no edge
+4. Bad betting + bad predictions,Hit rate <52.4% AND MAE >2.0,Model failure
+
+Why Both Matter,,,
+Betting performance,Answers: Can we make money?,
+Prediction accuracy,Answers: Is our model any good?,
+They can diverge,Accurate forecasts don't guarantee +EV,
+Example,Tennis model: great MAE but lost to Pinnacle closing line,
+
+Key Insight from Testing,,,
+Individual IDs,WORSE than types (MAE 1.672 → 1.693),Overfitting
+Home/away + umpire,WORSE (MAE → 1.715),Added noise
+Type-based model,BEST (MAE 1.672 | r=0.479),Winner
+Variance inflation,Fixes spread but +15% MAE cost,Only for confidence intervals
+
+Files Created,,,
+validate_june23_manual.csv,Fill in actual results here,
+validate_june23_results.py,Run this after filling CSV,
+JUNE23_VALIDATION_INSTRUCTIONS.md,Detailed how-to guide,
+app_vs_prediction_test.py,Auto-validator (needs database update),
+
+Next Steps,,,
+1. Get June 23 actual results,From Baseball Reference or MLB.com,
+2. Fill CSV,Add actual K totals,
+3. Run validation,See betting + prediction performance,
+4. Compare to baseline,MAE 1.67 | hit rate breakeven 52.4%,
+5. Iterate if needed,Adjust if both metrics fail,

@@ -1,0 +1,7 @@
+archetype,pitcher_label,num_pitchers,total_pa_2026,avg_k_pct_2026,avg_bb_pct_2026,avg_hit_pct_2026,avg_k_pct_career,avg_bb_pct_career
+0,wild / ground-ball,104,11337.0,17.4,8.0,14.5,23.4,10.3
+1,low-whiff / pitch-to-contact,74,8603.0,11.8,6.7,16.8,18.1,7.4
+2,chase-inducing / swing-and-miss,64,10304.0,22.2,6.8,16.7,26.9,7.2
+3,hittable / fly-ball,99,14289.0,16.2,7.2,18.3,22.9,8.2
+4,strikeout / power-velo,55,8373.0,24.5,7.3,17.3,27.8,7.5
+5,low-whiff / barrel-suppressing,94,15123.0,16.1,6.1,18.1,20.2,7.0

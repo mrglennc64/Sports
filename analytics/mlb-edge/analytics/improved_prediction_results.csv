@@ -1,0 +1,41 @@
+Model,N,MAE,RMSE,Correlation,Spread_Ratio,Bias,Notes
+Original (Type-based),2296,1.672,2.083,0.479,0.502,+0.234,Pitcher/batter types with SHRINK=200
+Basic (Individual IDs),2296,1.693,2.127,0.439,0.430,+0.188,Individual player IDs with SHRINK=100
+Improved (+H/A+Umpire),2296,1.715,2.155,0.420,0.489,+0.206,Individual IDs + home/away + umpire effects
+
+Key Findings,,,,,,,
+MAE Change (Type → Individual),,+0.021,,,,-0.046,Slightly worse MAE but less bias
+Spread Change (Type → Individual),,,,,+0.072 (14% worse),LESS underconfident but still compressed
+H/A+Umpire Effect,,-0.022 (worse),,,,,Added complexity hurt MAE slightly
+Spread Improvement (Individual → Improved),,,,,-0.059 (14% worse),Adjustments made spread worse
+
+By Pitcher Tier,,,,,,,
+Ace (6.5+ K) - Basic,13,1.288,,0.555,0.360,,Best correlation for aces
+Ace (6.5+ K) - Improved,13,1.249,,0.599,0.412,,Only tier where improvements helped (+3.08% MAE)
+Mid (5-6.5 K) - Basic,1030,1.795,,0.262,0.321,,
+Mid (5-6.5 K) - Improved,1030,1.836,,0.233,0.384,,Hurt by adjustments (-2.28% MAE)
+Low (< 5 K) - Basic,1253,1.613,,0.378,0.408,,
+Low (< 5 K) - Improved,1253,1.621,,0.356,0.438,,Slightly hurt (-0.51% MAE)
+
+Conclusions,,,,,,,
+1. Individual IDs vs Types,,Worse MAE but LESS compressed,,,,"Individual IDs reduce underconfidence (0.502→0.430 spread) but hurt accuracy"
+2. Home/Away + Umpire,,Added noise not signal,,,,"Adjustments degraded both MAE and correlation, only helped for aces (N=13)"
+3. Spread Still Compressed,,0.489 vs target 1.0,,,,"Even individual IDs are 51% too compressed, still severely underconfident"
+4. Type-based Model Wins,,Best MAE and correlation,,,,"Original type-based model (1.672 MAE, 0.479 corr) beats both ""improved"" versions"
+5. Tier Effects,,Aces easiest to predict,,,,"Aces: r=0.599, Mid: r=0.233, Low: r=0.378"
+
+Recommendations,,,,,,,
+DON'T use individual IDs,,,,,,"They hurt accuracy without solving underconfidence problem"
+DON'T add H/A+umpire adjustments,,,,,,"Added complexity degrades performance, likely overfitting to noise"
+DO investigate why spread is compressed,,,,,,"Root cause isn't shrinkage (tested 0-1000), it's the matchup rate approach itself"
+DO use type-based model,,,,,,"Original model (MAE=1.672, r=0.479, spread=0.502) is best so far"
+DO consider ensemble approach,,,,,,"Combine type-based rates with variance inflation to fix spread without hurting MAE"
+
+Next Steps,,,,,,,
+1. Test variance inflation,,,,,,"Multiply predictions by constant to hit spread_ratio=1.0 target"
+2. Add recent form carefully,,,,,,"Rolling L5 K totals as feature, test if signal > noise"
+3. Weather/park factors,,,,,,"Only if data is clean and sample sizes sufficient"
+4. Abandon individual player IDs,,,,,,"Types work better - less overfitting, better generalization"
+
+Test Date,2026-06-25,,,,,,
+Scripts,improved_prediction_test.py,,,,,,

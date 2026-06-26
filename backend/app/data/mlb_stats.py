@@ -140,14 +140,18 @@ def _starts_from_game(game: dict) -> list[ProbableStart]:
     for side, opp, is_home in ((away, home, False), (home, away, True)):
         pitcher = side.get("probablePitcher")
         opp_team = opp.get("team", {})
-        if not pitcher or not opp_team:
+
+        # Skip if opponent team missing (can't make predictions without opponent)
+        if not opp_team:
             continue
+
+        # Include game even if probable pitcher not announced (show as TBD)
         out.append(
             ProbableStart(
                 game_pk=game_pk,
-                pitcher_id=pitcher.get("id"),
-                pitcher_name=pitcher.get("fullName", ""),
-                throws=_handedness((pitcher.get("pitchHand") or {}).get("code")),
+                pitcher_id=pitcher.get("id") if pitcher else None,
+                pitcher_name=pitcher.get("fullName", "TBD") if pitcher else "TBD",
+                throws=_handedness((pitcher.get("pitchHand") or {}).get("code")) if pitcher else None,
                 is_home=is_home,
                 opponent_team_id=opp_team.get("id"),
                 opponent_team_name=opp_team.get("name", ""),
