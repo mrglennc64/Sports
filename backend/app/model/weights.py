@@ -104,6 +104,13 @@ class ModelConfig(BaseModel):
         "the synthesis backtest's out-of-sample optimum.",
     )
 
+    # Archetype interaction model (pitcher archetype × batter archetype). 0.0 = OFF.
+    # Blends final lambda toward archetype-based K rate predictions. Requires
+    # pitcher_id on inputs + archetype data files in data/exports/, else no-op.
+    # When lineup includes batter_ids (future), computes per-batter interactions.
+    # Enabled 2026-06-26: A/B test showed 0.5% MAE improvement, better calibration.
+    archetype_weight: float = Field(0.15, ge=0, le=1)
+
     # Betting evaluation.
     edge_threshold_ks: float = Field(
         0.5,
