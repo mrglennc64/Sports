@@ -1,0 +1,36 @@
+JUNE 23, 2026 - MANUAL EXTRACTION TEMPLATE
+
+Look at the MLB.com screenshot and fill in the K (strikeouts) for each pitcher.
+In each game box you'll see: "IP: X.X  K: X  ERA: X.XX"
+
+Copy this template and fill in the K values, then I'll process it.
+
+FORMAT: Pitcher Name | Opponent | K
+
+=== FLAGGED BETS (NEED THESE FOR BETTING PERFORMANCE) ===
+Zac Gallen | Cardinals | ___
+Bubba Chandler | Mariners | ___
+Michael McGreevy | Diamondbacks | ___
+Matthew Boyd | Mets | ___
+Cam Schlitter | Red Sox | ___
+Christopher Sánchez | Nationals | ___
+Cade Cavalli | Phillies | ___
+Troy Melton | Astros | ___
+Jeffrey Springs | Giants | ___
+
+=== UNFLAGGED (FOR PREDICTION ACCURACY) ===
+Kevin Gausman | Rangers | ___
+MacKenzie Gore | Blue Jays | ___
+Freddy Peralta | Cubs | ___
+Tatuya Imai | Tigers | ___
+Connelly Early | Yankees | ___
+Landen Roupp | Athletics | ___
+
+INSTRUCTIONS:
+1. Fill in the ___ with strikeout totals
+2. Paste the completed template back to me
+3. I'll process it and show results
+
+EXAMPLE:
+Zac Gallen | Cardinals | 5
+(means Zac Gallen had 5 strikeouts)

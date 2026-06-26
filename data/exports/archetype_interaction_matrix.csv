@@ -1,0 +1,43 @@
+pitcher_archetype,pitcher_label,batter_archetype,batter_label,total_pa,k_count,bb_count,hr_count,on_base_count,k_pct,bb_pct,hr_pct,obp
+0,wild / ground-ball,0,contact / zone-contact,9088,1552.0,947.0,162.0,2970.0,17.08,10.42,1.78,32.68
+0,wild / ground-ball,1,barrels/power / hard-contact,6124,1588.0,871.0,250.0,2221.0,25.93,14.22,4.08,36.27
+0,wild / ground-ball,2,high-K / zone-whiff,8276,2644.0,889.0,228.0,2469.0,31.95,10.74,2.75,29.83
+0,wild / ground-ball,3,fly-ball/lift / disciplined,7114,1473.0,918.0,178.0,2367.0,20.71,12.9,2.5,33.27
+0,wild / ground-ball,4,chaser,11122,2822.0,915.0,336.0,3437.0,25.37,8.23,3.02,30.9
+0,wild / ground-ball,5,speed / ground-ball,5647,1298.0,544.0,111.0,1801.0,22.99,9.63,1.97,31.89
+0,wild / ground-ball,6,chaser / aggressive,5183,970.0,322.0,101.0,1534.0,18.72,6.21,1.95,29.6
+1,low-whiff / pitch-to-contact,0,contact / zone-contact,9316,1182.0,631.0,203.0,3014.0,12.69,6.77,2.18,32.35
+1,low-whiff / pitch-to-contact,1,barrels/power / hard-contact,6443,1237.0,698.0,403.0,2356.0,19.2,10.83,6.25,36.57
+1,low-whiff / pitch-to-contact,2,high-K / zone-whiff,8172,1948.0,654.0,381.0,2529.0,23.84,8.0,4.66,30.95
+1,low-whiff / pitch-to-contact,3,fly-ball/lift / disciplined,7293,1201.0,688.0,277.0,2437.0,16.47,9.43,3.8,33.42
+1,low-whiff / pitch-to-contact,4,chaser,11583,2110.0,679.0,502.0,3736.0,18.22,5.86,4.33,32.25
+1,low-whiff / pitch-to-contact,5,speed / ground-ball,5898,977.0,386.0,161.0,1882.0,16.56,6.54,2.73,31.91
+1,low-whiff / pitch-to-contact,6,chaser / aggressive,5509,701.0,215.0,149.0,1646.0,12.72,3.9,2.7,29.88
+2,chase-inducing / swing-and-miss,0,contact / zone-contact,6808,1358.0,413.0,136.0,1979.0,19.95,6.07,2.0,29.07
+2,chase-inducing / swing-and-miss,1,barrels/power / hard-contact,4606,1370.0,434.0,255.0,1465.0,29.74,9.42,5.54,31.81
+2,chase-inducing / swing-and-miss,2,high-K / zone-whiff,6427,2255.0,455.0,236.0,1663.0,35.09,7.08,3.67,25.88
+2,chase-inducing / swing-and-miss,3,fly-ball/lift / disciplined,5400,1391.0,460.0,160.0,1526.0,25.76,8.52,2.96,28.26
+2,chase-inducing / swing-and-miss,4,chaser,8208,2365.0,439.0,283.0,2164.0,28.81,5.35,3.45,26.36
+2,chase-inducing / swing-and-miss,5,speed / ground-ball,4400,1127.0,260.0,103.0,1260.0,25.61,5.91,2.34,28.64
+2,chase-inducing / swing-and-miss,6,chaser / aggressive,4065,868.0,146.0,86.0,1041.0,21.35,3.59,2.12,25.61
+3,hittable / fly-ball,0,contact / zone-contact,10827,1851.0,836.0,222.0,3317.0,17.1,7.72,2.05,30.64
+3,hittable / fly-ball,1,barrels/power / hard-contact,7506,1864.0,876.0,429.0,2653.0,24.83,11.67,5.72,35.35
+3,hittable / fly-ball,2,high-K / zone-whiff,9646,2968.0,824.0,419.0,2807.0,30.77,8.54,4.34,29.1
+3,hittable / fly-ball,3,fly-ball/lift / disciplined,8790,1783.0,915.0,308.0,2828.0,20.28,10.41,3.5,32.17
+3,hittable / fly-ball,4,chaser,14107,3412.0,896.0,567.0,4205.0,24.19,6.35,4.02,29.81
+3,hittable / fly-ball,5,speed / ground-ball,6735,1480.0,473.0,170.0,2031.0,21.97,7.02,2.52,30.16
+3,hittable / fly-ball,6,chaser / aggressive,6456,1203.0,309.0,183.0,1847.0,18.63,4.79,2.83,28.61
+4,strikeout / power-velo,0,contact / zone-contact,6601,1363.0,449.0,85.0,1872.0,20.65,6.8,1.29,28.36
+4,strikeout / power-velo,1,barrels/power / hard-contact,4493,1407.0,417.0,142.0,1341.0,31.32,9.28,3.16,29.85
+4,strikeout / power-velo,2,high-K / zone-whiff,5979,2225.0,446.0,168.0,1552.0,37.21,7.46,2.81,25.96
+4,strikeout / power-velo,3,fly-ball/lift / disciplined,5070,1270.0,422.0,86.0,1439.0,25.05,8.32,1.7,28.38
+4,strikeout / power-velo,4,chaser,8120,2432.0,484.0,183.0,2185.0,29.95,5.96,2.25,26.91
+4,strikeout / power-velo,5,speed / ground-ball,4180,1179.0,257.0,50.0,1112.0,28.21,6.15,1.2,26.6
+4,strikeout / power-velo,6,chaser / aggressive,3997,924.0,161.0,57.0,1091.0,23.12,4.03,1.43,27.3
+5,low-whiff / barrel-suppressing,0,contact / zone-contact,12794,1819.0,829.0,200.0,3954.0,14.22,6.48,1.56,30.91
+5,low-whiff / barrel-suppressing,1,barrels/power / hard-contact,8613,1959.0,839.0,344.0,2933.0,22.74,9.74,3.99,34.05
+5,low-whiff / barrel-suppressing,2,high-K / zone-whiff,11337,2942.0,847.0,382.0,3337.0,25.95,7.47,3.37,29.43
+5,low-whiff / barrel-suppressing,3,fly-ball/lift / disciplined,9670,1736.0,902.0,253.0,3143.0,17.95,9.33,2.62,32.5
+5,low-whiff / barrel-suppressing,4,chaser,15324,3198.0,899.0,485.0,4669.0,20.87,5.87,3.16,30.47
+5,low-whiff / barrel-suppressing,5,speed / ground-ball,8119,1512.0,481.0,173.0,2483.0,18.62,5.92,2.13,30.58
+5,low-whiff / barrel-suppressing,6,chaser / aggressive,7502,1101.0,307.0,176.0,2222.0,14.68,4.09,2.35,29.62

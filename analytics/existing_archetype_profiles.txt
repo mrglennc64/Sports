@@ -1,0 +1,279 @@
+================================================================================
+PITCHER ARCHETYPES (2026 Season)
+================================================================================
+
+Total Pitchers Clustered: 129
+Number of Clusters: 6
+
+Cluster 5: LOW-WHIFF / BARREL-SUPPRESSING
+  Rank: #0
+  Size: 32 pitchers (24.8%)
+  Statistics:
+    Strikeout Rate (K%): 19.0%
+    Walk Rate (BB%):     7.7%
+    Whiff Rate:          21.5%
+    Chase Rate:          30.2%
+    Velocity (MPH):      92.5
+    Ground Ball Rate:    45.3%
+    Barrel Rate:         7.0%
+  Sample Players (by PA):
+    - Sandy Alcantara (PA: 432, K: 17.8%, BB: 5.6%, Whiff: 21.6%)
+    - Michael Wacha (PA: 382, K: 18.8%, BB: 7.3%, Whiff: 22.7%)
+    - Framber Valdez (PA: 367, K: 18.3%, BB: 8.7%, Whiff: 21.1%)
+    - Bryce Elder (PA: 366, K: 19.9%, BB: 7.4%, Whiff: 22.6%)
+    - Mitch Keller (PA: 353, K: 18.4%, BB: 8.8%, Whiff: 20.4%)
+
+Cluster 3: HITTABLE / FLY-BALL
+  Rank: #1
+  Size: 30 pitchers (23.3%)
+  Statistics:
+    Strikeout Rate (K%): 21.7%
+    Walk Rate (BB%):     8.5%
+    Whiff Rate:          24.9%
+    Chase Rate:          30.3%
+    Velocity (MPH):      93.6
+    Ground Ball Rate:    38.5%
+    Barrel Rate:         10.9%
+  Sample Players (by PA):
+    - Ryne Nelson (PA: 355, K: 17.5%, BB: 6.2%, Whiff: 21.0%)
+    - Shane Baz (PA: 355, K: 18.9%, BB: 9.0%, Whiff: 21.0%)
+    - Mike Burrows (PA: 350, K: 18.6%, BB: 8.6%, Whiff: 23.2%)
+    - Foster Griffin (PA: 347, K: 23.1%, BB: 6.6%, Whiff: 24.2%)
+    - Logan Gilbert (PA: 346, K: 26.6%, BB: 5.8%, Whiff: 29.8%)
+
+Cluster 2: CHASE-INDUCING / SWING-AND-MISS
+  Rank: #2
+  Size: 19 pitchers (14.7%)
+  Statistics:
+    Strikeout Rate (K%): 26.2%
+    Walk Rate (BB%):     6.3%
+    Whiff Rate:          28.4%
+    Chase Rate:          34.3%
+    Velocity (MPH):      94.3
+    Ground Ball Rate:    40.6%
+    Barrel Rate:         8.5%
+  Sample Players (by PA):
+    - Gavin Williams (PA: 369, K: 27.9%, BB: 8.1%, Whiff: 30.4%)
+    - Nathan Eovaldi (PA: 363, K: 22.9%, BB: 5.8%, Whiff: 29.5%)
+    - Reid Detmers (PA: 355, K: 28.2%, BB: 6.8%, Whiff: 28.1%)
+    - Max Meyer (PA: 353, K: 26.9%, BB: 9.1%, Whiff: 30.1%)
+    - Kevin Gausman (PA: 349, K: 24.6%, BB: 4.6%, Whiff: 27.8%)
+
+Cluster 1: LOW-WHIFF / PITCH-TO-CONTACT
+  Rank: #3
+  Size: 18 pitchers (14.0%)
+  Statistics:
+    Strikeout Rate (K%): 15.9%
+    Walk Rate (BB%):     7.8%
+    Whiff Rate:          18.7%
+    Chase Rate:          26.9%
+    Velocity (MPH):      91.7
+    Ground Ball Rate:    38.5%
+    Barrel Rate:         9.9%
+  Sample Players (by PA):
+    - Eduardo Rodriguez (PA: 363, K: 17.9%, BB: 9.6%, Whiff: 19.0%)
+    - Michael Lorenzen (PA: 342, K: 17.5%, BB: 7.3%, Whiff: 20.5%)
+    - Seth Lugo (PA: 334, K: 19.8%, BB: 7.5%, Whiff: 18.3%)
+    - Justin Wrobleski (PA: 316, K: 15.8%, BB: 5.1%, Whiff: 17.7%)
+    - Kyle Leahy (PA: 315, K: 18.7%, BB: 8.3%, Whiff: 22.4%)
+
+Cluster 0: WILD / GROUND-BALL
+  Rank: #4
+  Size: 17 pitchers (13.2%)
+  Statistics:
+    Strikeout Rate (K%): 22.9%
+    Walk Rate (BB%):     11.4%
+    Whiff Rate:          26.1%
+    Chase Rate:          28.8%
+    Velocity (MPH):      94.3
+    Ground Ball Rate:    46.7%
+    Barrel Rate:         7.4%
+  Sample Players (by PA):
+    - José Soriano (PA: 360, K: 25.6%, BB: 11.7%, Whiff: 33.0%)
+    - Freddy Peralta (PA: 357, K: 22.7%, BB: 9.2%, Whiff: 27.1%)
+    - Kyle Bradish (PA: 351, K: 24.2%, BB: 11.7%, Whiff: 26.3%)
+    - Michael King (PA: 348, K: 21.0%, BB: 10.1%, Whiff: 25.6%)
+    - Nolan McLean (PA: 344, K: 28.2%, BB: 9.3%, Whiff: 24.4%)
+
+Cluster 4: STRIKEOUT / POWER-VELO
+  Rank: #5
+  Size: 13 pitchers (10.1%)
+  Statistics:
+    Strikeout Rate (K%): 28.5%
+    Walk Rate (BB%):     6.5%
+    Whiff Rate:          29.2%
+    Chase Rate:          33.5%
+    Velocity (MPH):      96.6
+    Ground Ball Rate:    48.4%
+    Barrel Rate:         5.9%
+  Sample Players (by PA):
+    - Cristopher Sánchez (PA: 400, K: 29.0%, BB: 4.8%, Whiff: 32.0%)
+    - George Kirby (PA: 375, K: 21.1%, BB: 5.6%, Whiff: 21.3%)
+    - Braxton Ashcraft (PA: 369, K: 26.3%, BB: 6.0%, Whiff: 27.1%)
+    - Jesús Luzardo (PA: 364, K: 26.6%, BB: 7.4%, Whiff: 30.9%)
+    - Cam Schlittler (PA: 346, K: 27.7%, BB: 5.2%, Whiff: 27.3%)
+
+================================================================================
+BATTER ARCHETYPES (2026 Season)
+================================================================================
+
+Total Batters Clustered: 337
+Number of Clusters: 7
+
+Cluster 0: CONTACT / ZONE-CONTACT
+  Rank: #0
+  Size: 63 batters (18.7%)
+  Statistics:
+    Strikeout Rate (K%):    15.4%
+    Walk Rate (BB%):        9.1%
+    Chase Rate:             26.9%
+    Zone Contact (Z-Con%):  89.1%
+    Exit Velocity (MPH):    87.1
+    Launch Angle:           11.1°
+    Barrel Rate:            4.3%
+    Stolen Bases (avg):     1.43
+  Sample Players (by PA):
+    - Nico Hoerner (PA: 331, K: 7.3%, BB: 9.4%, Chase: 30.0%, Z-Con: 97.0%)
+    - Iván Herrera (PA: 327, K: 15.3%, BB: 12.8%, Chase: 27.1%, Z-Con: 89.5%)
+    - Xavier Edwards (PA: 318, K: 13.2%, BB: 12.3%, Chase: 23.1%, Z-Con: 89.8%)
+    - Matt Chapman (PA: 309, K: 20.7%, BB: 10.4%, Chase: 26.6%, Z-Con: 84.8%)
+    - Yandy Díaz (PA: 300, K: 13.0%, BB: 9.3%, Chase: 27.5%, Z-Con: 88.9%)
+
+Cluster 4: CHASER
+  Rank: #1
+  Size: 61 batters (18.1%)
+  Statistics:
+    Strikeout Rate (K%):    24.3%
+    Walk Rate (BB%):        7.3%
+    Chase Rate:             34.3%
+    Zone Contact (Z-Con%):  82.1%
+    Exit Velocity (MPH):    90.3
+    Launch Angle:           13.3°
+    Barrel Rate:            10.4%
+    Stolen Bases (avg):     1.39
+  Sample Players (by PA):
+    - Gunnar Henderson (PA: 338, K: 24.3%, BB: 7.7%, Chase: 32.2%, Z-Con: 83.9%)
+    - Julio Rodríguez (PA: 329, K: 20.7%, BB: 7.6%, Chase: 39.0%, Z-Con: 84.5%)
+    - Pete Crow-Armstrong (PA: 319, K: 25.1%, BB: 7.8%, Chase: 38.3%, Z-Con: 83.2%)
+    - Andy Pages (PA: 314, K: 19.7%, BB: 6.4%, Chase: 34.3%, Z-Con: 87.1%)
+    - Jo Adell (PA: 314, K: 22.9%, BB: 2.9%, Chase: 38.7%, Z-Con: 84.8%)
+
+Cluster 3: FLY-BALL/LIFT / DISCIPLINED
+  Rank: #2
+  Size: 54 batters (16.0%)
+  Statistics:
+    Strikeout Rate (K%):    20.2%
+    Walk Rate (BB%):        11.8%
+    Chase Rate:             24.6%
+    Zone Contact (Z-Con%):  86.3%
+    Exit Velocity (MPH):    88.6
+    Launch Angle:           17.9°
+    Barrel Rate:            8.0%
+    Stolen Bases (avg):     1.60
+  Sample Players (by PA):
+    - Taylor Ward (PA: 341, K: 19.9%, BB: 18.5%, Chase: 13.1%, Z-Con: 89.5%)
+    - Alex Bregman (PA: 337, K: 16.3%, BB: 11.0%, Chase: 22.0%, Z-Con: 88.1%)
+    - Michael Busch (PA: 326, K: 22.7%, BB: 15.3%, Chase: 24.4%, Z-Con: 84.9%)
+    - Kevin McGonigle (PA: 313, K: 13.1%, BB: 14.4%, Chase: 18.0%, Z-Con: 89.9%)
+    - Miguel Vargas (PA: 311, K: 16.4%, BB: 14.5%, Chase: 19.7%, Z-Con: 81.5%)
+
+Cluster 2: HIGH-K / ZONE-WHIFF
+  Rank: #3
+  Size: 48 batters (14.2%)
+  Statistics:
+    Strikeout Rate (K%):    30.4%
+    Walk Rate (BB%):        9.5%
+    Chase Rate:             29.2%
+    Zone Contact (Z-Con%):  77.5%
+    Exit Velocity (MPH):    89.5
+    Launch Angle:           17.6°
+    Barrel Rate:            10.2%
+    Stolen Bases (avg):     0.77
+  Sample Players (by PA):
+    - Zach Neto (PA: 330, K: 31.8%, BB: 11.2%, Chase: 33.5%, Z-Con: 82.9%)
+    - Rafael Devers (PA: 316, K: 30.1%, BB: 7.9%, Chase: 30.3%, Z-Con: 70.7%)
+    - Willy Adames (PA: 307, K: 27.4%, BB: 5.5%, Chase: 32.3%, Z-Con: 84.6%)
+    - Brandon Lowe (PA: 304, K: 25.7%, BB: 10.9%, Chase: 32.5%, Z-Con: 80.5%)
+    - Austin Riley (PA: 298, K: 28.5%, BB: 8.4%, Chase: 31.9%, Z-Con: 79.7%)
+
+Cluster 6: CHASER / AGGRESSIVE
+  Rank: #4
+  Size: 41 batters (12.2%)
+  Statistics:
+    Strikeout Rate (K%):    17.3%
+    Walk Rate (BB%):        4.8%
+    Chase Rate:             39.2%
+    Zone Contact (Z-Con%):  87.5%
+    Exit Velocity (MPH):    87.6
+    Launch Angle:           13.3°
+    Barrel Rate:            5.4%
+    Stolen Bases (avg):     1.18
+  Sample Players (by PA):
+    - Bo Bichette (PA: 324, K: 17.3%, BB: 6.2%, Chase: 40.0%, Z-Con: 91.7%)
+    - Daylen Lile (PA: 323, K: 16.7%, BB: 7.4%, Chase: 36.1%, Z-Con: 85.9%)
+    - Luis Arraez (PA: 316, K: 4.1%, BB: 5.1%, Chase: 33.6%, Z-Con: 92.8%)
+    - Ozzie Albies (PA: 314, K: 12.1%, BB: 7.0%, Chase: 35.5%, Z-Con: 86.7%)
+    - Cole Young (PA: 303, K: 18.5%, BB: 6.6%, Chase: 31.4%, Z-Con: 83.1%)
+
+Cluster 1: BARRELS/POWER / HARD-CONTACT
+  Rank: #5
+  Size: 36 batters (10.7%)
+  Statistics:
+    Strikeout Rate (K%):    24.8%
+    Walk Rate (BB%):        13.7%
+    Chase Rate:             25.7%
+    Zone Contact (Z-Con%):  81.1%
+    Exit Velocity (MPH):    92.5
+    Launch Angle:           13.0°
+    Barrel Rate:            14.9%
+    Stolen Bases (avg):     1.75
+  Sample Players (by PA):
+    - James Wood (PA: 349, K: 29.2%, BB: 16.9%, Chase: 22.5%, Z-Con: 81.2%)
+    - Mike Trout (PA: 335, K: 24.8%, BB: 19.7%, Chase: 19.3%, Z-Con: 87.4%)
+    - Nick Kurtz (PA: 334, K: 28.7%, BB: 20.4%, Chase: 21.6%, Z-Con: 75.3%)
+    - Yordan Alvarez (PA: 327, K: 16.8%, BB: 14.1%, Chase: 27.3%, Z-Con: 89.8%)
+    - Bryan Reynolds (PA: 325, K: 21.2%, BB: 15.1%, Chase: 22.9%, Z-Con: 84.3%)
+
+Cluster 5: SPEED / GROUND-BALL
+  Rank: #6
+  Size: 34 batters (10.1%)
+  Statistics:
+    Strikeout Rate (K%):    21.7%
+    Walk Rate (BB%):        8.0%
+    Chase Rate:             31.9%
+    Zone Contact (Z-Con%):  83.9%
+    Exit Velocity (MPH):    88.3
+    Launch Angle:           9.6°
+    Barrel Rate:            5.2%
+    Stolen Bases (avg):     5.54
+  Sample Players (by PA):
+    - Bobby Witt Jr. (PA: 335, K: 17.0%, BB: 10.4%, Chase: 32.6%, Z-Con: 86.8%)
+    - Trea Turner (PA: 318, K: 22.6%, BB: 6.3%, Chase: 36.1%, Z-Con: 84.7%)
+    - Otto Lopez (PA: 315, K: 14.6%, BB: 4.4%, Chase: 34.9%, Z-Con: 91.2%)
+    - José Ramírez (PA: 314, K: 14.0%, BB: 13.1%, Chase: 29.7%, Z-Con: 89.6%)
+    - Fernando Tatis Jr. (PA: 314, K: 20.4%, BB: 8.9%, Chase: 27.9%, Z-Con: 83.2%)
+
+================================================================================
+ARCHETYPE SUMMARY
+================================================================================
+
+PITCHER ARCHETYPES:
+  0. low-whiff / barrel-suppressing (n=32)
+  1. hittable / fly-ball (n=30)
+  2. chase-inducing / swing-and-miss (n=19)
+  3. low-whiff / pitch-to-contact (n=18)
+  4. wild / ground-ball (n=17)
+  5. strikeout / power-velo (n=13)
+
+BATTER ARCHETYPES:
+  0. contact / zone-contact (n=63)
+  1. chaser (n=61)
+  2. fly-ball/lift / disciplined (n=54)
+  3. high-K / zone-whiff (n=48)
+  4. chaser / aggressive (n=41)
+  5. barrels/power / hard-contact (n=36)
+  6. speed / ground-ball (n=34)
+
+================================================================================
+Generated: 2026-06-26
+================================================================================
