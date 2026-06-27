@@ -49,6 +49,13 @@ DEFAULT_HOOK_PITCH_COUNT = 100.0
 
 DEFAULT_RECENT_STARTS = 5
 
+# Recency blend for innings-per-start: weight recent 21-day window vs season average
+# to catch mid-season fatigue/tightening leash that STD averages miss.
+RECENT_WINDOW_DAYS = 21
+RECENT_MIN_STARTS = 3  # minimum starts in window to trust the signal
+RECENT_IP_START_WEIGHT = 0.6  # recent window gets 60% weight
+SEASON_IP_START_WEIGHT = 0.4  # season average gets 40% weight
+
 
 @dataclass
 class ProbableStart:
@@ -238,27 +245,82 @@ def _k_per_9_last_30(splits: list[dict]) -> float:
 # --- pitcher workload --------------------------------------------------------
 
 
+async def _fetch_recent_ip_per_start(
+    client: StatsApiClient,
+    pitcher_id: int,
+    season: int,
+    end_date: date,
+    window_days: int = RECENT_WINDOW_DAYS,
+    min_starts: int = RECENT_MIN_STARTS,
+) -> float | None:
+    """Recent innings per start over the last N days, or None if insufficient sample.
+
+    Returns the average IP/start over the trailing window. If the pitcher has fewer
+    than min_starts in the window, returns None so the caller can fall back to
+    season average. This catches mid-season fatigue and tightening leash patterns
+    that season-to-date averages miss.
+    """
+    start_date = end_date - timedelta(days=window_days)
+    payload = await client.get_json(
+        f"/api/v1/people/{pitcher_id}/stats",
+        params={
+            "stats": "byDateRange",
+            "group": "pitching",
+            "season": season,
+            "startDate": start_date.isoformat(),
+            "endDate": end_date.isoformat(),
+        },
+    )
+    stat = _first_split_stat(payload)
+    if not stat:
+        return None
+    gs = int(stat.get("gamesStarted") or 0)
+    ip = parse_innings(stat.get("inningsPitched", "0"))
+    if gs < min_starts or ip <= 0:
+        return None
+    return ip / gs
+
+
 async def fetch_pitcher_workload(
-    client: StatsApiClient, pitcher_id: int, season: int
+    client: StatsApiClient, pitcher_id: int, season: int, today: date | None = None
 ) -> tuple[ExpectedWorkload, BullpenContext]:
-    """Expected workload + bullpen leash from season IP / games started.
+    """Expected workload + bullpen leash from recency-blended IP / games started.
+
+    Blends recent 21-day window (60%) with season average (40%) to catch mid-season
+    fatigue and tightening leash patterns. Falls back to season average if the pitcher
+    has fewer than 3 recent starts.
 
     ``expected_innings`` is clamped to 3-7 IP; the ``BullpenContext`` is read
     from the RAW (unclamped) IP/start so an opener or short-leash role — which
     the clamp would otherwise hide — still trims the strikeout ceiling.
     """
+    today = today or date.today()
+
+    # Fetch season-to-date workload
     payload = await client.get_json(
         f"/api/v1/people/{pitcher_id}/stats",
         params={"stats": "season", "group": "pitching", "season": season},
     )
     stat = _first_split_stat(payload)
-    raw_ip_per_start = (MIN_IP_PER_START + MAX_IP_PER_START) / 2  # neutral fallback
+    season_ip_per_start = (MIN_IP_PER_START + MAX_IP_PER_START) / 2  # neutral fallback
     gs = 0
     if stat:
         gs = int(stat.get("gamesStarted") or 0)
         ip = parse_innings(stat.get("inningsPitched", "0"))
         if gs and ip > 0:
-            raw_ip_per_start = ip / gs
+            season_ip_per_start = ip / gs
+
+    # Fetch recent window and blend if sufficient sample
+    recent_ip_per_start = await _fetch_recent_ip_per_start(
+        client, pitcher_id, season, today
+    )
+    if recent_ip_per_start is not None:
+        raw_ip_per_start = (
+            recent_ip_per_start * RECENT_IP_START_WEIGHT +
+            season_ip_per_start * SEASON_IP_START_WEIGHT
+        )
+    else:
+        raw_ip_per_start = season_ip_per_start
 
     ip_per_start = min(MAX_IP_PER_START, max(MIN_IP_PER_START, raw_ip_per_start))
     expected_pitches = ip_per_start * PITCHES_PER_INNING
@@ -372,11 +434,16 @@ async def fetch_lineup_strength(
     game_pk: int,
     opponent_is_home: bool,
     season: int,
+    pitcher_hand: Handedness | None = None,
 ) -> LineupStrength | None:
     """Tonight's projected lineup K% from the posted starting nine.
 
-    Averages each posted hitter's season K% (PA-weighted). Returns ``None`` if
-    the lineup hasn't been posted yet, so callers can fall back to team rates.
+    Each batter's K% is PA-weighted. When ``pitcher_hand`` is supplied, uses
+    the batter's handedness-split rate (vs RHP or vs LHP) rather than their
+    overall season K% — a more precise signal since a power-hitting RHB may
+    strike out 28% vs LHP but only 20% vs RHP. Falls back to overall season
+    K% for any batter with fewer than 50 split PA. Returns ``None`` if the
+    lineup hasn't been posted yet.
     """
     payload = await client.get_json(
         "/api/v1/schedule",
@@ -386,10 +453,17 @@ async def fetch_lineup_strength(
     if not lineup_ids:
         return None
 
+    MIN_SPLIT_PA = 50  # minimum PA in split to trust it over season average
+
     total_k = 0
     total_pa = 0
     for pid in lineup_ids:
-        ks, pa = await _hitter_k_and_pa(client, pid, season)
+        if pitcher_hand is not None:
+            ks, pa = await _hitter_k_and_pa_vs_hand(client, pid, season, pitcher_hand)
+            if pa < MIN_SPLIT_PA:
+                ks, pa = await _hitter_k_and_pa(client, pid, season)
+        else:
+            ks, pa = await _hitter_k_and_pa(client, pid, season)
         total_k += ks
         total_pa += pa
     if total_pa <= 0:
@@ -419,6 +493,27 @@ async def _hitter_k_and_pa(
     payload = await client.get_json(
         f"/api/v1/people/{player_id}/stats",
         params={"stats": "season", "group": "hitting", "season": season},
+    )
+    stat = _first_split_stat(payload) or {}
+    return int(stat.get("strikeOuts") or 0), int(stat.get("plateAppearances") or 0)
+
+
+async def _hitter_k_and_pa_vs_hand(
+    client: StatsApiClient,
+    player_id: int,
+    season: int,
+    pitcher_hand: Handedness,
+) -> tuple[int, int]:
+    """Batter's K and PA against a specific pitcher handedness (vr = vs RHP, vl = vs LHP)."""
+    sit_code = "vr" if pitcher_hand == Handedness.R else "vl"
+    payload = await client.get_json(
+        f"/api/v1/people/{player_id}/stats",
+        params={
+            "stats": "statSplits",
+            "group": "hitting",
+            "season": season,
+            "sitCodes": sit_code,
+        },
     )
     stat = _first_split_stat(payload) or {}
     return int(stat.get("strikeOuts") or 0), int(stat.get("plateAppearances") or 0)

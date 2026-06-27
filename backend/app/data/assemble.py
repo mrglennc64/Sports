@@ -71,13 +71,16 @@ async def build_projection_inputs(
     pitcher_form = await fetch_pitcher_form(
         client, start.pitcher_id, start.throws, season
     )
-    workload, bullpen = await fetch_pitcher_workload(client, start.pitcher_id, season)
+    workload, bullpen = await fetch_pitcher_workload(
+        client, start.pitcher_id, season, today=date.fromisoformat(on_date)
+    )
 
     # Tonight's actual nine (if posted) drives the starting-lineup K%. The
     # opponent is home exactly when the pitcher's team is NOT (``start.is_home``
     # is true when the *pitcher* is home), so the flag is inverted.
     lineup = await fetch_lineup_strength(
-        client, start.game_pk, opponent_is_home=not start.is_home, season=season
+        client, start.game_pk, opponent_is_home=not start.is_home, season=season,
+        pitcher_hand=start.throws,
     )
     lineup_k_pct = lineup.projected_lineup_k_pct if lineup else None
 

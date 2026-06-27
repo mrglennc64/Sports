@@ -13,7 +13,6 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [betsOnly, setBetsOnly] = useState(false);
   const [cardOnly, setCardOnly] = useState(false);
   const [mode, setMode] = useState("simple"); // "simple" | "pro"
 
@@ -37,7 +36,6 @@ export default function Dashboard() {
 
   let rows = data?.rows ?? [];
   if (cardOnly) rows = rows.filter((r) => r.selected);
-  else if (betsOnly) rows = rows.filter((r) => r.bet);
 
   return (
     <div className="app">
@@ -45,10 +43,9 @@ export default function Dashboard() {
         <div className="nav">
           <Link to="/" className="home-link">← Home</Link>
         </div>
-        <h1>⚾ Strikeout Edge — Engine</h1>
+        <h1>⚾ Strikeout Projections</h1>
         <p className="sub">
-          Model-priced pitcher-strikeout props vs. de-vigged sportsbook odds.
-          Signals only — verify before betting.
+          Pitcher strikeout projections with confidence levels.
         </p>
       </header>
 
@@ -64,14 +61,6 @@ export default function Dashboard() {
         <button onClick={() => load(date)} disabled={loading}>
           {loading ? "Loading…" : "Load slate"}
         </button>
-        <label className="toggle">
-          <input
-            type="checkbox"
-            checked={betsOnly}
-            onChange={(e) => setBetsOnly(e.target.checked)}
-          />
-          Sharp bets only
-        </label>
         <label className="toggle">
           <input
             type="checkbox"
@@ -100,10 +89,9 @@ export default function Dashboard() {
 
       {data && (
         <div className="summary">
-          <span><b>{data.evaluated}</b> evaluated</span>
-          <span><b>{data.bets}</b> flagged bets</span>
-          <span>⭐ <b>{data.card_size}</b> on the card</span>
-          <span><b>{data.skipped}</b> skipped (no prop / no stats)</span>
+          <span><b>{data.evaluated}</b> projected</span>
+          <span>⭐ <b>{data.card_size}</b> featured</span>
+          <span><b>{data.skipped}</b> unavailable</span>
         </div>
       )}
 
@@ -115,8 +103,7 @@ export default function Dashboard() {
         ))}
 
       <footer>
-        Edges are unproven until validated by logged CLV. This is an analytics tool,
-        not betting advice.
+        Projections based on historical data. Validate with live results.
       </footer>
     </div>
   );

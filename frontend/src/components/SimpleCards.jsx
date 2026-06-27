@@ -7,11 +7,10 @@ export default function SimpleCards({ rows }) {
     .filter((r) => r.status === "ok")
     .sort(
       (a, b) =>
-        // carded plays first, then by signal strength, then edge
+        // carded plays first, then by signal strength
         (a.selected ? 0 : 1) - (b.selected ? 0 : 1) ||
         (a.card_rank ?? 99) - (b.card_rank ?? 99) ||
-        (SIGNAL_RANK[a.signal] ?? 3) - (SIGNAL_RANK[b.signal] ?? 3) ||
-        b.edge - a.edge
+        (SIGNAL_RANK[a.signal] ?? 3) - (SIGNAL_RANK[b.signal] ?? 3)
     );
 
   if (cards.length === 0) return <p className="empty">No props to show.</p>;
@@ -37,12 +36,6 @@ export default function SimpleCards({ rows }) {
               <li key={j}>{reason}</li>
             ))}
           </ul>
-          <div className="card-stake">
-            Suggested stake: <b>{r.stake_label}</b>
-            {r.stake_label !== "—" && r.kelly != null && (
-              <span className="muted"> ({(r.kelly * 100).toFixed(1)}% bankroll)</span>
-            )}
-          </div>
         </div>
       ))}
     </div>

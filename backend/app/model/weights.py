@@ -105,11 +105,9 @@ class ModelConfig(BaseModel):
     )
 
     # Archetype interaction model (pitcher archetype × batter archetype). 0.0 = OFF.
-    # Blends final lambda toward archetype-based K rate predictions. Requires
-    # pitcher_id on inputs + archetype data files in data/exports/, else no-op.
-    # When lineup includes batter_ids (future), computes per-batter interactions.
-    # Enabled 2026-06-26: A/B test showed 0.5% MAE improvement, better calibration.
-    archetype_weight: float = Field(0.15, ge=0, le=1)
+    # June 1-14 backtest (417 starts): archetype V2 MAE 1.57 vs baseline MAE 1.43 —
+    # adding archetype noise made projections WORSE. Disabled 2026-06-27.
+    archetype_weight: float = Field(0.0, ge=0, le=1)
 
     # Betting evaluation.
     edge_threshold_ks: float = Field(
