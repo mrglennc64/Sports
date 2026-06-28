@@ -77,6 +77,8 @@ async def predict_pitcher_ensemble(
         out["venue"] = start.venue_name
         out["park"] = park
         out["game_pk"] = start.game_pk
+        out["pitcher_id"] = start.pitcher_id  # needed to settle a logged leg
+        out["date"] = date
         return out
     finally:
         if owns:

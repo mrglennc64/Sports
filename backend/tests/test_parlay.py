@@ -143,3 +143,82 @@ def test_v2_parlay_route_404_on_missing_pitcher(monkeypatch):
         {"pitcher": "Ghost", "line": 6.5, "side": "over", "odds": -110},
     ]})
     assert r.status_code == 404
+
+
+# --------------------------------------------------------------------------- #
+# Logging legs into the calibration pipeline (a)
+# --------------------------------------------------------------------------- #
+def _fake_predict_with_ids(monkeypatch):
+    """Stub projections that carry pitcher_id + date (needed to settle a leg)."""
+    import app.parlay_pipeline as pp
+
+    async def fake_predict(pitcher, *, line, date, client=None, settings=None):
+        meta = {"Cole": (100, 0.62), "Bello": (200, 0.48)}
+        game_pk, p_over = meta[pitcher]
+        return {
+            "pitcher": pitcher,
+            "pitcher_id": game_pk + 1,  # any stable id
+            "date": date,
+            "prob_over": p_over,
+            "prob_under": 1 - p_over,
+            "expected_ks": 6.1,
+            "opponent": "OPP",
+            "venue": "Park",
+            "game_pk": game_pk,
+            "low_confidence": False,
+        }
+
+    monkeypatch.setattr(pp, "predict_pitcher_ensemble", fake_predict)
+    return pp
+
+
+def test_build_parlay_logs_settleable_legs(monkeypatch, tmp_path):
+    import csv
+
+    from app.backtest.reliability import reliability_report
+    from app.backtest.settle import settle_row
+
+    pp = _fake_predict_with_ids(monkeypatch)
+    log_path = tmp_path / "predictions.csv"
+    monkeypatch.setattr(pp.default_settings, "predictions_log", str(log_path), raising=False)
+
+    specs = [
+        pp.LegSpec("Cole", 6.5, "over", -110, date="2026-06-07"),
+        pp.LegSpec("Bello", 5.5, "under", -105, date="2026-06-07"),
+    ]
+
+    async def run():
+        return await pp.build_parlay(specs, on_date="2026-06-07", client=object(), log=True)
+
+    out = asyncio.run(run())
+    assert out["legs_logged"] == 2
+
+    rows = list(csv.DictReader(open(log_path, encoding="utf-8")))
+    assert len(rows) == 2
+    # Each logged leg must be settle-able and carry the chosen side's model_prob.
+    over_leg = next(r for r in rows if r["side"] == "over")
+    assert over_leg["bet"] == "False"  # not a flagged single bet
+    assert float(over_leg["model_prob"]) == pytest.approx(0.62)
+    assert over_leg["over_odds"] == "-110" and over_leg["under_odds"] == ""
+
+    # Settle the over leg as a win (actual 8 > 6.5) -> it feeds /calibration.
+    settled = settle_row(over_leg, actual_ks=8)
+    assert settled is not None and settled.result == "win"
+    assert settled.model_prob == pytest.approx(0.62)
+    rep = reliability_report([settled])
+    assert rep.n == 1  # the parlay leg is now a decided, scored prediction
+
+
+def test_build_parlay_does_not_log_by_default(monkeypatch, tmp_path):
+    pp = _fake_predict_with_ids(monkeypatch)
+    log_path = tmp_path / "predictions.csv"
+    monkeypatch.setattr(pp.default_settings, "predictions_log", str(log_path), raising=False)
+
+    specs = [pp.LegSpec("Cole", 6.5, "over", -110, date="2026-06-07")]
+
+    async def run():
+        return await pp.build_parlay(specs, on_date="2026-06-07", client=object())
+
+    out = asyncio.run(run())
+    assert out["legs_logged"] == 0
+    assert not log_path.exists()  # nothing written unless log=True

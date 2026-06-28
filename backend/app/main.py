@@ -212,6 +212,10 @@ class ParlayLegBody(BaseModel):
 class ParlayBody(BaseModel):
     legs: list[ParlayLegBody] = Field(..., min_length=1)
     date: str | None = Field(None, description="YYYY-MM-DD; defaults to today")
+    log: bool = Field(
+        False,
+        description="Log each leg to the predictions log so it feeds /calibration",
+    )
 
 
 @app.post("/v2/parlay")
@@ -220,13 +224,14 @@ async def parlay(body: ParlayBody) -> dict:
 
     Each leg's win probability comes from the v2 ensemble projection; you supply
     the book odds. Legs in the same game are flagged (correlated — the product
-    overstates the true probability)."""
+    overstates the true probability). Set ``log=true`` to record each leg (as a
+    non-flagged prediction) so its probability is later scored by /calibration."""
     specs = [
         LegSpec(pitcher=l.pitcher, line=l.line, side=l.side, odds=l.odds, date=l.date)
         for l in body.legs
     ]
     try:
-        return await build_parlay(specs, on_date=body.date or _today())
+        return await build_parlay(specs, on_date=body.date or _today(), log=body.log)
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
     except ValueError as exc:

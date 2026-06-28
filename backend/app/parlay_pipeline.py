@@ -15,6 +15,7 @@ from app.config import Settings
 from app.config import settings as default_settings
 from app.data.client import StatsApiClient
 from app.ensemble_pipeline import predict_pitcher_ensemble
+from app.log.predictions import log_predictions
 from app.model.parlay import ParlayLeg, evaluate_parlay
 
 
@@ -29,6 +30,36 @@ class LegSpec:
     date: str | None = None
 
 
+def _leg_log_row(proj: dict, spec: LegSpec, side: str, model_prob: float, on_date: str) -> dict:
+    """A settle-able prediction row for one parlay leg.
+
+    Mirrors the daily-slate log schema so the leg flows through the SAME
+    settle -> /calibration pipeline as every other prediction. ``bet=False``
+    keeps parlay legs out of /backtest's flagged-bet ROI (they aren't standalone
+    +EV plays) while still feeding the probability-honesty sample, which is the
+    point: more decided predictions sharpen calibration. Only the chosen side's
+    odds are known, so the other side is left blank (settle reads the chosen one).
+    """
+    over_odds = spec.odds if side == "over" else ""
+    under_odds = spec.odds if side == "under" else ""
+    return {
+        "date": proj.get("date") or spec.date or on_date,
+        "pitcher": proj.get("pitcher", spec.pitcher),
+        "pitcher_id": proj.get("pitcher_id", ""),
+        "opponent": proj.get("opponent", ""),
+        "venue": proj.get("venue", ""),
+        "expected_ks": proj.get("expected_ks", ""),
+        "line": spec.line,
+        "side": side,
+        "model_prob": round(model_prob, 4),
+        "over_odds": over_odds,
+        "under_odds": under_odds,
+        "edge": 0.0,
+        "bet": False,  # a parlay leg is not a flagged single bet
+        "low_confidence": proj.get("low_confidence", False),
+    }
+
+
 async def build_parlay(
     specs: list[LegSpec],
     on_date: str,
@@ -36,6 +67,7 @@ async def build_parlay(
     client: StatsApiClient | None = None,
     kelly_fraction: float | None = None,
     kelly_cap: float | None = None,
+    log: bool = False,
     settings: Settings = default_settings,
 ) -> dict:
     """Project every leg, combine into a parlay, and return a JSON-able result.
@@ -44,6 +76,10 @@ async def build_parlay(
     pitcher on its date; the book odds are supplied by the caller. Raises
     ``LookupError`` (propagated from the projection) if a pitcher isn't starting,
     and ``ValueError`` for a bad side or no legs.
+
+    ``log=True`` appends each leg to the predictions log (as a non-flagged row)
+    so the leg's probability is later settled and scored by /calibration — wiring
+    parlays into the same honesty tracking as the daily slate.
     """
     if not specs:
         raise ValueError("a parlay needs at least one leg")
@@ -52,6 +88,7 @@ async def build_parlay(
     client = client or StatsApiClient()
     try:
         legs: list[ParlayLeg] = []
+        log_rows: list[dict] = []
         for spec in specs:
             side = spec.side.lower()
             if side not in ("over", "under"):
@@ -72,13 +109,19 @@ async def build_parlay(
                     game_id=proj.get("game_pk"),
                 )
             )
+            log_rows.append(_leg_log_row(proj, spec, side, model_prob, on_date))
 
         evaluation = evaluate_parlay(
             legs,
             kelly_fraction=kelly_fraction if kelly_fraction is not None else settings.kelly_fraction,
             kelly_cap=kelly_cap if kelly_cap is not None else settings.kelly_cap,
         )
-        return asdict(evaluation)
+        if log and log_rows:
+            log_predictions(log_rows, settings.predictions_log)
+
+        result = asdict(evaluation)
+        result["legs_logged"] = len(log_rows) if log else 0
+        return result
     finally:
         if owns:
             await client.aclose()
