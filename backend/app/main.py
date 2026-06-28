@@ -40,6 +40,10 @@ from app.ensemble_pipeline import build_slate_ensemble, predict_pitcher_ensemble
 from app.log.predictions import log_predictions
 from app.parlay_pipeline import LegSpec, build_parlay
 from app.pipeline import build_slate, predict_pitcher
+from app import polymarket_client as pmkt
+from app import signals as sig
+
+import time as _time
 
 app = FastAPI(title="Edge AI: Multi-Vertical Prediction Platform", version="2.0.0")
 
@@ -319,157 +323,100 @@ async def vertical_mlb(
 
 
 @app.get("/verticals/ai-releases")
-def vertical_ai_releases(
+async def vertical_ai_releases(
     market: str = Query("polymarket", description="Market source (polymarket)"),
 ) -> dict:
-    """AI release predictions (Claude, GPT, xAI). Returns current market prices vs model probability."""
-    return {
-        "vertical": "ai-releases",
-        "timestamp": _today(),
-        "market": market,
-        "predictions": [
-            {
-                "event": "Claude 5 release before Dec 2026",
-                "market_price": 0.62,
-                "model_probability": 0.71,
-                "edge": 0.09,
-                "kelly": 0.015,
-                "confidence": "high",
-                "action": "BUY",
-            },
-            {
-                "event": "GPT-6 release before Oct 2026",
-                "market_price": 0.45,
-                "model_probability": 0.58,
-                "edge": 0.13,
-                "kelly": 0.025,
-                "confidence": "high",
-                "action": "BUY",
-            },
+    """AI release predictions (Claude, GPT, xAI, Gemini) from LIVE Polymarket markets."""
+    payload = await pmkt.vertical_payload(
+        "ai-releases",
+        queries=[
+            "AI model", "GPT", "OpenAI", "Anthropic Claude", "Google Gemini",
+            "xAI Grok", "best AI model", "AGI",
         ],
-    }
+        now=_time.time(),
+        exclude=["before gta", "jesus", "largest company"],
+        min_liquidity=500.0,
+    )
+    payload["timestamp"] = _today()
+    return payload
 
 
 @app.get("/verticals/economics")
-def vertical_economics(
+async def vertical_economics(
     date: str | None = Query(None, description="YYYY-MM-DD; defaults to today"),
 ) -> dict:
-    """Fed & Economics predictions (CPI, rates, unemployment)."""
-    return {
-        "vertical": "economics",
-        "timestamp": _today(),
-        "date": date or _today(),
-        "predictions": [
-            {
-                "event": "CPI prints above 3.5% (next month)",
-                "market_price": 0.41,
-                "model_probability": 0.53,
-                "edge": 0.12,
-                "kelly": 0.02,
-                "confidence": "high",
-                "action": "BUY",
-            },
-            {
-                "event": "Fed cuts rates next meeting",
-                "market_price": 0.38,
-                "model_probability": 0.48,
-                "edge": 0.10,
-                "kelly": 0.018,
-                "confidence": "medium",
-                "action": "BUY",
-            },
+    """Fed & Economics predictions (CPI, rates, GDP, recession) from LIVE Polymarket markets."""
+    now = _time.time()
+    macro = await sig.get_macro(now)
+
+    def econ_signal(norm: dict):
+        return sig.econ_signal(norm["question"], norm["yes_price"], macro)
+
+    payload = await pmkt.vertical_payload(
+        "economics",
+        queries=[
+            "Fed interest rate", "rate cut", "CPI inflation", "recession",
+            "GDP growth", "unemployment", "federal funds rate", "Jerome Powell",
         ],
-    }
+        now=now,
+        exclude=["anthropic", "openai"],  # keep AI-stake markets out of econ
+        min_liquidity=500.0,
+        signal_fn=econ_signal,
+        model_tag=f"economics-v2 (Polymarket + macro anchor, {macro.get('source','')})",
+    )
+    payload["timestamp"] = _today()
+    payload["date"] = date or _today()
+    payload["macro"] = macro
+    return payload
 
 
 @app.get("/verticals/earnings")
-def vertical_earnings(
+async def vertical_earnings(
     sector: str = Query("tech", description="Sector (tech, finance, energy)"),
 ) -> dict:
-    """Company earnings beat/miss predictions."""
-    return {
-        "vertical": "earnings",
-        "timestamp": _today(),
-        "sector": sector,
-        "predictions": [
-            {
-                "company": "Tesla",
-                "event": "Beat earnings Q3 2026",
-                "market_price": 0.54,
-                "model_probability": 0.71,
-                "edge": 0.17,
-                "kelly": 0.03,
-                "confidence": "high",
-                "action": "BUY",
-            },
-            {
-                "company": "Nvidia",
-                "event": "Beat earnings Q3 2026",
-                "market_price": 0.62,
-                "model_probability": 0.68,
-                "edge": 0.06,
-                "kelly": 0.008,
-                "confidence": "low",
-                "action": "PASS",
-            },
+    """Company earnings / revenue beat-miss predictions from LIVE Polymarket markets."""
+    now = _time.time()
+    caps = await sig.get_market_caps(now)
+
+    def earn_signal(norm: dict):
+        return sig.earnings_signal(norm["question"], norm["yes_price"], caps)
+
+    payload = await pmkt.vertical_payload(
+        "earnings",
+        queries=[
+            "earnings", "quarterly revenue", "Nvidia", "Tesla", "Apple",
+            "Microsoft", "Amazon", "largest company market cap", "company revenue",
         ],
-    }
+        now=now,
+        exclude=["wimbledon", "tennis", "win on", " vs ", " beat the ",
+                 "election", "best ai model", "before gta"],
+        min_liquidity=200.0,
+        signal_fn=earn_signal,
+        model_tag="earnings-v2 (Polymarket + live market caps via Yahoo)",
+    )
+    payload["timestamp"] = _today()
+    payload["sector"] = sector
+    return payload
 
 
 @app.get("/verticals/crypto")
 async def vertical_crypto(
     market: str = Query("polymarket", description="Market source (polymarket)"),
-    event: str | None = Query(None, description="Specific event (bitcoin_150k_dec, ethereum_etf, solana_300)"),
+    event: str | None = Query(None, description="(legacy) specific event key"),
 ) -> dict:
-    """Crypto event predictions (Bitcoin price, ETF approvals, Solana milestones).
-
-    Combines CoinGecko price data, on-chain metrics, options market IV/put-call ratio,
-    news sentiment, and Polymarket pricing to predict crypto events via XGBoost.
-    """
-    try:
-        predictor = CryptoEventPredictor()
-
-        if event:
-            # Single event prediction
-            result = await predictor.predict_event(event)
-            predictions = [
-                {
-                    "event": pred.event,
-                    "model_probability": pred.predicted_probability,
-                    "market_price": pred.polymarket_probability,
-                    "edge": pred.edge,
-                    "confidence": pred.confidence,
-                    "key_factors": pred.key_factors,
-                    "updated_at": pred.updated_at,
-                }
-                for pred in result.predictions
-            ]
-        else:
-            # All events
-            all_results = await predictor.predict_all()
-            predictions = []
-            for result in all_results:
-                for pred in result.predictions:
-                    predictions.append({
-                        "event": pred.event,
-                        "model_probability": pred.predicted_probability,
-                        "market_price": pred.polymarket_probability,
-                        "edge": pred.edge,
-                        "confidence": pred.confidence,
-                        "key_factors": pred.key_factors,
-                        "updated_at": pred.updated_at,
-                    })
-
-        return {
-            "vertical": "crypto",
-            "timestamp": _today(),
-            "market": market,
-            "predictions": predictions,
-        }
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc))
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(exc)}")
+    """Crypto predictions (Bitcoin/ETH/SOL price targets, ETFs) from LIVE Polymarket markets."""
+    payload = await pmkt.vertical_payload(
+        "crypto",
+        queries=[
+            "Bitcoin price", "Ethereum", "Solana", "crypto", "XRP Ripple",
+            "Dogecoin", "Ethereum ETF",
+        ],
+        now=_time.time(),
+        exclude=["up or down", "satoshi"],  # drop 5-minute noise + novelty
+        min_liquidity=2000.0,
+    )
+    payload["timestamp"] = _today()
+    return payload
 
 
 @app.get("/verticals/crypto/event/{event_id}")
