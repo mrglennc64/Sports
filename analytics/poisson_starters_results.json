@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-06-28T13:03:16.236394",
+  "model": "PoissonRegressor (Starters >= 15 BF)",
+  "training_records": 262,
+  "test_records": 100,
+  "backtest": {
+    "num_plays": 0,
+    "reason": "No plays passed: |edge%|>5.0, conf>60.0%"
+  },
+  "sample_predictions": [
+    {
+      "pitcher": "Kyle Harrison",
+      "opponent": "PHI",
+      "date": "2026-06-14",
+      "bf": 21,
+      "lambda": 6.43,
+      "p_over": 0.621,
+      "edge_pct": 9.7,
+      "actual": 3,
+      "actual_over": false
+    },
+    {
+      "pitcher": "Randy V\u00e1squez",
+      "opponent": "SD",
+      "date": "2026-06-13",
+      "bf": 23,
+      "lambda": 4.08,
+      "p_over": 0.227,
+      "edge_pct": -29.6,
+      "actual": 5,
+      "actual_over": false
+    },
+    {
+      "pitcher": "Aaron Nola",
+      "opponent": "PHI",
+      "date": "2026-06-13",
+      "bf": 22,
+      "lambda": 5.92,
+      "p_over": 0.542,
+      "edge_pct": 1.8,
+      "actual": 3,
+      "actual_over": false
+    },
+    {
+      "pitcher": "Michael Soroka",
+      "opponent": "AZ",
+      "date": "2026-06-13",
+      "bf": 23,
+      "lambda": 3.41,
+      "p_over": 0.131,
+      "edge_pct": -39.3,
+      "actual": 7,
+      "actual_over": true
+    },
+    {
+      "pitcher": "Joey Cantillo",
+      "opponent": "CLE",
+      "date": "2026-06-13",
+      "bf": 21,
+      "lambda": 4.41,
+      "p_over": 0.281,
+      "edge_pct": -24.3,
+      "actual": 4,
+      "actual_over": false
+    }
+  ],
+  "comparison": {
+    "poisson_mse": 5.2321,
+    "archetype_mse": 4.9563,
+    "poisson_better": "False",
+    "poisson_mae": 1.8348
+  }
+}

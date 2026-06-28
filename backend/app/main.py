@@ -28,6 +28,12 @@ from app.arb_pipeline import scan_arbitrage
 from app.backtest.metrics import summarize
 from app.backtest.settle import settle_predictions
 from app.config import settings
+from app.crypto_predictor import (
+    CryptoEventPredictor,
+    CryptoEventPrediction,
+    PredictionResult,
+    predict_crypto_event,
+)
 from app.ensemble_pipeline import build_slate_ensemble, predict_pitcher_ensemble
 from app.log.predictions import log_predictions
 from app.parlay_pipeline import LegSpec, build_parlay
@@ -388,32 +394,92 @@ def vertical_earnings(
 
 
 @app.get("/verticals/crypto")
-def vertical_crypto(
+async def vertical_crypto(
     market: str = Query("polymarket", description="Market source (polymarket)"),
+    event: str | None = Query(None, description="Specific event (bitcoin_150k_dec, ethereum_etf, solana_300)"),
 ) -> dict:
-    """Crypto event predictions (Bitcoin price, ETF approvals, etc)."""
-    return {
-        "vertical": "crypto",
-        "timestamp": _today(),
-        "market": market,
-        "predictions": [
-            {
-                "event": "Bitcoin above $150k by Dec 2026",
-                "market_price": 0.48,
-                "model_probability": 0.62,
-                "edge": 0.14,
-                "kelly": 0.024,
-                "confidence": "high",
-                "action": "BUY",
-            },
-            {
-                "event": "Ethereum ETF approval before Dec 2026",
-                "market_price": 0.71,
-                "model_probability": 0.76,
-                "edge": 0.05,
-                "kelly": 0.006,
-                "confidence": "low",
-                "action": "PASS",
-            },
-        ],
-    }
+    """Crypto event predictions (Bitcoin price, ETF approvals, Solana milestones).
+
+    Combines CoinGecko price data, on-chain metrics, options market IV/put-call ratio,
+    news sentiment, and Polymarket pricing to predict crypto events via XGBoost.
+    """
+    try:
+        predictor = CryptoEventPredictor()
+
+        if event:
+            # Single event prediction
+            result = await predictor.predict_event(event)
+            predictions = [
+                {
+                    "event": pred.event,
+                    "model_probability": pred.predicted_probability,
+                    "market_price": pred.polymarket_probability,
+                    "edge": pred.edge,
+                    "confidence": pred.confidence,
+                    "key_factors": pred.key_factors,
+                    "updated_at": pred.updated_at,
+                }
+                for pred in result.predictions
+            ]
+        else:
+            # All events
+            all_results = await predictor.predict_all()
+            predictions = []
+            for result in all_results:
+                for pred in result.predictions:
+                    predictions.append({
+                        "event": pred.event,
+                        "model_probability": pred.predicted_probability,
+                        "market_price": pred.polymarket_probability,
+                        "edge": pred.edge,
+                        "confidence": pred.confidence,
+                        "key_factors": pred.key_factors,
+                        "updated_at": pred.updated_at,
+                    })
+
+        return {
+            "vertical": "crypto",
+            "timestamp": _today(),
+            "market": market,
+            "predictions": predictions,
+        }
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(exc)}")
+
+
+@app.get("/verticals/crypto/event/{event_id}")
+async def crypto_event_detail(
+    event_id: str = Query(..., description="Event ID (bitcoin_150k_dec, ethereum_etf, solana_300)"),
+) -> dict:
+    """Detailed analysis for a specific crypto event.
+
+    Includes current price data, on-chain metrics, options market conditions,
+    news sentiment, and model prediction with feature importance.
+    """
+    try:
+        predictor = CryptoEventPredictor()
+        result = await predictor.predict_event(event_id)
+
+        return {
+            "event": result.event,
+            "timestamp": result.timestamp,
+            "data_quality": result.data_quality,
+            "predictions": [
+                {
+                    "event": pred.event,
+                    "predicted_probability": pred.predicted_probability,
+                    "confidence": pred.confidence,
+                    "polymarket_reference": pred.polymarket_probability,
+                    "edge": pred.edge,
+                    "key_factors": pred.key_factors,
+                    "updated_at": pred.updated_at,
+                }
+                for pred in result.predictions
+            ],
+        }
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(exc)}")

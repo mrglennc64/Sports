@@ -45,3 +45,5 @@ class BetEvaluation(BaseModel):
     projected_ks: float
     edge_ks: float = Field(..., description="projection - line; positive favors the over")
     lean: Lean
+    kelly_fraction: float | None = Field(default=None, description="Optimal fraction of bankroll to bet (quarter Kelly)")
+    suggested_bet_size: float | None = Field(default=None, description="Suggested bet size in dollars at $1000 bankroll")

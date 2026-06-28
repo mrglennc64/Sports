@@ -23,6 +23,7 @@ from __future__ import annotations
 
 from statistics import mean
 
+from . import kelly
 from .inputs import ProjectionInputs
 from .result import BetEvaluation, ComponentEstimate, Lean, ProjectionResult
 from .type_matchup import type_matchup_lambda
@@ -344,9 +345,13 @@ def project(inputs: ProjectionInputs, cfg: ModelConfig | None = None) -> Project
 
 
 def evaluate_bet(
-    result: ProjectionResult, line: float, cfg: ModelConfig | None = None
+    result: ProjectionResult, line: float, cfg: ModelConfig | None = None,
+    american_odds: int = -110, bankroll: float = 1000.0
 ) -> BetEvaluation:
-    """Compare a projection to a sportsbook strikeout line and lean over/under."""
+    """Compare a projection to a sportsbook strikeout line and lean over/under.
+
+    Also calculates Kelly Criterion bet sizing (quarter Kelly for variance reduction).
+    """
     cfg = cfg or ModelConfig()
     edge = result.projected_ks - line
     if edge >= cfg.edge_threshold_ks:
@@ -355,10 +360,43 @@ def evaluate_bet(
         lean = Lean.UNDER
     else:
         lean = Lean.PASS
+
+    # Calculate Kelly bet sizing using quarter Kelly (0.25 fraction)
+    kelly_fraction = None
+    bet_size = None
+    if lean != Lean.PASS:
+        # Convert line to model probability using normal approximation
+        # Assume ~2.5 K standard error (conservative Poisson assumption)
+        from statistics import NormalDist
+        if lean == Lean.OVER:
+            # P(projection > line) using cumulative normal distribution
+            model_prob = 1 - NormalDist(result.projected_ks, 2.5).cdf(line)
+        else:
+            # P(projection < line)
+            model_prob = NormalDist(result.projected_ks, 2.5).cdf(line)
+
+        # Market probability from odds
+        decimal_odds = kelly.american_to_decimal(american_odds)
+        market_prob = 1 / decimal_odds
+
+        # Calculate Kelly fraction (with 0.25 quarter Kelly applied internally)
+        kelly_fraction = kelly.calculate_kelly_fraction(
+            model_probability=model_prob,
+            market_probability=market_prob,
+            american_odds=american_odds,
+            kelly_fraction_fraction=0.25
+        )
+
+        # Calculate bet size
+        if kelly_fraction > 0:
+            bet_size = kelly.calculate_bet_size(kelly_fraction, bankroll)
+
     return BetEvaluation(
         pitcher_name=result.pitcher_name,
         line=line,
         projected_ks=result.projected_ks,
         edge_ks=edge,
         lean=lean,
+        kelly_fraction=kelly_fraction,
+        suggested_bet_size=bet_size,
     )

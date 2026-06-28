@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from app.config import Settings
 from app.config import settings as default_settings
-from app.model import poisson
+from app.model import kelly, poisson
 from app.model.calibration import shrink_to_even
 from app.model.edge import evaluate_prop, prob_to_american
 from app.model.expected_ks import LEAGUE_AVG_K_RATE
@@ -90,6 +90,28 @@ def evaluate_projection(
         line=line,
         min_edge=settings.min_edge,
     )
+
+    # Calculate kelly_fraction and suggested_bet_size from the model probability
+    kelly_fraction = None
+    suggested_bet_size = None
+    if best.side == "over":
+        kelly_fraction = kelly.calculate_kelly_fraction(
+            model_probability=p_over,
+            market_probability=best.fair_prob,
+            american_odds=over_odds,
+            kelly_fraction_fraction=settings.kelly_fraction
+        )
+    else:  # under
+        kelly_fraction = kelly.calculate_kelly_fraction(
+            model_probability=p_under,
+            market_probability=best.fair_prob,
+            american_odds=under_odds,
+            kelly_fraction_fraction=settings.kelly_fraction
+        )
+
+    if kelly_fraction and kelly_fraction > 0:
+        suggested_bet_size = kelly.calculate_bet_size(kelly_fraction, 1000.0)
+
     out.update(
         {
             "side": best.side,
@@ -99,6 +121,8 @@ def evaluate_projection(
             "under_odds": under_odds,
             "edge": round(best.edge, 4),
             "kelly": round(best.kelly, 4),
+            "kelly_fraction": round(kelly_fraction, 4) if kelly_fraction else None,
+            "suggested_bet_size": round(suggested_bet_size, 2) if suggested_bet_size else None,
             "bet": best.edge >= settings.min_edge
             and best.kelly > 0
             and not low_confidence,

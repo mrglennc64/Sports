@@ -1,0 +1,154 @@
+{
+  "timestamp": "2026-06-28T12:23:46.783344",
+  "data_summary": {
+    "training_records": 1053,
+    "test_records": 412,
+    "unique_pitchers": 458,
+    "unique_games": 181,
+    "date_range": {
+      "start": "2026-06-01",
+      "end": "2026-06-14"
+    }
+  },
+  "backtest_results": {
+    "win_rate": null,
+    "roi": null,
+    "num_plays": 0,
+    "reason": "No plays passed filters: |edge%|>8.0, confidence>70.0"
+  },
+  "sample_predictions": [
+    {
+      "pitcher_id": 669270,
+      "pitcher_name": "Joel Kuhnel",
+      "opponent": "MIL",
+      "game_date": "2026-06-13",
+      "batters_faced": 3,
+      "lambda": 2.404,
+      "p_over_5_5": 0.036,
+      "edge_pct": -48.79,
+      "actual_strikeouts": 1,
+      "actual_over": false
+    },
+    {
+      "pitcher_id": 623149,
+      "pitcher_name": "Paul Sewald",
+      "opponent": "CIN",
+      "game_date": "2026-06-12",
+      "batters_faced": 3,
+      "lambda": 1.948,
+      "p_over_5_5": 0.015,
+      "edge_pct": -50.91,
+      "actual_strikeouts": 1,
+      "actual_over": false
+    },
+    {
+      "pitcher_id": 642397,
+      "pitcher_name": "Gregory Soto",
+      "opponent": "PIT",
+      "game_date": "2026-06-13",
+      "batters_faced": 4,
+      "lambda": 3.009,
+      "p_over_5_5": 0.085,
+      "edge_pct": -43.9,
+      "actual_strikeouts": 1,
+      "actual_over": false
+    },
+    {
+      "pitcher_id": 670990,
+      "pitcher_name": "Yohan Ram\u00edrez",
+      "opponent": "PIT",
+      "game_date": "2026-06-11",
+      "batters_faced": 8,
+      "lambda": 2.155,
+      "p_over_5_5": 0.023,
+      "edge_pct": -50.1,
+      "actual_strikeouts": 1,
+      "actual_over": false
+    },
+    {
+      "pitcher_id": 527048,
+      "pitcher_name": "Mart\u00edn P\u00e9rez",
+      "opponent": "NYM",
+      "game_date": "2026-06-13",
+      "batters_faced": 20,
+      "lambda": 2.456,
+      "p_over_5_5": 0.039,
+      "edge_pct": -48.46,
+      "actual_strikeouts": 4,
+      "actual_over": false
+    },
+    {
+      "pitcher_id": 571578,
+      "pitcher_name": "Patrick Corbin",
+      "opponent": "TOR",
+      "game_date": "2026-06-14",
+      "batters_faced": 18,
+      "lambda": 1.776,
+      "p_over_5_5": 0.01,
+      "edge_pct": -51.41,
+      "actual_strikeouts": 3,
+      "actual_over": false
+    },
+    {
+      "pitcher_id": 678606,
+      "pitcher_name": "Jos\u00e9 A. Ferrer",
+      "opponent": "WSH",
+      "game_date": "2026-06-13",
+      "batters_faced": 4,
+      "lambda": 1.806,
+      "p_over_5_5": 0.011,
+      "edge_pct": -51.33,
+      "actual_strikeouts": 0,
+      "actual_over": false
+    },
+    {
+      "pitcher_id": 808963,
+      "pitcher_name": "Roki Sasaki",
+      "opponent": "LAD",
+      "game_date": "2026-06-12",
+      "batters_faced": 23,
+      "lambda": 1.92,
+      "p_over_5_5": 0.014,
+      "edge_pct": -51.0,
+      "actual_strikeouts": 4,
+      "actual_over": false
+    },
+    {
+      "pitcher_id": 592332,
+      "pitcher_name": "Kevin Gausman",
+      "opponent": "NYY",
+      "game_date": "2026-06-13",
+      "batters_faced": 25,
+      "lambda": 1.667,
+      "p_over_5_5": 0.007,
+      "edge_pct": -51.65,
+      "actual_strikeouts": 7,
+      "actual_over": true
+    },
+    {
+      "pitcher_id": 683155,
+      "pitcher_name": "Joey Estes",
+      "opponent": "COL",
+      "game_date": "2026-06-13",
+      "batters_faced": 18,
+      "lambda": 2.397,
+      "p_over_5_5": 0.035,
+      "edge_pct": -48.83,
+      "actual_strikeouts": 4,
+      "actual_over": false
+    }
+  ],
+  "model_comparison": {
+    "poisson_mse": 4.254884644801859,
+    "poisson_mae": 1.5554193794488107,
+    "archetype_mse": 1.9229543030160516,
+    "archetype_mae": 1.0310157709200185,
+    "poisson_better": "False",
+    "improvement_pct": -121.26811012244536
+  },
+  "gatekeeper_filters": {
+    "edge_threshold_pct": 8.0,
+    "confidence_threshold": 70.0,
+    "strikeout_line": 5.5
+  }
+}
