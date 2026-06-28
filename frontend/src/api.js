@@ -9,3 +9,15 @@ export async function fetchSlate(date, minEdge) {
   if (!res.ok) throw new Error(`slate request failed: ${res.status}`);
   return res.json();
 }
+
+// Reliability / calibration tracker: are the model's probabilities honest?
+// Returns Brier, log-loss, ECE, the base-rate reference, and the reliability
+// curve (one bucket per claimed-probability band). See /calibration backend.
+export async function fetchCalibration(bins) {
+  const params = new URLSearchParams();
+  if (bins != null && bins !== "") params.set("bins", bins);
+  const qs = params.toString();
+  const res = await fetch(`${BASE}/calibration${qs ? `?${qs}` : ""}`);
+  if (!res.ok) throw new Error(`calibration request failed: ${res.status}`);
+  return res.json();
+}

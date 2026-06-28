@@ -144,9 +144,69 @@ table.slate {
 footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
 
 /* nav back-link on dashboard */
-.nav { margin-bottom: 8px; }
+.nav { margin-bottom: 8px; display: flex; gap: 16px; }
 .home-link { color: var(--muted); text-decoration: none; font-size: 13px; }
 .home-link:hover { color: var(--text); }
+
+/* ---------- calibration tracker ---------- */
+.cal-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.cal-metric {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.cal-metric.good { border-color: rgba(46, 160, 67, 0.5); }
+.cal-metric.bad { border-color: rgba(248, 81, 73, 0.5); }
+.cal-metric.warn { border-color: rgba(210, 153, 34, 0.5); }
+.cal-metric-value { font-size: 26px; font-weight: 700; line-height: 1.1; }
+.cal-metric.good .cal-metric-value { color: var(--pos); }
+.cal-metric.bad .cal-metric-value { color: #f85149; }
+.cal-metric.warn .cal-metric-value { color: #d29922; }
+.cal-metric-label { font-size: 12px; color: var(--text); margin-top: 4px; }
+.cal-metric-hint { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.cal-verdict {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--bet);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.cal-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.cal-table th {
+  text-align: left;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.cal-table td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.cal-band { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cal-n { color: var(--muted); font-variant-numeric: tabular-nums; }
+.cal-bars { width: 55%; }
+.cal-bar-row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+.cal-bar-tag { width: 52px; font-size: 11px; color: var(--muted); }
+.cal-bar-track { flex: 1; background: var(--bg); border-radius: 4px; height: 12px; overflow: hidden; }
+.cal-bar { height: 100%; border-radius: 4px; }
+.cal-bar-pred { background: var(--bet); }
+.cal-bar-act { background: var(--pos); }
+.cal-bar-val { width: 52px; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
+.cal-gap { font-variant-numeric: tabular-nums; font-weight: 600; }
+.cal-gap.ok { color: var(--pos); }
+.cal-gap.warn { color: #d29922; }
+.cal-gap.bad { color: #f85149; }
+.cal-foot { font-size: 12px; margin-top: 10px; }
 
 /* ---------- landing page ---------- */
 .landing { max-width: 980px; margin: 0 auto; padding: 0 16px 64px; }
