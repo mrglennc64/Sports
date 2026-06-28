@@ -3,6 +3,7 @@ import Landing from "./pages/Landing.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Research from "./pages/Research.jsx";
 import Calibration from "./pages/Calibration.jsx";
+import Clv from "./pages/Clv.jsx";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Route path="/landing" element={<Landing />} />
       <Route path="/research" element={<Research />} />
       <Route path="/calibration" element={<Calibration />} />
+      <Route path="/clv" element={<Clv />} />
     </Routes>
   );
 }

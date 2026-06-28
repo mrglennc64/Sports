@@ -26,6 +26,7 @@ from pydantic import BaseModel, Field
 from dataclasses import asdict as _asdict
 
 from app.arb_pipeline import scan_arbitrage
+from app.backtest.clv import clv_report
 from app.backtest.metrics import summarize
 from app.backtest.reliability import reliability_report
 from app.backtest.settle import settle_predictions
@@ -263,6 +264,20 @@ def calibration(
     """
     settled = settle_predictions(settings.predictions_log)
     return _asdict(reliability_report(settled, n_bins=bins))
+
+
+@app.get("/clv")
+def clv() -> dict:
+    """Closing Line Value: did our flagged bets beat the market's closing price?
+
+    The sharp's truth metric. /backtest asks 'did we profit?' and /calibration
+    asks 'are our probabilities honest?'; this asks the price question: across
+    every flagged bet we can match to a captured closing line, did we consistently
+    buy below where the market closed (positive de-vigged CLV)? That's the one
+    academically-supported signal of real edge. Needs closing lines captured near
+    first pitch (line_capture close); unmatched bets are reported, not counted.
+    """
+    return _asdict(clv_report(settings.predictions_log, settings.line_history_log))
 
 
 # ============================================================================

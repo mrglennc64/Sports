@@ -43,6 +43,7 @@ export default function Dashboard() {
         <div className="nav">
           <Link to="/" className="home-link">← Home</Link>
           <Link to="/calibration" className="home-link">🎯 Calibration</Link>
+          <Link to="/clv" className="home-link">📈 CLV</Link>
         </div>
         <h1>⚾ Strikeout Projections</h1>
         <p className="sub">

@@ -21,3 +21,12 @@ export async function fetchCalibration(bins) {
   if (!res.ok) throw new Error(`calibration request failed: ${res.status}`);
   return res.json();
 }
+
+// Closing Line Value: did flagged bets beat the market's closing price?
+// Returns mean/median de-vigged CLV, % of bets that beat the close, and the
+// per-bet breakdown. See /clv backend.
+export async function fetchClv() {
+  const res = await fetch(`${BASE}/clv`);
+  if (!res.ok) throw new Error(`clv request failed: ${res.status}`);
+  return res.json();
+}

@@ -53,6 +53,10 @@ class Settings(BaseSettings):
     # prop lines that feed the historical backtest (app.data.history).
     lines_csv: str = "../data/lines.csv"
 
+    # Timestamped line snapshots (app.data.line_capture) tagged open|close. The
+    # close-tagged rows are the closing lines that /clv settles flagged bets against.
+    line_history_log: str = "../data/line_history.csv"
+
     # Home-plate umpire K-tendency table (JSON). The MLB API gives the umpire
     # *assignment* but not their zone tendency, so this is a replaceable lookup
     # populated from a source like Umpire Scorecards. Missing file -> neutral.

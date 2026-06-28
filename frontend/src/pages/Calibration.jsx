@@ -89,6 +89,7 @@ export default function Calibration() {
       <header>
         <div className="nav">
           <Link to="/" className="home-link">← Home</Link>
+          <Link to="/clv" className="home-link">📈 CLV</Link>
         </div>
         <h1>🎯 Calibration Tracker</h1>
         <p className="sub">
