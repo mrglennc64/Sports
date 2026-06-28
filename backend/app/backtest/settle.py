@@ -21,6 +21,7 @@ class SettledBet:
     line: float
     odds: float           # American odds for the chosen side
     edge: float
+    model_prob: float | None  # model P(chosen side) at prediction time, if logged
     flagged_bet: bool     # was this a model-flagged bet (bet=True)?
     expected_ks: float
     actual_ks: int
@@ -49,6 +50,11 @@ def settle_row(row: dict, actual_ks: int) -> SettledBet | None:
     if side not in ("over", "under") or odds is None:
         return None
 
+    try:
+        model_prob = float(row["model_prob"])
+    except (TypeError, ValueError, KeyError):
+        model_prob = None  # older log rows predate model_prob; skipped by calibration
+
     if actual_ks == line:
         result, profit = "push", 0.0
     else:
@@ -67,6 +73,7 @@ def settle_row(row: dict, actual_ks: int) -> SettledBet | None:
         line=line,
         odds=odds,
         edge=edge,
+        model_prob=model_prob,
         flagged_bet=str(row.get("bet")).lower() == "true",
         expected_ks=expected,
         actual_ks=actual_ks,

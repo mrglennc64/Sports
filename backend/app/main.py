@@ -18,6 +18,7 @@ from datetime import date as date_cls
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi import Path as PathParam
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
@@ -26,6 +27,7 @@ from dataclasses import asdict as _asdict
 
 from app.arb_pipeline import scan_arbitrage
 from app.backtest.metrics import summarize
+from app.backtest.reliability import reliability_report
 from app.backtest.settle import settle_predictions
 from app.config import settings
 from app.crypto_predictor import (
@@ -236,6 +238,22 @@ def backtest() -> dict:
     """Settle logged predictions vs actual results -> hit rate, ROI, MAE."""
     settled = settle_predictions(settings.predictions_log)
     return _asdict(summarize(settled))
+
+
+@app.get("/calibration")
+def calibration(
+    bins: int = Query(10, ge=2, le=50, description="Reliability-curve bucket count"),
+) -> dict:
+    """Are the model's probabilities honest? Brier, log-loss + reliability curve.
+
+    Unlike /backtest (ROI on flagged bets), this scores EVERY decided prediction:
+    when the model claims 70%, does it hit ~70% over a large sample? That's the
+    proof a system is calibrated rather than lucky. Reads the same prediction log,
+    settles each vs the actual strikeout result, and buckets by claimed
+    probability. Pushes and pre-model_prob rows are excluded.
+    """
+    settled = settle_predictions(settings.predictions_log)
+    return _asdict(reliability_report(settled, n_bins=bins))
 
 
 # ============================================================================
@@ -451,7 +469,7 @@ async def vertical_crypto(
 
 @app.get("/verticals/crypto/event/{event_id}")
 async def crypto_event_detail(
-    event_id: str = Query(..., description="Event ID (bitcoin_150k_dec, ethereum_etf, solana_300)"),
+    event_id: str = PathParam(..., description="Event ID (bitcoin_150k_dec, ethereum_etf, solana_300)"),
 ) -> dict:
     """Detailed analysis for a specific crypto event.
 
