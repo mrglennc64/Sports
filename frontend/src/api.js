@@ -17,12 +17,13 @@ export async function fetchSlate(date, minEdge, kellyFraction, sharpCheck) {
 // betting the opposite side now at `hedgeOdds` may lock a result. Returns the
 // hedge stake, capital at risk, and locked profit (risk_free only on a true
 // cross-time arb). See /v2/hedge backend.
-export async function fetchHedge(stake, odds, hedgeOdds) {
+export async function fetchHedge(stake, odds, hedgeOdds, roundTo) {
   const params = new URLSearchParams({
     stake: String(stake),
     odds: String(odds),
     hedge_odds: String(hedgeOdds),
   });
+  if (roundTo) params.set("round_to", String(roundTo));
   const res = await fetch(`${BASE}/v2/hedge?${params.toString()}`);
   if (!res.ok) throw new Error(`hedge request failed: ${res.status}`);
   return res.json();

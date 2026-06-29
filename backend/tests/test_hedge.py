@@ -42,3 +42,36 @@ def test_hedge_route():
     assert body["risk_free"] is True
     assert body["locked_profit"] > 0
     assert body["hedge_stake"] > 0
+
+
+def test_round_to_snaps_hedge_stake_to_increment():
+    # Exact equalising stake is ~104.88; round_to=5 snaps it to 105.
+    exact = hedge_existing_position(100, 115, 105)
+    snapped = hedge_existing_position(100, 115, 105, round_to=5)
+    assert snapped.hedge_stake == 105.0
+    assert snapped.hedge_stake_exact == pytest.approx(exact.hedge_stake, abs=0.01)
+    assert snapped.round_to == 5
+
+
+def test_rounding_reports_both_outcomes_and_floors_on_worst():
+    # Once rounded, the two outcomes differ; locked_profit must be the smaller.
+    r = hedge_existing_position(100, 115, 105, round_to=10)
+    assert r.profit_if_initial != r.profit_if_hedge
+    assert r.locked_profit == min(r.profit_if_initial, r.profit_if_hedge)
+    assert r.risk_free == (r.locked_profit > 0)
+
+
+def test_round_to_zero_is_a_perfect_lock():
+    # No rounding -> both outcomes equal, floor == either, matches legacy behaviour.
+    r = hedge_existing_position(100, 115, 105, round_to=0)
+    assert r.profit_if_initial == pytest.approx(r.profit_if_hedge, abs=0.01)
+    assert r.hedge_stake == r.hedge_stake_exact
+
+
+def test_round_to_route():
+    client = TestClient(main.app)
+    r = client.get("/v2/hedge", params={"stake": 100, "odds": 115, "hedge_odds": 105, "round_to": 5})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["hedge_stake"] == 105.0
+    assert body["round_to"] == 5

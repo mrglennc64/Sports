@@ -21,6 +21,11 @@ export default function Dashboard() {
   // Sharp check: veto edges where the model is a market-consensus outlier. Costs
   // the wide (~3x) quote pull, so it's off by default and only runs on demand.
   const [sharpCheck, setSharpCheck] = useState(false);
+  // Bankroll + stake rounding: turn the per-bet Kelly fraction into an actual
+  // dollar stake, snapped to a whole-dollar increment so the wager blends in as a
+  // casual bet rather than an obviously-optimised number. 0 = show no $ stakes.
+  const [bankroll, setBankroll] = useState(0);
+  const [stakeRound, setStakeRound] = useState(5);
 
   async function load(d, sharp = sharpCheck) {
     setLoading(true);
@@ -134,6 +139,36 @@ export default function Dashboard() {
         </p>
       </div>
 
+      <div className="bankroll-control">
+        <label className="bankroll-label">
+          Bankroll ($)
+          <input
+            type="number"
+            min={0}
+            step="50"
+            value={bankroll}
+            onChange={(e) => setBankroll(Number(e.target.value))}
+            placeholder="0 = hide $ stakes"
+          />
+        </label>
+        <label className="bankroll-label">
+          Round stake
+          <select
+            value={stakeRound}
+            onChange={(e) => setStakeRound(Number(e.target.value))}
+          >
+            <option value={0}>Exact</option>
+            <option value={5}>Nearest $5</option>
+            <option value={10}>Nearest $10</option>
+          </select>
+        </label>
+        <p className="kelly-hint">
+          Enter a bankroll to see the dollar stake per play — the capped Kelly
+          fraction × bankroll, snapped to a round number so it blends in as a
+          casual bet.
+        </p>
+      </div>
+
       {error && <p className="error">⚠ {error}</p>}
 
       {data && (
@@ -151,9 +186,9 @@ export default function Dashboard() {
 
       {data &&
         (mode === "simple" ? (
-          <SimpleCards rows={rows} />
+          <SimpleCards rows={rows} bankroll={bankroll} stakeRound={stakeRound} />
         ) : (
-          <SlateTable rows={rows} />
+          <SlateTable rows={rows} bankroll={bankroll} stakeRound={stakeRound} />
         ))}
 
       <footer>

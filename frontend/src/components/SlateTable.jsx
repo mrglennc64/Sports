@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { dollarStake, effectiveKelly, fmtMoney } from "../stake.js";
 
 const pct = (x) => (x == null ? "—" : `${(x * 100).toFixed(1)}%`);
 const odds = (x) => (x == null ? "—" : x > 0 ? `+${x}` : `${x}`);
 
-export default function SlateTable({ rows }) {
+export default function SlateTable({ rows, bankroll = 0, stakeRound = 0 }) {
   const [showMarketData, setShowMarketData] = useState(false);
+  const showStakes = bankroll > 0;
 
   const evaluated = rows.filter((r) => r.status === "ok");
   if (evaluated.length === 0) {
@@ -37,6 +39,7 @@ export default function SlateTable({ rows }) {
             <th>Line</th>
             <th>Pick</th>
             <th>Projected Ks</th>
+            {showStakes && <th>Stake</th>}
             {showMarketData && (
               <>
                 <th>Model %</th>
@@ -52,6 +55,10 @@ export default function SlateTable({ rows }) {
         <tbody>
           {evaluated.map((r, i) => {
             const sideOdds = r.side === "over" ? r.over_odds : r.under_odds;
+            const stake =
+              showStakes && r.selected && !r.sharp_vetoed
+                ? dollarStake(effectiveKelly(r), bankroll, stakeRound)
+                : null;
             return (
               <tr
                 key={i}
@@ -79,6 +86,9 @@ export default function SlateTable({ rows }) {
                 <td>{r.line}</td>
                 <td className={`side side-${r.side}`}>{r.side?.toUpperCase()}</td>
                 <td>{r.expected_ks?.toFixed(2)}</td>
+                {showStakes && (
+                  <td className="stake-cell">{stake != null ? fmtMoney(stake) : "—"}</td>
+                )}
                 {showMarketData && (
                   <>
                     <td>{pct(r.model_prob)}</td>

@@ -290,6 +290,7 @@ def hedge(
     stake: float = Query(..., gt=0, description="Amount already staked on the early bet"),
     odds: float = Query(..., description="American odds of your early bet, e.g. 115"),
     hedge_odds: float = Query(..., description="American odds now available on the opposite side"),
+    round_to: float = Query(0.0, ge=0, description="Snap the hedge stake to a $ increment (5/10) for camouflage; 0 = exact"),
 ) -> dict:
     """Lock an existing position: stake to bet the other side to equalise payout.
 
@@ -299,7 +300,7 @@ def hedge(
     (otherwise it's an honest capped loss, not free money). See /v2/arb for the
     simultaneous two-book scanner.
     """
-    return _asdict(hedge_existing_position(stake, odds, hedge_odds))
+    return _asdict(hedge_existing_position(stake, odds, hedge_odds, round_to=round_to))
 
 
 @app.get("/clv")

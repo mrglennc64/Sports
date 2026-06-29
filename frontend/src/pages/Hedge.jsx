@@ -15,6 +15,7 @@ export default function Hedge() {
   const [stake, setStake] = useState("100");
   const [odds, setOdds] = useState("115");
   const [hedgeOdds, setHedgeOdds] = useState("105");
+  const [roundTo, setRoundTo] = useState(0); // 0 = exact, 5 or 10 = camouflage
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -23,7 +24,9 @@ export default function Hedge() {
     setLoading(true);
     setError(null);
     try {
-      setData(await fetchHedge(Number(stake), Number(odds), Number(hedgeOdds)));
+      setData(
+        await fetchHedge(Number(stake), Number(odds), Number(hedgeOdds), roundTo)
+      );
     } catch (e) {
       setError(e.message);
       setData(null);
@@ -77,6 +80,15 @@ export default function Hedge() {
           />
           <small>opposite side available NOW, e.g. +105 or -120</small>
         </label>
+        <label>
+          Round stake
+          <select value={roundTo} onChange={(e) => setRoundTo(Number(e.target.value))}>
+            <option value={0}>Exact (perfect lock)</option>
+            <option value={5}>Nearest $5</option>
+            <option value={10}>Nearest $10</option>
+          </select>
+          <small>round numbers blend in as casual bets</small>
+        </label>
         <button onClick={calc} disabled={loading}>
           {loading ? "Calculating…" : "Calculate hedge"}
         </button>
@@ -99,7 +111,11 @@ export default function Hedge() {
               <div className="hedge-cell-value">{money(data.hedge_stake)}</div>
               <div className="hedge-cell-label">HEDGE STAKE</div>
               <div className="hedge-cell-hint">
-                bet this at {oddsFmt(data.hedge_odds)} on the opposite side
+                {data.round_to > 0
+                  ? `rounded to $${data.round_to} from ${money(
+                      data.hedge_stake_exact
+                    )} · bet at ${oddsFmt(data.hedge_odds)}`
+                  : `bet this at ${oddsFmt(data.hedge_odds)} on the opposite side`}
               </div>
             </div>
             <div
@@ -108,10 +124,13 @@ export default function Hedge() {
               }`}
             >
               <div className="hedge-cell-value">{money(data.locked_profit)}</div>
-              <div className="hedge-cell-label">LOCKED PROFIT</div>
+              <div className="hedge-cell-label">
+                {data.round_to > 0 ? "WORST-CASE PROFIT" : "LOCKED PROFIT"}
+              </div>
               <div className="hedge-cell-hint">
                 {data.roi_pct >= 0 ? "+" : ""}
                 {data.roi_pct}% on capital at risk
+                {data.round_to > 0 ? " · floor of the two outcomes" : ""}
               </div>
             </div>
             <div className="hedge-cell">
@@ -119,11 +138,38 @@ export default function Hedge() {
               <div className="hedge-cell-label">Capital at risk</div>
               <div className="hedge-cell-hint">original + hedge stake</div>
             </div>
-            <div className="hedge-cell">
-              <div className="hedge-cell-value">{money(data.locked_return)}</div>
-              <div className="hedge-cell-label">Locked return</div>
-              <div className="hedge-cell-hint">same on either outcome</div>
-            </div>
+            {data.round_to > 0 ? (
+              <>
+                <div
+                  className={`hedge-cell ${
+                    data.profit_if_initial >= 0 ? "good" : "bad"
+                  }`}
+                >
+                  <div className="hedge-cell-value">
+                    {money(data.profit_if_initial)}
+                  </div>
+                  <div className="hedge-cell-label">If original wins</div>
+                  <div className="hedge-cell-hint">net at {oddsFmt(data.initial_odds)}</div>
+                </div>
+                <div
+                  className={`hedge-cell ${
+                    data.profit_if_hedge >= 0 ? "good" : "bad"
+                  }`}
+                >
+                  <div className="hedge-cell-value">
+                    {money(data.profit_if_hedge)}
+                  </div>
+                  <div className="hedge-cell-label">If hedge wins</div>
+                  <div className="hedge-cell-hint">net at {oddsFmt(data.hedge_odds)}</div>
+                </div>
+              </>
+            ) : (
+              <div className="hedge-cell">
+                <div className="hedge-cell-value">{money(data.locked_return)}</div>
+                <div className="hedge-cell-label">Locked return</div>
+                <div className="hedge-cell-hint">same on either outcome</div>
+              </div>
+            )}
           </div>
 
           <p className="sub hedge-foot">

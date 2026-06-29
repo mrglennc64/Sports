@@ -1,8 +1,10 @@
 // Simple ("consumer") mode: hide the math, show a decision per HOF-style feedback.
+import { dollarStake, effectiveKelly, fmtMoney } from "../stake.js";
+
 const SIGNAL_RANK = { strong: 0, lean: 1, avoid: 2 };
 const SIGNAL_EMOJI = { strong: "🟢", lean: "🟡", avoid: "🔴" };
 
-export default function SimpleCards({ rows }) {
+export default function SimpleCards({ rows, bankroll = 0, stakeRound = 0 }) {
   const cards = rows
     .filter((r) => r.status === "ok")
     .sort(
@@ -17,7 +19,12 @@ export default function SimpleCards({ rows }) {
 
   return (
     <div className="cards">
-      {cards.map((r, i) => (
+      {cards.map((r, i) => {
+        const stake =
+          r.selected && !r.sharp_vetoed
+            ? dollarStake(effectiveKelly(r), bankroll, stakeRound)
+            : null;
+        return (
         <div key={i} className={`card sig-${r.signal}${r.selected ? " carded" : ""}${r.sharp_vetoed ? " vetoed" : ""}`}>
           <div className="card-top">
             <span className="card-signal">{SIGNAL_EMOJI[r.signal]} {r.recommendation}</span>
@@ -31,6 +38,12 @@ export default function SimpleCards({ rows }) {
             {r.pitcher} <b>{r.side?.toUpperCase()} {r.line} Ks</b>
           </div>
           <div className="card-vs">vs {r.opponent}</div>
+          {stake != null && (
+            <div className="card-stake">
+              💵 Stake <b>{fmtMoney(stake)}</b>
+              {stakeRound > 0 ? ` · rounded to $${stakeRound}` : ""}
+            </div>
+          )}
           {r.sharp_vetoed && (
             <div className="card-veto" title={r.sharp_note}>
               🔬 Vetoed — model disagrees with the market by{" "}
@@ -43,7 +56,8 @@ export default function SimpleCards({ rows }) {
             ))}
           </ul>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

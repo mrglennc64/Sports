@@ -124,6 +124,31 @@ tr.vetoed .side { text-decoration: line-through; }
 .kelly-hint { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
 .kelly-hint a { color: var(--bet); }
 
+/* --- Bankroll + stake-rounding control (Dashboard) --- */
+.bankroll-control {
+  margin: 4px 0 18px;
+  padding: 12px 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+.bankroll-label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+.bankroll-control input,
+.bankroll-control select {
+  background: #0e0e10;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 10px;
+  width: 170px;
+}
+.bankroll-control .kelly-hint { flex-basis: 100%; }
+.stake-cell { font-weight: 600; color: #4ade80; }
+
 /* --- Hedge calculator --- */
 .hedge-form {
   display: flex;
@@ -133,7 +158,8 @@ tr.vetoed .side { text-decoration: line-through; }
   margin-bottom: 18px;
 }
 .hedge-form label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
-.hedge-form input {
+.hedge-form input,
+.hedge-form select {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 6px;
