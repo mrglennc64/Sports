@@ -56,13 +56,24 @@ export default function SlateTable({ rows }) {
               <tr
                 key={i}
                 className={
-                  r.selected ? "carded" : r.low_confidence ? "lowconf" : ""
+                  r.sharp_vetoed
+                    ? "vetoed"
+                    : r.selected
+                    ? "carded"
+                    : r.low_confidence
+                    ? "lowconf"
+                    : ""
                 }
               >
                 <td className="pitcher">
                   {r.selected && <span className="tag tag-card">⭐ #{r.card_rank}</span>}
                   {r.pitcher}
                   {r.low_confidence && <span className="tag tag-low">low sample</span>}
+                  {r.sharp_vetoed && (
+                    <span className="tag tag-veto" title={r.sharp_note}>
+                      🔬 vetoed
+                    </span>
+                  )}
                 </td>
                 <td>{r.opponent}</td>
                 <td>{r.line}</td>

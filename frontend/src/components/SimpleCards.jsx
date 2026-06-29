@@ -18,7 +18,7 @@ export default function SimpleCards({ rows }) {
   return (
     <div className="cards">
       {cards.map((r, i) => (
-        <div key={i} className={`card sig-${r.signal}${r.selected ? " carded" : ""}`}>
+        <div key={i} className={`card sig-${r.signal}${r.selected ? " carded" : ""}${r.sharp_vetoed ? " vetoed" : ""}`}>
           <div className="card-top">
             <span className="card-signal">{SIGNAL_EMOJI[r.signal]} {r.recommendation}</span>
             {r.selected ? (
@@ -31,6 +31,12 @@ export default function SimpleCards({ rows }) {
             {r.pitcher} <b>{r.side?.toUpperCase()} {r.line} Ks</b>
           </div>
           <div className="card-vs">vs {r.opponent}</div>
+          {r.sharp_vetoed && (
+            <div className="card-veto" title={r.sharp_note}>
+              🔬 Vetoed — model disagrees with the market by{" "}
+              {Math.abs(r.consensus_k_gap)?.toFixed(1)} Ks (consensus {r.consensus_line})
+            </div>
+          )}
           <ul className="card-reasons">
             {r.reasons.slice(0, 3).map((reason, j) => (
               <li key={j}>{reason}</li>

@@ -22,6 +22,7 @@ from app.data.park import park_factor
 from app.data.savant import SavantClient
 from app.data.umpires import UmpireTable, load_umpire_table
 from app.model.bridge import predict_with_ensemble
+from app.model.divergence import market_divergence
 from app.model.inputs import ProjectionInputs
 from app.model.risk import cap_correlated
 from app.model.selection import input_completeness, select_card
@@ -121,6 +122,33 @@ def _match_prop(start: ProbableStart, props: list[PropLine]) -> PropLine | None:
     return None
 
 
+def _collect_quote_lines(provider: OddsProvider) -> dict[str, list[float]]:
+    """Every book's strikeout LINE per pitcher, across all events (the wide pull).
+
+    Used only by the opt-in sharp check: the median of these lines is the market
+    consensus the divergence guard vetoes outliers against. Costs ~3x the props
+    pull (wide regions), so this is never called on the daily cron path.
+    """
+    out: dict[str, list[float]] = {}
+    for event in provider.list_events():
+        try:
+            quotes = provider.get_strikeout_quotes(event.event_id)
+        except Exception:  # one bad event shouldn't sink the sharp check
+            continue
+        for pitcher, books in quotes.items():
+            out.setdefault(pitcher, []).extend(
+                b.line for b in books if b.line is not None
+            )
+    return out
+
+
+def _match_quote_lines(pitcher_name: str, lines_by_pitcher: dict[str, list[float]]) -> list[float]:
+    for name, lines in lines_by_pitcher.items():
+        if names_match(pitcher_name, name):
+            return lines
+    return []
+
+
 def _completeness(inputs: ProjectionInputs, settings: Settings) -> float:
     """How fully-supported this projection is — feeds the card completeness gate."""
     form = inputs.pitcher_form
@@ -145,6 +173,8 @@ async def build_slate_ensemble(
     select_min_edge: float = 0.05,
     select_max_edge: float = 0.20,
     min_completeness: float = 0.5,
+    sharp_check: bool = False,
+    divergence_threshold: float = 1.25,
 ) -> dict:
     """Ranked +EV pitcher-strikeout edges for ``date`` via the ensemble bridge.
 
@@ -221,9 +251,33 @@ async def build_slate_ensemble(
         # Cap correlated exposure (same pitcher across books/lines/re-pulls) before
         # ranking + card selection. Additive: adds kelly_capped, leaves kelly intact.
         _apply_group_cap(priced, settings.kelly_group_cap)
+
+        # Opt-in sharp check: veto edges where the model is a market outlier. Costs
+        # the wide (~3x) quote pull, so it only runs when explicitly requested.
+        sharp_vetoed = 0
+        if sharp_check:
+            lines_by_pitcher = _collect_quote_lines(provider)
+            for row in priced:
+                lines = _match_quote_lines(row.get("pitcher", ""), lines_by_pitcher)
+                proj = row.get("expected_ks")
+                if proj is None or not lines:
+                    continue
+                view = market_divergence(proj, lines, threshold=divergence_threshold)
+                if view is None:
+                    continue
+                row["consensus_line"] = view.consensus_line
+                row["consensus_k_gap"] = view.k_gap
+                row["sharp_vetoed"] = view.diverges
+                row["sharp_note"] = view.reason
+                if view.diverges:
+                    sharp_vetoed += 1
+
         priced.sort(key=lambda r: r.get("edge", float("-inf")), reverse=True)
+        # A vetoed edge (model far from market consensus) is kept in the rows for
+        # transparency but barred from the bet card — it's likely a model error.
+        card_candidates = [r for r in priced if not r.get("sharp_vetoed")]
         card = select_card(
-            priced,
+            card_candidates,
             max_bets=max_bets,
             max_per_game=max_per_game,
             min_edge=select_min_edge,
@@ -231,7 +285,7 @@ async def build_slate_ensemble(
             min_completeness=min_completeness,
         )
         rows = priced + unpriced
-        return {
+        result = {
             "date": date,
             "count": len(rows),
             "evaluated": len(priced),
@@ -241,6 +295,10 @@ async def build_slate_ensemble(
             "card": card,
             "rows": rows,
         }
+        if sharp_check:
+            result["sharp_check"] = True
+            result["sharp_vetoed"] = sharp_vetoed
+        return result
     finally:
         if owns:
             await client.aclose()

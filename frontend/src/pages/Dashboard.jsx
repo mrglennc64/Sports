@@ -18,12 +18,15 @@ export default function Dashboard() {
   // Kelly scale: 0.25 (quarter) while the model is young; dial toward 0.5 (half)
   // only once calibration + track record justify it. Backend clamps to [0.25, 0.5].
   const [kellyFraction, setKellyFraction] = useState(0.25);
+  // Sharp check: veto edges where the model is a market-consensus outlier. Costs
+  // the wide (~3x) quote pull, so it's off by default and only runs on demand.
+  const [sharpCheck, setSharpCheck] = useState(false);
 
-  async function load(d) {
+  async function load(d, sharp = sharpCheck) {
     setLoading(true);
     setError(null);
     try {
-      setData(await fetchSlate(d, null, kellyFraction));
+      setData(await fetchSlate(d, null, kellyFraction, sharp));
     } catch (e) {
       setError(e.message);
       setData(null);
@@ -74,6 +77,17 @@ export default function Dashboard() {
             onChange={(e) => setCardOnly(e.target.checked)}
           />
           Today's card only
+        </label>
+        <label className="toggle" title="Veto plays where the model disagrees with the market consensus by more than ~1 strikeout — likely a projection error, not an edge. Costs ~3x the odds quota.">
+          <input
+            type="checkbox"
+            checked={sharpCheck}
+            onChange={(e) => {
+              setSharpCheck(e.target.checked);
+              load(date, e.target.checked);
+            }}
+          />
+          🔬 Sharp check
         </label>
         <div className="modes">
           <button
@@ -127,6 +141,11 @@ export default function Dashboard() {
           <span><b>{data.evaluated}</b> projected</span>
           <span>⭐ <b>{data.card_size}</b> featured</span>
           <span><b>{data.skipped}</b> unavailable</span>
+          {data.sharp_check && (
+            <span className="sharp-summary">
+              🔬 <b>{data.sharp_vetoed}</b> vetoed (model vs market)
+            </span>
+          )}
         </div>
       )}
 

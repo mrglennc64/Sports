@@ -163,6 +163,10 @@ async def slate_v2(
         None, ge=0.25, le=0.5,
         description="Kelly scale: 0.25 (quarter, young model) ... 0.5 (half, proven). Default uses server setting.",
     ),
+    sharp_check: bool = Query(
+        False,
+        description="Veto edges where the model is a market-consensus outlier (costs the wide ~3x quote pull).",
+    ),
 ) -> dict:
     """Ranked +EV pitcher-strikeout edges for a date via the v2 ensemble bridge.
 
@@ -183,6 +187,7 @@ async def slate_v2(
         select_max_edge=select_max_edge,
         min_completeness=min_completeness,
         settings=run_settings,
+        sharp_check=sharp_check,
     )
     result["kelly_fraction"] = run_settings.kelly_fraction
     if min_edge is not None:

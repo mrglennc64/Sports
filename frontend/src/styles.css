@@ -93,6 +93,22 @@ table.slate {
 .tag-low { background: #30363d; color: var(--muted); }
 .tag-card { background: #f0b90b; color: #1a1a00; margin-left: 0; margin-right: 8px; }
 .tag-capped { background: #5a3b00; color: #ffce6b; margin-left: 4px; }
+.tag-veto { background: #4a1d1d; color: #ff9d9d; margin-left: 4px; }
+
+/* --- sharp-check / market-divergence veto --- */
+.sharp-summary { color: #ff9d9d; }
+tr.vetoed { opacity: 0.55; }
+tr.vetoed .side { text-decoration: line-through; }
+.card.vetoed { opacity: 0.6; border: 1px dashed #5a2a2a; }
+.card-veto {
+  margin: 6px 0;
+  padding: 4px 8px;
+  background: #2a1414;
+  color: #ff9d9d;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
 
 /* --- Kelly scale control (Dashboard) --- */
 .kelly-control {
