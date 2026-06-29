@@ -30,6 +30,7 @@ from app.backtest.clv import clv_report
 from app.backtest.metrics import summarize
 from app.model.hedge import hedge_existing_position
 from app.backtest.reliability import reliability_report
+from app.backtest.calibration_validate import oos_validate
 from app.backtest.settle import settle_predictions
 from app.config import settings
 from app.crypto_predictor import (
@@ -308,6 +309,24 @@ def calibration(
     """
     settled = settle_predictions(settings.predictions_log)
     return _asdict(reliability_report(settled, n_bins=bins))
+
+
+@app.get("/calibration/validate")
+def calibration_validate(
+    train_frac: float = Query(0.7, gt=0.5, lt=0.95, description="Fraction of (chronologically) earliest predictions used to fit"),
+    bins: int = Query(10, ge=2, le=50, description="Reliability bucket count for ECE"),
+) -> dict:
+    """Should we turn calibration ON? Out-of-sample test before it touches staking.
+
+    Fits each calibrator (1-param shrink-to-even, 2-param Platt) on the earliest
+    ``train_frac`` of decided predictions and scores it on the later, unseen slice
+    — the only honest way to tell real correction from fitting small-sample noise.
+    Compares held-out Brier/log-loss/ECE vs the uncalibrated baseline and returns a
+    deliberately conservative recommendation. READ-ONLY: this never changes staking;
+    it produces the evidence for setting PROB_SHRINKAGE (or justifying a Platt flag).
+    """
+    settled = settle_predictions(settings.predictions_log)
+    return _asdict(oos_validate(settled, train_frac=train_frac, n_bins=bins))
 
 
 @app.get("/v2/hedge")
