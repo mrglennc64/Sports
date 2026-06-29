@@ -1,0 +1,37 @@
+# Test dependencies for smoke test suite
+# Run: pip install -r requirements-test.txt
+
+# Core testing framework
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+pytest-timeout>=2.1.0
+pytest-cov>=5.0.0
+
+# API testing
+httpx>=0.28.0
+respx>=0.22.0
+
+# Fixtures and factories
+pytest-factoryboy>=2.7.0
+
+# Performance monitoring
+pytest-benchmark>=4.0.0
+
+# Output formatting
+pytest-html>=4.1.0
+pytest-json-report>=1.5.0
+
+# Mocking and assertions
+unittest-mock>=1.5.0
+
+# Data validation
+pydantic>=2.10.0
+
+# Async support
+asyncio>=3.4.3
+
+# Environment management
+python-dotenv>=1.0.0
+
+# Code coverage
+coverage>=7.0.0

@@ -4,11 +4,12 @@ set -euo pipefail
 # Redeploy script - updates code on strike.perfecthold.online
 # Usage: ./deploy/redeploy.sh
 
-SERVER="root@187.77.111.16"
+SERVER="newvps"
 REPO_DIR="/opt/strike"
+NGINX_DIR="/var/www/strike"
 
 echo "=============================================================================="
-echo "Redeploying MLB Strikeout Edge to strike.perfecthold.online"
+echo "Redeploying to strike.perfecthold.online"
 echo "=============================================================================="
 
 # Step 1: Git pull latest code
@@ -37,34 +38,34 @@ ssh $SERVER "cd $REPO_DIR/frontend && VITE_API_BASE=/api npm install && npm run 
 # Step 5: Copy built frontend to nginx directory
 echo ""
 echo "[5/7] Deploying frontend assets..."
-ssh $SERVER "rm -rf /var/www/strike && mkdir -p /var/www/strike && cp -r $REPO_DIR/frontend/dist/* /var/www/strike/"
+ssh $SERVER "rm -rf $NGINX_DIR && mkdir -p $NGINX_DIR && cp -r $REPO_DIR/frontend/dist/* $NGINX_DIR/"
 
-# Step 6: Restart backend service
+# Step 6: Restart nginx
 echo ""
-echo "[6/7] Restarting backend service..."
-ssh $SERVER "systemctl restart mlb-edge"
+echo "[6/7] Reloading nginx..."
+ssh $SERVER "systemctl reload nginx"
 
 # Step 7: Verify services
 echo ""
 echo "[7/7] Verifying deployment..."
 sleep 2
 
-# Check if service is running
-ssh $SERVER "systemctl is-active mlb-edge" || {
-    echo "ERROR: Backend service failed to start!"
-    echo "Check logs with: ssh $SERVER journalctl -u mlb-edge -n 50"
+# Check if nginx is running
+ssh $SERVER "systemctl is-active nginx" || {
+    echo "ERROR: Nginx failed to start!"
+    echo "Check logs with: ssh $SERVER journalctl -u nginx -n 50"
     exit 1
 }
 
 # Test API endpoint
 echo ""
-echo "Testing API endpoint..."
-API_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "http://187.77.111.16/api/v2/slate")
+echo "Testing frontend..."
+API_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "https://strike.perfecthold.online/")
 
 if [ "$API_RESPONSE" = "200" ]; then
-    echo "✓ API is responding (HTTP $API_RESPONSE)"
+    echo "✓ Frontend is responding (HTTP $API_RESPONSE)"
 else
-    echo "⚠ API returned HTTP $API_RESPONSE"
+    echo "⚠ Frontend returned HTTP $API_RESPONSE (expected for HTTPS redirect)"
 fi
 
 echo ""
@@ -72,12 +73,12 @@ echo "==========================================================================
 echo "Deployment complete!"
 echo "=============================================================================="
 echo ""
-echo "Site: https://strike.perfecthold.online/app"
-echo "API:  https://strike.perfecthold.online/api/v2/slate"
+echo "Frontend: https://strike.perfecthold.online"
+echo "Nginx dir: $NGINX_DIR"
 echo ""
 echo "To check logs:"
-echo "  ssh $SERVER journalctl -u mlb-edge -f"
+echo "  ssh $SERVER journalctl -u nginx -f"
 echo ""
-echo "To verify correct pitchers:"
-echo "  curl https://strike.perfecthold.online/api/v2/slate?date=2026-06-23 | jq '.rows[0:3] | .[].pitcher'"
+echo "To verify files deployed:"
+echo "  ssh $SERVER ls -la $NGINX_DIR/"
 echo ""

@@ -1,0 +1,318 @@
+{
+  "sample_odds_captures": [
+    {
+      "pitcher": "Gerrit Cole",
+      "game_id": "MLB_NYY_BAL_2026_06_28",
+      "strikeout_line": 6.5,
+      "timestamp": "2026-06-28T12:00:00Z",
+      "odds": {
+        "draftkings": {
+          "over": -110,
+          "under": -110
+        },
+        "fanduel": {
+          "over": -105,
+          "under": -115
+        },
+        "betmgm": {
+          "over": -110,
+          "under": -110
+        }
+      }
+    },
+    {
+      "pitcher": "Clayton Kershaw",
+      "game_id": "MLB_LAD_SD_2026_06_28",
+      "strikeout_line": 7.5,
+      "timestamp": "2026-06-28T14:00:00Z",
+      "odds": {
+        "draftkings": {
+          "over": -120,
+          "under": +100
+        },
+        "fanduel": {
+          "over": -115,
+          "under": +105
+        }
+      }
+    },
+    {
+      "pitcher": "Max Scherzer",
+      "game_id": "MLB_NYM_PHI_2026_06_28",
+      "strikeout_line": 6.5,
+      "timestamp": "2026-06-28T13:30:00Z",
+      "odds": {
+        "draftkings": {
+          "over": -105,
+          "under": -115
+        }
+      }
+    }
+  ],
+  "sample_bets": [
+    {
+      "id": "bet_001",
+      "pitcher": "Gerrit Cole",
+      "line": 6.5,
+      "side": "over",
+      "odds": -110,
+      "stake": 100,
+      "result": "win",
+      "actual_strikeouts": 7,
+      "market_probability": 0.45,
+      "model_probability": 0.58,
+      "timestamp": "2026-06-28T12:00:00Z",
+      "game_date": "2026-06-28"
+    },
+    {
+      "id": "bet_002",
+      "pitcher": "Clayton Kershaw",
+      "line": 7.5,
+      "side": "under",
+      "odds": +100,
+      "stake": 150,
+      "result": "loss",
+      "actual_strikeouts": 8,
+      "market_probability": 0.35,
+      "model_probability": 0.42,
+      "timestamp": "2026-06-28T14:00:00Z",
+      "game_date": "2026-06-28"
+    },
+    {
+      "id": "bet_003",
+      "pitcher": "Max Scherzer",
+      "line": 6.5,
+      "side": "over",
+      "odds": -105,
+      "stake": 200,
+      "result": "win",
+      "actual_strikeouts": 7,
+      "market_probability": 0.52,
+      "model_probability": 0.61,
+      "timestamp": "2026-06-28T13:30:00Z",
+      "game_date": "2026-06-28"
+    },
+    {
+      "id": "bet_004",
+      "pitcher": "Justin Verlander",
+      "line": 5.5,
+      "side": "under",
+      "odds": -110,
+      "stake": 50,
+      "result": "push",
+      "actual_strikeouts": 5.5,
+      "market_probability": 0.48,
+      "model_probability": 0.55,
+      "timestamp": "2026-06-27T18:00:00Z",
+      "game_date": "2026-06-27"
+    }
+  ],
+  "sample_predictions": [
+    {
+      "pitcher": "Gerrit Cole",
+      "line": 6.5,
+      "date": "2026-06-28",
+      "model_probability": 0.58,
+      "market_probability": 0.45,
+      "projected_ks": 6.8,
+      "status": "ok",
+      "edge": 0.13,
+      "kelly": 0.025,
+      "action": "BUY"
+    },
+    {
+      "pitcher": "Clayton Kershaw",
+      "line": 7.5,
+      "date": "2026-06-28",
+      "model_probability": 0.42,
+      "market_probability": 0.35,
+      "projected_ks": 7.2,
+      "status": "ok",
+      "edge": 0.07,
+      "kelly": 0.011,
+      "action": "PASS"
+    },
+    {
+      "pitcher": "Max Scherzer",
+      "line": 6.5,
+      "date": "2026-06-28",
+      "model_probability": 0.61,
+      "market_probability": 0.52,
+      "projected_ks": 6.9,
+      "status": "ok",
+      "edge": 0.09,
+      "kelly": 0.017,
+      "action": "BUY"
+    }
+  ],
+  "sample_portfolio_allocations": [
+    {
+      "date": "2026-06-28",
+      "vertical": "mlb",
+      "weight": 0.35,
+      "expected_roi": 0.045,
+      "confidence": 0.72
+    },
+    {
+      "date": "2026-06-28",
+      "vertical": "ai-releases",
+      "weight": 0.25,
+      "expected_roi": 0.062,
+      "confidence": 0.68
+    },
+    {
+      "date": "2026-06-28",
+      "vertical": "crypto",
+      "weight": 0.20,
+      "expected_roi": 0.085,
+      "confidence": 0.55
+    },
+    {
+      "date": "2026-06-28",
+      "vertical": "economics",
+      "weight": 0.15,
+      "expected_roi": 0.038,
+      "confidence": 0.61
+    },
+    {
+      "date": "2026-06-28",
+      "vertical": "earnings",
+      "weight": 0.05,
+      "expected_roi": 0.025,
+      "confidence": 0.42
+    }
+  ],
+  "sample_equity_curve": [
+    {
+      "date": "2026-01-01",
+      "value": 100000,
+      "daily_return": 0.0,
+      "cumulative_return": 0.0
+    },
+    {
+      "date": "2026-02-01",
+      "value": 102500,
+      "daily_return": 0.0025,
+      "cumulative_return": 0.025
+    },
+    {
+      "date": "2026-03-01",
+      "value": 105300,
+      "daily_return": 0.0027,
+      "cumulative_return": 0.053
+    },
+    {
+      "date": "2026-04-01",
+      "value": 103800,
+      "daily_return": -0.0143,
+      "cumulative_return": 0.038
+    },
+    {
+      "date": "2026-05-01",
+      "value": 107200,
+      "daily_return": 0.0328,
+      "cumulative_return": 0.072
+    },
+    {
+      "date": "2026-06-01",
+      "value": 110500,
+      "daily_return": 0.0307,
+      "cumulative_return": 0.105
+    },
+    {
+      "date": "2026-06-28",
+      "value": 112800,
+      "daily_return": 0.0208,
+      "cumulative_return": 0.128
+    }
+  ],
+  "sample_regime_states": [
+    {
+      "date": "2026-06-28",
+      "regime": "trending_up",
+      "probability": 0.62,
+      "volatility": 0.15,
+      "confidence": 0.78
+    },
+    {
+      "date": "2026-06-27",
+      "regime": "trending_up",
+      "probability": 0.58,
+      "volatility": 0.14,
+      "confidence": 0.75
+    },
+    {
+      "date": "2026-06-26",
+      "regime": "ranging",
+      "probability": 0.71,
+      "volatility": 0.12,
+      "confidence": 0.82
+    }
+  ],
+  "sample_clv_analysis": {
+    "date": "2026-06-28",
+    "total_lines_tracked": 12,
+    "average_line_movement": 0.15,
+    "movements": [
+      {
+        "pitcher": "Gerrit Cole",
+        "line": 6.5,
+        "initial_odds": {
+          "over": -115,
+          "under": +105
+        },
+        "current_odds": {
+          "over": -110,
+          "under": -110
+        },
+        "direction": "sharper_over",
+        "change_percent": 0.04,
+        "books_reporting": 3
+      },
+      {
+        "pitcher": "Clayton Kershaw",
+        "line": 7.5,
+        "initial_odds": {
+          "over": -125,
+          "under": +115
+        },
+        "current_odds": {
+          "over": -120,
+          "under": +100
+        },
+        "direction": "sharper_under",
+        "change_percent": 0.06,
+        "books_reporting": 2
+      }
+    ]
+  },
+  "sample_crypto_predictions": [
+    {
+      "event": "Bitcoin hits $150k by Dec 2026",
+      "model_probability": 0.62,
+      "polymarket_probability": 0.55,
+      "edge": 0.07,
+      "confidence": "high",
+      "key_factors": ["price_momentum", "macro_sentiment", "on_chain_activity"],
+      "updated_at": "2026-06-28T12:00:00Z"
+    },
+    {
+      "event": "Ethereum ETF approved by July 2026",
+      "model_probability": 0.71,
+      "polymarket_probability": 0.68,
+      "edge": 0.03,
+      "confidence": "medium",
+      "key_factors": ["regulatory_signals", "political_environment"],
+      "updated_at": "2026-06-28T11:30:00Z"
+    },
+    {
+      "event": "Solana hits $300 by Dec 2026",
+      "model_probability": 0.48,
+      "polymarket_probability": 0.42,
+      "edge": 0.06,
+      "confidence": "low",
+      "key_factors": ["developer_activity", "ecosystem_growth"],
+      "updated_at": "2026-06-28T10:45:00Z"
+    }
+  ]
+}
