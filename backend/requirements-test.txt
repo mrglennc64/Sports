@@ -21,14 +21,12 @@ pytest-benchmark>=4.0.0
 pytest-html>=4.1.0
 pytest-json-report>=1.5.0
 
-# Mocking and assertions
-unittest-mock>=1.5.0
-
 # Data validation
 pydantic>=2.10.0
 
-# Async support
-asyncio>=3.4.3
+# Async support is provided by pytest-asyncio (above) + the stdlib asyncio module.
+# (Do NOT add a PyPI `asyncio`/`unittest-mock` backport — those are stdlib on 3.x
+# and the ancient backports break installs on modern Python.)
 
 # Environment management
 python-dotenv>=1.0.0

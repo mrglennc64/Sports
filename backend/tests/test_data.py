@@ -99,7 +99,10 @@ def test_fetch_probable_starts_parses_both_pitchers():
 
 
 @respx.mock
-def test_fetch_probable_starts_skips_missing_probable():
+def test_fetch_probable_starts_includes_unannounced_as_tbd():
+    # A game with one side's probable pitcher not yet announced is INCLUDED as a
+    # TBD placeholder (pitcher_id=None) rather than dropped — the UI shows the game,
+    # and downstream gating (no pitcher_id) keeps it from ever being projected/bet.
     schedule = {
         "dates": [
             {
@@ -123,9 +126,14 @@ def test_fetch_probable_starts_skips_missing_probable():
         return_value=httpx.Response(200, json=schedule)
     )
     starts = _run(fetch_probable_starts(_client(), "2025-06-07"))
-    assert len(starts) == 1
-    assert starts[0].pitcher_id == 9
-    assert starts[0].is_home is True
+    assert len(starts) == 2
+    by_home = {s.is_home: s for s in starts}
+    # announced home pitcher comes through intact
+    assert by_home[True].pitcher_id == 9
+    assert by_home[True].pitcher_name == "Only"
+    # unannounced away pitcher is a TBD placeholder, not a real bet candidate
+    assert by_home[False].pitcher_id is None
+    assert by_home[False].pitcher_name == "TBD"
 
 
 # --- pitcher recent form -----------------------------------------------------

@@ -403,7 +403,8 @@ class TestEdgeCases:
             updated_at=datetime.utcnow().isoformat(),
         )
         assert pred.edge == 0.15
-        assert pred.edge == pred.predicted_probability - pred.polymarket_probability
+        # float arithmetic: 0.65 - 0.50 == 0.15000000000000002, so compare with tolerance
+        assert pred.edge == pytest.approx(pred.predicted_probability - pred.polymarket_probability)
 
     def test_negative_edge(self):
         """Test negative edge (model bearish vs market)."""

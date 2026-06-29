@@ -27,28 +27,43 @@ scp data/exports/archetype_interaction_matrix.csv $SERVER:$REPO_DIR/backend/data
 
 # Step 3: Rebuild backend virtualenv (in case dependencies changed)
 echo ""
-echo "[3/7] Updating backend dependencies..."
+echo "[3/8] Updating backend dependencies..."
 ssh $SERVER "cd $REPO_DIR/backend && .venv/bin/pip install -q -r requirements.txt"
 
-# Step 4: Rebuild frontend with correct API base
+# Step 4: Restart the FastAPI backend so new routes / code take effect.
+# REQUIRED: nginx serves static frontend + proxies /api to this service. Without a
+# restart, any new or changed backend route 404s (or runs stale code) until the
+# next reboot. This is the step the old script omitted.
 echo ""
-echo "[4/7] Rebuilding frontend..."
+echo "[4/8] Restarting backend service..."
+ssh $SERVER "systemctl restart strike-backend.service"
+
+# Step 5: Rebuild frontend with correct API base
+echo ""
+echo "[5/8] Rebuilding frontend..."
 ssh $SERVER "cd $REPO_DIR/frontend && VITE_API_BASE=/api npm install && npm run build"
 
-# Step 5: Copy built frontend to nginx directory
+# Step 6: Copy built frontend to nginx directory
 echo ""
-echo "[5/7] Deploying frontend assets..."
+echo "[6/8] Deploying frontend assets..."
 ssh $SERVER "rm -rf $NGINX_DIR && mkdir -p $NGINX_DIR && cp -r $REPO_DIR/frontend/dist/* $NGINX_DIR/"
 
-# Step 6: Restart nginx
+# Step 7: Reload nginx
 echo ""
-echo "[6/7] Reloading nginx..."
-ssh $SERVER "systemctl reload nginx"
+echo "[7/8] Reloading nginx..."
+ssh $SERVER "nginx -t && systemctl reload nginx"
 
-# Step 7: Verify services
+# Step 8: Verify services
 echo ""
-echo "[7/7] Verifying deployment..."
+echo "[8/8] Verifying deployment..."
 sleep 2
+
+# Backend must be active (it serves every /api route)
+ssh $SERVER "systemctl is-active strike-backend.service" || {
+    echo "ERROR: strike-backend.service is not active!"
+    echo "Check logs with: ssh $SERVER journalctl -u strike-backend.service -n 50"
+    exit 1
+}
 
 # Check if nginx is running
 ssh $SERVER "systemctl is-active nginx" || {

@@ -73,7 +73,7 @@ class OptionsMarketData(BaseModel):
 class NewsSentiment(BaseModel):
     """Aggregated news sentiment."""
     symbol: str
-    sentiment_score: float = Field(..., ge=-1, le=1, description="[-1, 1] where -1 is very negative")
+    sentiment_score: float = Field(0.0, ge=-1, le=1, description="[-1, 1] where -1 is very negative; 0 = neutral default when no signal")
     article_count_24h: int = 0
     mentions_24h: int = 0
     trending: bool = False
