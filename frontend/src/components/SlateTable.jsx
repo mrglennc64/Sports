@@ -12,6 +12,8 @@ export default function SlateTable({ rows, bankroll = 0, stakeRound = 0 }) {
   if (evaluated.length === 0) {
     return <p className="empty">No evaluated props for this date.</p>;
   }
+  // The consensus columns only have data when the sharp check (wide book pull) ran.
+  const hasConsensus = evaluated.some((r) => r.consensus_line != null);
   return (
     <div>
       <button
@@ -39,6 +41,7 @@ export default function SlateTable({ rows, bankroll = 0, stakeRound = 0 }) {
             <th>Line</th>
             <th>Pick</th>
             <th>Projected Ks</th>
+            {hasConsensus && <th>Field (books)</th>}
             {showStakes && <th>Stake</th>}
             {showMarketData && (
               <>
@@ -86,6 +89,32 @@ export default function SlateTable({ rows, bankroll = 0, stakeRound = 0 }) {
                 <td>{r.line}</td>
                 <td className={`side side-${r.side}`}>{r.side?.toUpperCase()}</td>
                 <td>{r.expected_ks?.toFixed(2)}</td>
+                {hasConsensus && (
+                  <td
+                    className={
+                      r.consensus_line == null
+                        ? ""
+                        : r.sharp_vetoed
+                        ? "field-outlier"
+                        : "field-withfield"
+                    }
+                    title={r.sharp_note}
+                  >
+                    {r.consensus_line == null ? (
+                      "—"
+                    ) : (
+                      <>
+                        {r.consensus_at_line}/{r.consensus_n_books} @ {r.consensus_line}
+                        <br />
+                        <small>
+                          {r.sharp_vetoed
+                            ? `⚠️ outlier ${r.consensus_k_gap >= 0 ? "+" : ""}${r.consensus_k_gap}`
+                            : "✓ with field"}
+                        </small>
+                      </>
+                    )}
+                  </td>
+                )}
                 {showStakes && (
                   <td className="stake-cell">{stake != null ? fmtMoney(stake) : "—"}</td>
                 )}

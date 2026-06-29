@@ -31,9 +31,15 @@ class DivergenceView:
     line_low: float
     line_high: float
     n_books: int
+    n_at_consensus: int     # how many books hang the line exactly at the consensus
     k_gap: float            # model_expected_ks - consensus_line (signed)
     diverges: bool          # True => model is an outlier vs the market, veto the edge
     reason: str
+
+    @property
+    def agreement_pct(self) -> float:
+        """Share of books clustered at the consensus line — market tightness."""
+        return round(self.n_at_consensus / self.n_books * 100.0, 1) if self.n_books else 0.0
 
 
 def market_divergence(
@@ -55,6 +61,7 @@ def market_divergence(
         return None
 
     consensus = _median(lines)
+    n_at_consensus = sum(1 for x in lines if x == consensus)
     k_gap = model_expected_ks - consensus
     diverges = abs(k_gap) > threshold
     direction = "below" if k_gap < 0 else "above"
@@ -69,6 +76,7 @@ def market_divergence(
         line_low=min(lines),
         line_high=max(lines),
         n_books=len(lines),
+        n_at_consensus=n_at_consensus,
         k_gap=round(k_gap, 2),
         diverges=diverges,
         reason=reason,

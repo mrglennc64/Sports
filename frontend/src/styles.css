@@ -243,6 +243,29 @@ tr.vetoed .side { text-decoration: line-through; }
 .card-reasons { margin: 0 0 10px; padding-left: 18px; color: var(--text); font-size: 13px; }
 .card-reasons li { margin: 2px 0; }
 .card-stake { font-size: 13px; border-top: 1px solid var(--line); padding-top: 8px; }
+
+/* --- "vs the field" consensus scoreboard (card) --- */
+.consensus {
+  margin: 8px 0;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid var(--line);
+}
+.consensus.withfield { background: #0e1f14; border-color: #1f5132; }
+.consensus.outlier { background: #241313; border-color: #5a2a2a; }
+.consensus-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+.consensus-title { color: var(--muted); font-weight: 600; }
+.consensus-verdict { font-weight: 700; font-size: 11px; }
+.consensus-verdict.good { color: #4ade80; }
+.consensus-verdict.bad { color: #f87171; }
+.consensus-stats { display: flex; flex-direction: column; gap: 1px; color: var(--text); }
+.consensus-stats span:last-child { color: var(--muted); }
+
+/* --- "Field (books)" column (Pro table) --- */
+.field-withfield small { color: #4ade80; }
+.field-outlier small { color: #f87171; }
+.field-outlier { opacity: 0.95; }
 .muted { color: var(--muted); }
 
 footer { margin-top: 24px; color: var(--muted); font-size: 12px; }

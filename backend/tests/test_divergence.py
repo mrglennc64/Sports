@@ -59,3 +59,20 @@ def test_consensus_uses_median_not_mean():
     v = market_divergence(5.0, [5.5, 5.5, 12.5])
     assert v.consensus_line == pytest.approx(5.5)
     assert not v.diverges
+
+
+def test_consensus_agreement_counts_books_at_the_line():
+    # 4 of 6 books hang 5.5 (the consensus); the other two are off it.
+    v = market_divergence(5.0, [5.0, 5.5, 5.5, 5.5, 5.5, 6.0])
+    assert v.n_books == 6
+    assert v.consensus_line == pytest.approx(5.5)
+    assert v.n_at_consensus == 4
+    assert v.agreement_pct == pytest.approx(66.7, abs=0.1)
+    assert v.line_low == pytest.approx(5.0)
+    assert v.line_high == pytest.approx(6.0)
+
+
+def test_full_agreement_is_100_pct():
+    v = market_divergence(5.0, [5.5, 5.5, 5.5])
+    assert v.n_at_consensus == 3
+    assert v.agreement_pct == pytest.approx(100.0)

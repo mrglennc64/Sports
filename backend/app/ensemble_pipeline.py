@@ -267,6 +267,11 @@ async def build_slate_ensemble(
                     continue
                 row["consensus_line"] = view.consensus_line
                 row["consensus_k_gap"] = view.k_gap
+                row["consensus_n_books"] = view.n_books
+                row["consensus_at_line"] = view.n_at_consensus
+                row["consensus_line_low"] = view.line_low
+                row["consensus_line_high"] = view.line_high
+                row["consensus_agreement_pct"] = view.agreement_pct
                 row["sharp_vetoed"] = view.diverges
                 row["sharp_note"] = view.reason
                 if view.diverges:

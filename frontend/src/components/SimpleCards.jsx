@@ -1,5 +1,6 @@
 // Simple ("consumer") mode: hide the math, show a decision per HOF-style feedback.
 import { dollarStake, effectiveKelly, fmtMoney } from "../stake.js";
+import ConsensusBar from "./ConsensusBar.jsx";
 
 const SIGNAL_RANK = { strong: 0, lean: 1, avoid: 2 };
 const SIGNAL_EMOJI = { strong: "🟢", lean: "🟡", avoid: "🔴" };
@@ -44,12 +45,7 @@ export default function SimpleCards({ rows, bankroll = 0, stakeRound = 0 }) {
               {stakeRound > 0 ? ` · rounded to $${stakeRound}` : ""}
             </div>
           )}
-          {r.sharp_vetoed && (
-            <div className="card-veto" title={r.sharp_note}>
-              🔬 Vetoed — model disagrees with the market by{" "}
-              {Math.abs(r.consensus_k_gap)?.toFixed(1)} Ks (consensus {r.consensus_line})
-            </div>
-          )}
+          <ConsensusBar row={r} />
           <ul className="card-reasons">
             {r.reasons.slice(0, 3).map((reason, j) => (
               <li key={j}>{reason}</li>
