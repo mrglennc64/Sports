@@ -78,22 +78,45 @@ def evaluate_parlay(
     *,
     kelly_fraction: float = 0.25,
     kelly_cap: float = 0.05,
+    max_legs: int | None = None,
+    block_same_game: bool = False,
 ) -> ParlayEvaluation:
     """Combine independent leg projections into a parlay EV + stake.
 
-    Raises ``ValueError`` on an empty leg list or an out-of-range probability.
+    By default this only WARNS about the two ways a parlay goes wrong (same-game
+    correlation and long-parlay variance) and reports EV honestly. The two
+    optional guards turn those warnings into hard rules — the user-facing
+    ``build_parlay`` path enables both so the live app can't submit a bad parlay:
+
+    * ``max_legs`` — reject a parlay with more than this many legs (variance +
+      compounded vig). ``None`` = no cap (warn-only, the pure-math default).
+    * ``block_same_game`` — reject any parlay whose legs share a game (their
+      combined probability is not the product; the EV would be a fiction).
+
+    Raises ``ValueError`` on an empty leg list, an out-of-range probability, or a
+    violated guard.
     """
     if not legs:
         raise ValueError("a parlay needs at least one leg")
     for leg in legs:
         if not 0.0 < leg.model_prob < 1.0:
             raise ValueError(f"leg {leg.label!r} has invalid model_prob {leg.model_prob}")
+    if max_legs is not None and len(legs) > max_legs:
+        raise ValueError(
+            f"parlay has {len(legs)} legs but max_legs={max_legs} — long parlays "
+            "stack variance and compounded vig; keep it to 2–3 sharp legs"
+        )
 
     model_prob = prod(leg.model_prob for leg in legs)
     book_decimal = prod(american_to_decimal(leg.american_odds) for leg in legs)
     ev_per_unit = model_prob * book_decimal - 1.0
 
     warns, independent = _correlation_warnings(legs)
+    if block_same_game and not independent:
+        raise ValueError(
+            "parlay legs share a game and are correlated — the product overstates "
+            "the true probability, so this parlay is disallowed. " + " ".join(warns)
+        )
     if len(legs) >= 4:
         warns.append(
             f"{len(legs)}-leg parlay: high variance and compounded vig — most long "

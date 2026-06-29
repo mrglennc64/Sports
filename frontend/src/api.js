@@ -13,6 +13,21 @@ export async function fetchSlate(date, minEdge, kellyFraction, sharpCheck) {
   return res.json();
 }
 
+// Auto-suggested +EV parlays built from today's bet card (one bet per game, so
+// the legs are independent). Returns suggestions ranked by EV per unit, each with
+// its legs, combined probability, payout multiple, EV and Kelly. Same-game legs
+// are never combined and the parlay is capped at `maxLegs`. See /v2/parlay/suggest.
+export async function fetchParlaySuggestions(date, maxLegs, maxSuggestions) {
+  const params = new URLSearchParams();
+  if (date) params.set("date", date);
+  if (maxLegs != null && maxLegs !== "") params.set("max_legs", maxLegs);
+  if (maxSuggestions != null && maxSuggestions !== "")
+    params.set("max_suggestions", maxSuggestions);
+  const res = await fetch(`${BASE}/v2/parlay/suggest?${params.toString()}`);
+  if (!res.ok) throw new Error(`parlay suggest request failed: ${res.status}`);
+  return res.json();
+}
+
 // Hedge an EXISTING position: you took `stake` at `odds`, the line moved, and
 // betting the opposite side now at `hedgeOdds` may lock a result. Returns the
 // hedge stake, capital at risk, and locked profit (risk_free only on a true

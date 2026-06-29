@@ -69,6 +69,30 @@ def test_long_parlay_variance_warning():
     assert any("4-leg" in w for w in ev.warnings)
 
 
+def test_max_legs_guard_rejects_long_parlay():
+    legs = [
+        ParlayLeg(f"L{i}", model_prob=0.6, american_odds=120, game_id=i)
+        for i in range(4)
+    ]
+    # Warn-only by default (no raise)...
+    evaluate_parlay(legs)
+    # ...but a hard cap rejects it.
+    with pytest.raises(ValueError, match="max_legs"):
+        evaluate_parlay(legs, max_legs=3)
+
+
+def test_block_same_game_guard_rejects_correlated_legs():
+    legs = [
+        ParlayLeg("Cole Over 6.5", model_prob=0.6, american_odds=120, game_id=777),
+        ParlayLeg("Bello Under 4.5", model_prob=0.6, american_odds=120, game_id=777),
+    ]
+    # Warn-only by default (still returns, flagged dependent)...
+    assert evaluate_parlay(legs).independent is False
+    # ...but the hard guard rejects it.
+    with pytest.raises(ValueError, match="share a game"):
+        evaluate_parlay(legs, block_same_game=True)
+
+
 def test_fair_decimal_is_inverse_model_prob():
     legs = [
         ParlayLeg("A", model_prob=0.6, american_odds=-110, game_id=1),
@@ -207,6 +231,77 @@ def test_build_parlay_logs_settleable_legs(monkeypatch, tmp_path):
     assert settled.model_prob == pytest.approx(0.62)
     rep = reliability_report([settled])
     assert rep.n == 1  # the parlay leg is now a decided, scored prediction
+
+
+def test_build_parlay_rejects_same_game_legs(monkeypatch):
+    import app.parlay_pipeline as pp
+
+    async def fake_predict(pitcher, *, line, date, client=None, settings=None):
+        return {  # both legs in the SAME game (game_pk 500)
+            "pitcher": pitcher,
+            "prob_over": 0.6,
+            "prob_under": 0.4,
+            "game_pk": 500,
+        }
+
+    monkeypatch.setattr(pp, "predict_pitcher_ensemble", fake_predict)
+    specs = [
+        pp.LegSpec("Cole", 6.5, "over", -110),
+        pp.LegSpec("Bello", 5.5, "under", -105),
+    ]
+
+    async def run():
+        return await pp.build_parlay(specs, on_date="2025-06-07", client=object())
+
+    with pytest.raises(ValueError, match="share a game"):
+        asyncio.run(run())
+
+
+def test_build_parlay_rejects_too_many_legs():
+    import app.parlay_pipeline as pp
+
+    specs = [pp.LegSpec(f"P{i}", 5.5, "over", -110) for i in range(4)]
+
+    async def run():
+        return await pp.build_parlay(specs, on_date="2025-06-07", client=object())
+
+    # Fails fast on the leg count, before any projection call.
+    with pytest.raises(ValueError, match="max_legs"):
+        asyncio.run(run())
+
+
+def test_suggest_parlays_builds_independent_combos(monkeypatch):
+    import app.parlay_pipeline as pp
+
+    async def fake_slate(date, *, client=None, settings=None, **kwargs):
+        # A 3-leg card, one bet per game (independent), all +EV plus-money.
+        return {
+            "card": [
+                {"pitcher": "A", "side": "over", "line": 6.5, "model_prob": 0.70,
+                 "over_odds": 120, "under_odds": -150, "game_pk": 1},
+                {"pitcher": "B", "side": "under", "line": 5.5, "model_prob": 0.68,
+                 "over_odds": -150, "under_odds": 115, "game_pk": 2},
+                {"pitcher": "C", "side": "over", "line": 4.5, "model_prob": 0.66,
+                 "over_odds": 110, "under_odds": -140, "game_pk": 3},
+            ]
+        }
+
+    monkeypatch.setattr(pp, "build_slate_ensemble", fake_slate)
+
+    async def run():
+        return await pp.suggest_parlays("2026-06-29", client=object(), max_legs=3)
+
+    out = asyncio.run(run())
+    assert out["eligible_legs"] == 3
+    # 3 two-leg combos + 1 three-leg combo = 4 possible; all +EV here.
+    assert out["n_suggestions"] == 4
+    # Ranked by EV per unit, descending.
+    evs = [s["ev_per_unit"] for s in out["suggestions"]]
+    assert evs == sorted(evs, reverse=True)
+    # The under leg pulled the under_odds (+115), never the over_odds.
+    three = next(s for s in out["suggestions"] if s["n_legs"] == 3)
+    b_leg = next(l for l in three["legs"] if l["label"].startswith("B "))
+    assert b_leg["american_odds"] == 115
 
 
 def test_build_parlay_does_not_log_by_default(monkeypatch, tmp_path):

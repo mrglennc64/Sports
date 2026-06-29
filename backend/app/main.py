@@ -40,7 +40,7 @@ from app.crypto_predictor import (
 )
 from app.ensemble_pipeline import build_slate_ensemble, predict_pitcher_ensemble
 from app.log.predictions import log_predictions
-from app.parlay_pipeline import LegSpec, build_parlay
+from app.parlay_pipeline import LegSpec, build_parlay, suggest_parlays
 from app.pipeline import build_slate, predict_pitcher
 from app import polymarket_client as pmkt
 from app import signals as sig
@@ -236,6 +236,10 @@ class ParlayLegBody(BaseModel):
 class ParlayBody(BaseModel):
     legs: list[ParlayLegBody] = Field(..., min_length=1)
     date: str | None = Field(None, description="YYYY-MM-DD; defaults to today")
+    max_legs: int = Field(
+        3, ge=2, le=4,
+        description="Hard cap on legs (2–3 is the variance/vig sweet spot). >max_legs is rejected.",
+    )
     log: bool = Field(
         False,
         description="Log each leg to the predictions log so it feeds /calibration",
@@ -247,19 +251,40 @@ async def parlay(body: ParlayBody) -> dict:
     """Combine per-leg strikeout projections into a parlay EV + stake.
 
     Each leg's win probability comes from the v2 ensemble projection; you supply
-    the book odds. Legs in the same game are flagged (correlated — the product
-    overstates the true probability). Set ``log=true`` to record each leg (as a
+    the book odds. **Hard rules:** legs in the same game are REJECTED (correlated —
+    the product would overstate the true probability) and the parlay is capped at
+    ``max_legs`` (default 3). Set ``log=true`` to record each leg (as a
     non-flagged prediction) so its probability is later scored by /calibration."""
     specs = [
         LegSpec(pitcher=l.pitcher, line=l.line, side=l.side, odds=l.odds, date=l.date)
         for l in body.legs
     ]
     try:
-        return await build_parlay(specs, on_date=body.date or _today(), log=body.log)
+        return await build_parlay(
+            specs, on_date=body.date or _today(), max_legs=body.max_legs, log=body.log
+        )
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
+
+
+@app.get("/v2/parlay/suggest")
+async def parlay_suggest(
+    date: str | None = Query(None, description="YYYY-MM-DD; defaults to today"),
+    max_legs: int = Query(3, ge=2, le=4, description="Max legs per suggested parlay"),
+    max_suggestions: int = Query(5, ge=1, le=20, description="How many to return"),
+) -> dict:
+    """Auto-suggest +EV parlays from today's bet card.
+
+    Enumerates 2..``max_legs`` combinations of the day's card legs — which are
+    already one-per-game (so independent) and already +EV/confident — evaluates
+    each as a parlay, and returns the positive-EV ones ranked by EV per unit.
+    Probabilities include the configured shrinkage, so the EV is honest. Never
+    parlays same-game legs and never exceeds ``max_legs`` (the hard rules)."""
+    return await suggest_parlays(
+        date or _today(), max_legs=max_legs, max_suggestions=max_suggestions
+    )
 
 
 @app.get("/backtest")
@@ -371,7 +396,19 @@ async def vertical_mlb(
     min_edge: float | None = Query(0.05, description="Min edge to display"),
 ) -> dict:
     """MLB strikeout vertical - returns today's best edges."""
-    return await slate_v2(date=date, min_edge=min_edge)
+    # Call slate_v2 with explicit plain values: invoked directly (not via FastAPI
+    # dependency injection), so the remaining params must not keep their Query() defaults.
+    return await slate_v2(
+        date=date,
+        min_edge=min_edge,
+        max_bets=4,
+        max_per_game=1,
+        select_min_edge=0.05,
+        select_max_edge=0.20,
+        min_completeness=0.5,
+        kelly_fraction=None,
+        sharp_check=False,
+    )
 
 
 @app.get("/verticals/ai-releases")

@@ -402,3 +402,57 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
 }
 .steps b { color: #58a6ff; }
 .landing-footer { text-align: center; color: var(--muted); font-size: 12px; padding-top: 24px; }
+
+/* ── Suggested parlays (Dashboard) ───────────────────────────────────────── */
+.parlay-suggest {
+  margin: 36px 0 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+.parlay-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.parlay-head h2 { margin: 0; font-size: 20px; }
+.parlay-sub { color: var(--muted); font-size: 13px; }
+.parlay-controls {
+  display: flex; align-items: center; gap: 12px; margin: 14px 0 6px;
+  color: var(--muted);
+}
+.parlay-controls select, .parlay-controls button {
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px;
+}
+.parlay-controls button { cursor: pointer; }
+.parlay-controls button:disabled { opacity: 0.6; cursor: default; }
+.parlay-empty { color: var(--muted); font-size: 14px; }
+.parlay-list {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px; margin-top: 12px;
+}
+.parlay-card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 12px; padding: 14px 16px;
+}
+.parlay-card-top {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.parlay-legs-count {
+  font-size: 12px; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--muted);
+}
+.parlay-ev {
+  font-weight: 700; color: #3fb950; margin-left: auto;
+}
+.parlay-payout { color: var(--muted); font-size: 13px; }
+.parlay-leg-list { list-style: none; margin: 0; padding: 0; }
+.parlay-leg-list li {
+  display: flex; justify-content: space-between; gap: 10px;
+  padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 14px;
+}
+.parlay-leg-list li:last-child { border-bottom: none; }
+.leg-label { color: var(--text); }
+.leg-odds { color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.parlay-card-bottom {
+  display: flex; gap: 16px; margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--line); font-size: 13px; color: var(--muted);
+}
+.parlay-card-bottom b { color: var(--text); }
+.parlay-note { color: var(--muted); font-size: 12px; margin-top: 14px; max-width: 680px; }

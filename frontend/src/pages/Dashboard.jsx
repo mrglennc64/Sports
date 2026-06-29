@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { fetchSlate } from "../api.js";
 import SlateTable from "../components/SlateTable.jsx";
 import SimpleCards from "../components/SimpleCards.jsx";
+import SuggestedParlays from "../components/SuggestedParlays.jsx";
 
 function today() {
   return new Date().toISOString().slice(0, 10);
@@ -191,6 +192,14 @@ export default function Dashboard() {
         ) : (
           <SlateTable rows={rows} bankroll={bankroll} stakeRound={stakeRound} />
         ))}
+
+      {data && (
+        <SuggestedParlays
+          date={date}
+          bankroll={bankroll}
+          stakeRound={stakeRound}
+        />
+      )}
 
       <footer>
         Projections based on historical data. Validate with live results.
