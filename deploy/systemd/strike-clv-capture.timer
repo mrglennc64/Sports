@@ -1,0 +1,9 @@
+[Unit]
+Description=Strike: capture closing lines at 22:50 UTC (near night first pitch)
+
+[Timer]
+OnCalendar=*-*-* 22:50:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

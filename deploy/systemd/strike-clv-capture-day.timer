@@ -1,0 +1,14 @@
+[Unit]
+Description=Strike: capture day-game closing lines at 16:50 UTC (near ~1pm ET first pitch)
+
+[Timer]
+# Day games finish before the 22:50 night capture, so their closes were missed
+# (showed up as n_unmatched in /clv). This second capture fires the SAME oneshot
+# service near day-game first pitch. /clv takes the latest capture per pitcher, so
+# night games still use the 22:50 close; day games (absent by 22:50) use this one.
+OnCalendar=*-*-* 16:50:00 UTC
+Persistent=true
+Unit=strike-clv-capture.service
+
+[Install]
+WantedBy=timers.target

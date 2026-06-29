@@ -1,0 +1,10 @@
+[Unit]
+Description=Strike: capture closing strikeout lines for CLV
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/strike/backend
+EnvironmentFile=-/opt/strike/backend/.env
+ExecStart=/opt/strike/backend/.venv/bin/python -m app.data.line_capture close
