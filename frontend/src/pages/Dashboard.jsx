@@ -164,8 +164,9 @@ export default function Dashboard() {
         </label>
         <p className="kelly-hint">
           Enter a bankroll to see the dollar stake per play — the capped Kelly
-          fraction × bankroll, snapped to a round number so it blends in as a
-          casual bet.
+          fraction × bankroll, <b>rounded down</b> to a round number so it blends in
+          as a casual bet <b>without ever exceeding</b> your Kelly limit. (A stake
+          smaller than one increment is too small to bet.)
         </p>
       </div>
 
