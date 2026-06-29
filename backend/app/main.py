@@ -28,6 +28,7 @@ from dataclasses import asdict as _asdict
 from app.arb_pipeline import scan_arbitrage
 from app.backtest.clv import clv_report
 from app.backtest.metrics import summarize
+from app.model.hedge import hedge_existing_position
 from app.backtest.reliability import reliability_report
 from app.backtest.settle import settle_predictions
 from app.config import settings
@@ -264,6 +265,23 @@ def calibration(
     """
     settled = settle_predictions(settings.predictions_log)
     return _asdict(reliability_report(settled, n_bins=bins))
+
+
+@app.get("/v2/hedge")
+def hedge(
+    stake: float = Query(..., gt=0, description="Amount already staked on the early bet"),
+    odds: float = Query(..., description="American odds of your early bet, e.g. 115"),
+    hedge_odds: float = Query(..., description="American odds now available on the opposite side"),
+) -> dict:
+    """Lock an existing position: stake to bet the other side to equalise payout.
+
+    For a bet you ALREADY placed (ideally with positive CLV) that the line has
+    since moved on. Reports the hedge stake, capital at risk, and the locked
+    result — flagging ``risk_free`` only when the two prices form a cross-time arb
+    (otherwise it's an honest capped loss, not free money). See /v2/arb for the
+    simultaneous two-book scanner.
+    """
+    return _asdict(hedge_existing_position(stake, odds, hedge_odds))
 
 
 @app.get("/clv")
