@@ -17,6 +17,7 @@ from app.model import poisson
 from app.model.edge import evaluate_prop, prob_to_american
 from app.model.expected_ks import PitcherInputs, expected_strikeouts
 from app.model.insight import build_insight
+from app.model.risk import cap_correlated
 
 # Minimum starter sample to trust a projection enough to flag a bet.
 MIN_STARTS = 5
@@ -41,6 +42,8 @@ class EdgeRow:
     under_odds: float | None = None
     edge: float | None = None
     kelly: float | None = None
+    kelly_capped: float | None = None   # stake after correlated-exposure cap (app.model.risk)
+    group_capped: bool = False          # True iff scaled down for sharing a pitcher
     bet: bool = False
     low_confidence: bool = False     # small sample -> shown but never flagged BET
     # decision/insight layer (human-readable verdict)
@@ -270,6 +273,14 @@ def build_slate(
         )
 
     ok_rows = [r for r in rows if r.status == "ok"]
+    # Cap correlated exposure: aggregate stake per pitcher can't exceed the group
+    # cap even if the per-bet cap is cleared on each leg. Additive — sets
+    # kelly_capped/group_capped, leaves each row's raw kelly untouched.
+    keys = [str(r.pitcher_id or r.pitcher) for r in ok_rows]
+    kellys = [r.kelly or 0.0 for r in ok_rows]
+    for row, leg in zip(ok_rows, cap_correlated(keys, kellys, settings.kelly_group_cap)):
+        row.kelly_capped = round(leg.kelly_capped, 4)
+        row.group_capped = leg.capped
     ok_rows.sort(key=lambda r: r.edge, reverse=True)
     other = [r for r in rows if r.status != "ok"]
     return Slate(date=date, rows=ok_rows + other, skipped=len(other))

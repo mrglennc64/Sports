@@ -32,6 +32,12 @@ class Settings(BaseSettings):
     min_edge: float = 0.03
     kelly_fraction: float = 0.25
     kelly_cap: float = 0.05
+    # Correlated-exposure cap (app.model.risk): the per-bet kelly_cap can't see
+    # that two legs are the SAME pitcher (two books, two lines, or a re-pulled
+    # slate). This caps the AGGREGATE stake across all legs sharing a pitcher, so
+    # one arm can't quietly carry multiples of kelly_cap (the 2026-06-28 stack).
+    # Reduce-only; set a touch above kelly_cap so a lone bet is never reduced.
+    kelly_group_cap: float = 0.08
     devig_method: str = "shin"  # "shin" | "proportional"
     # Calibration: shrink model probabilities toward 0.5 before measuring edge.
     # 1.0 = off; <1 pulls overconfident edges back toward the market. The backtest

@@ -92,6 +92,68 @@ table.slate {
 .tag-bet { background: var(--bet); color: #fff; }
 .tag-low { background: #30363d; color: var(--muted); }
 .tag-card { background: #f0b90b; color: #1a1a00; margin-left: 0; margin-right: 8px; }
+.tag-capped { background: #5a3b00; color: #ffce6b; margin-left: 4px; }
+
+/* --- Kelly scale control (Dashboard) --- */
+.kelly-control {
+  margin: 4px 0 18px;
+  padding: 12px 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.kelly-label { display: flex; flex-direction: column; gap: 6px; }
+.kelly-label input[type="range"] { width: 100%; max-width: 360px; accent-color: var(--bet); }
+.kelly-name { color: var(--muted); font-weight: 500; }
+.kelly-hint { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+.kelly-hint a { color: var(--bet); }
+
+/* --- Hedge calculator --- */
+.hedge-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+  margin-bottom: 18px;
+}
+.hedge-form label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+.hedge-form input {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 10px;
+  width: 170px;
+}
+.hedge-form small { color: var(--muted); font-size: 11px; }
+.hedge-form button {
+  background: var(--bet); color: #fff; border: 0;
+  padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: 600;
+}
+.hedge-form button:disabled { opacity: 0.6; cursor: default; }
+.hedge-verdict { padding: 12px 16px; border-radius: 8px; font-weight: 600; margin-bottom: 16px; }
+.hedge-verdict.locked { background: #0d2a14; color: #4ade80; border: 1px solid #1f5132; }
+.hedge-verdict.capped { background: #2a1f0d; color: #fbbf24; border: 1px solid #5a4420; }
+.hedge-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.hedge-cell {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.hedge-cell.highlight { border-color: var(--bet); }
+.hedge-cell-value { font-size: 24px; font-weight: 700; color: var(--text); }
+.hedge-cell.good .hedge-cell-value { color: #4ade80; }
+.hedge-cell.bad .hedge-cell-value { color: #f87171; }
+.hedge-cell-label { font-size: 11px; letter-spacing: 0.04em; color: var(--muted); margin-top: 4px; text-transform: uppercase; }
+.hedge-cell-hint { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.hedge-foot { margin-top: 8px; }
 
 .side-over { color: #58a6ff; }
 .side-under { color: #d29922; }

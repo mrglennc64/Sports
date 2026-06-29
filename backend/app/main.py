@@ -159,11 +159,22 @@ async def slate_v2(
     select_min_edge: float = Query(0.05, description="Card: min edge to be eligible"),
     select_max_edge: float = Query(0.20, description="Card: cap on edge (above = likely model error)"),
     min_completeness: float = Query(0.5, ge=0, le=1, description="Card: min input-completeness score"),
+    kelly_fraction: float | None = Query(
+        None, ge=0.25, le=0.5,
+        description="Kelly scale: 0.25 (quarter, young model) ... 0.5 (half, proven). Default uses server setting.",
+    ),
 ) -> dict:
     """Ranked +EV pitcher-strikeout edges for a date via the v2 ensemble bridge.
 
     Also returns a diversified ``card`` of the top ``max_bets`` plays for a small
-    bankroll (edge band + per-game cap + input-completeness gate)."""
+    bankroll (edge band + per-game cap + input-completeness gate).
+
+    ``kelly_fraction`` scales every stake: keep it at 0.25 (quarter-Kelly) while the
+    model is young and its sample small; dial toward 0.5 (half-Kelly) only once the
+    track record + calibration justify it. Clamped to [0.25, 0.5]."""
+    run_settings = settings
+    if kelly_fraction is not None:
+        run_settings = settings.model_copy(update={"kelly_fraction": kelly_fraction})
     result = await build_slate_ensemble(
         date or _today(),
         max_bets=max_bets,
@@ -171,7 +182,9 @@ async def slate_v2(
         select_min_edge=select_min_edge,
         select_max_edge=select_max_edge,
         min_completeness=min_completeness,
+        settings=run_settings,
     )
+    result["kelly_fraction"] = run_settings.kelly_fraction
     if min_edge is not None:
         result["rows"] = [
             r for r in result["rows"]

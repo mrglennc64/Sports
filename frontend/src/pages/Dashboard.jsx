@@ -15,12 +15,15 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [cardOnly, setCardOnly] = useState(false);
   const [mode, setMode] = useState("simple"); // "simple" | "pro"
+  // Kelly scale: 0.25 (quarter) while the model is young; dial toward 0.5 (half)
+  // only once calibration + track record justify it. Backend clamps to [0.25, 0.5].
+  const [kellyFraction, setKellyFraction] = useState(0.25);
 
   async function load(d) {
     setLoading(true);
     setError(null);
     try {
-      setData(await fetchSlate(d));
+      setData(await fetchSlate(d, null, kellyFraction));
     } catch (e) {
       setError(e.message);
       setData(null);
@@ -44,6 +47,7 @@ export default function Dashboard() {
           <Link to="/" className="home-link">← Home</Link>
           <Link to="/calibration" className="home-link">🎯 Calibration</Link>
           <Link to="/clv" className="home-link">📈 CLV</Link>
+          <Link to="/hedge" className="home-link">🛡️ Hedge</Link>
         </div>
         <h1>⚾ Strikeout Projections</h1>
         <p className="sub">
@@ -85,6 +89,35 @@ export default function Dashboard() {
             Pro
           </button>
         </div>
+      </div>
+
+      <div className="kelly-control">
+        <label className="kelly-label">
+          <span>
+            Kelly scale: <b>{kellyFraction.toFixed(2)}×</b>{" "}
+            <span className="kelly-name">
+              {kellyFraction <= 0.3
+                ? "Quarter — young model"
+                : kellyFraction < 0.45
+                ? "Three-eighths — building trust"
+                : "Half — proven track record"}
+            </span>
+          </span>
+          <input
+            type="range"
+            min={0.25}
+            max={0.5}
+            step={0.05}
+            value={kellyFraction}
+            onChange={(e) => setKellyFraction(Number(e.target.value))}
+          />
+        </label>
+        <p className="kelly-hint">
+          Keep this at 0.25× while the sample is small. Only dial toward 0.50× once{" "}
+          <Link to="/calibration">calibration</Link> and{" "}
+          <Link to="/clv">CLV</Link> prove the edge is real — higher Kelly grows the
+          bankroll faster but deepens drawdowns. Reload the slate to apply.
+        </p>
       </div>
 
       {error && <p className="error">⚠ {error}</p>}

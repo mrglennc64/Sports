@@ -23,7 +23,26 @@ from app.data.savant import SavantClient
 from app.data.umpires import UmpireTable, load_umpire_table
 from app.model.bridge import predict_with_ensemble
 from app.model.inputs import ProjectionInputs
+from app.model.risk import cap_correlated
 from app.model.selection import input_completeness, select_card
+
+
+def _apply_group_cap(priced: list[dict], group_cap: float) -> None:
+    """Annotate priced rows with a correlated-exposure cap (app.model.risk).
+
+    Groups rows by pitcher (every leg on one arm is the same underlying outcome)
+    and adds, in place: ``kelly_capped`` (stake after the group cap), ``group_capped``
+    (was it scaled down), and ``kelly_group_total`` (summed raw kelly on that arm).
+    Strictly additive — the original ``kelly`` is left as-is so nothing downstream
+    that reads it changes; consumers opt into ``kelly_capped`` when they want the
+    correlation-aware stake. Rows without a kelly (no bet) get ``kelly_capped`` 0.
+    """
+    keys = [str(r.get("pitcher_id") or r.get("pitcher") or i) for i, r in enumerate(priced)]
+    kellys = [float(r.get("kelly") or 0.0) for r in priced]
+    for row, leg in zip(priced, cap_correlated(keys, kellys, group_cap)):
+        row["kelly_capped"] = round(leg.kelly_capped, 4)
+        row["group_capped"] = leg.capped
+        row["kelly_group_total"] = round(leg.group_total, 4)
 
 
 def _load_umpires(settings: Settings) -> UmpireTable | None:
@@ -186,6 +205,7 @@ async def build_slate_ensemble(
             out["venue"] = start.venue_name
             out["park"] = park
             out["game_pk"] = start.game_pk
+            out["pitcher_id"] = start.pitcher_id  # correlation key for the group cap
             out["completeness"] = round(_completeness(inputs, settings), 3)
             if prop is not None:
                 out["bookmaker"] = prop.bookmaker
@@ -198,6 +218,9 @@ async def build_slate_ensemble(
                 out["status"] = "no_prop"
                 unpriced.append(out)
 
+        # Cap correlated exposure (same pitcher across books/lines/re-pulls) before
+        # ranking + card selection. Additive: adds kelly_capped, leaves kelly intact.
+        _apply_group_cap(priced, settings.kelly_group_cap)
         priced.sort(key=lambda r: r.get("edge", float("-inf")), reverse=True)
         card = select_card(
             priced,

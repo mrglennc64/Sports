@@ -77,7 +77,16 @@ export default function SlateTable({ rows }) {
                       {r.edge >= 0 ? "+" : ""}
                       {pct(r.edge)}
                     </td>
-                    <td>{pct(r.kelly)}</td>
+                    <td>
+                      {r.group_capped ? (
+                        <span title={`Correlated-exposure cap: ${pct(r.kelly)} requested on this pitcher, trimmed to keep total stake on one arm in check`}>
+                          {pct(r.kelly_capped)}{" "}
+                          <span className="tag tag-capped">capped</span>
+                        </span>
+                      ) : (
+                        pct(r.kelly_capped != null ? r.kelly_capped : r.kelly)
+                      )}
+                    </td>
                     <td className="book">{r.bookmaker}</td>
                   </>
                 )}
