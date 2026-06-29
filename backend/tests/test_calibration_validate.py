@@ -28,8 +28,9 @@ def _bet(date: str, model_prob: float | None, won: bool | None) -> SettledBet:
 
 
 def _day(i: int) -> str:
-    # distinct, chronologically-sorting dates
-    return f"2026-{(i % 12) + 1:02d}-{(i % 28) + 1:02d}"
+    # distinct, monotonically-increasing dates (one per index), like real slates
+    from datetime import date, timedelta
+    return (date(2026, 1, 1) + timedelta(days=i)).isoformat()
 
 
 # ---- helper properties -----------------------------------------------------
@@ -127,6 +128,22 @@ def test_well_calibrated_data_yields_no_recommendation():
                 i += 1
     rep = oos_validate(settled)
     assert rep.recommended_method == "none"
+
+
+def test_single_date_is_flagged_and_never_enabled():
+    # The real n=147 case: everything graded on ONE slate. No temporal holdout,
+    # so the tool must flag it and refuse to enable regardless of any in-sample gain.
+    settled = [_bet("2026-06-28", 0.65, i % 3 != 0) for i in range(160)]
+    rep = oos_validate(settled)
+    assert rep.temporal_holdout is False
+    assert rep.recommended_method == "none"
+    assert "one slate" in rep.recommendation.lower() or "same date" in rep.recommendation.lower()
+
+
+def test_multi_date_has_temporal_holdout():
+    settled = [_bet(_day(i), 0.6, i % 2 == 0) for i in range(300)]
+    rep = oos_validate(settled)
+    assert rep.temporal_holdout is True
 
 
 def test_report_always_has_three_method_scores_when_split():

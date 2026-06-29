@@ -159,6 +159,7 @@ class CalibrationValidation:
     n_test: int
     train_date_range: tuple[str, str] | None
     test_date_range: tuple[str, str] | None
+    temporal_holdout: bool = True   # False => train/test share dates (one slate, not a real OOS)
     fitted: dict = field(default_factory=dict)   # {"shrink_k": .., "platt_a": .., "platt_b": ..}
     test_scores: dict = field(default_factory=dict)  # {"baseline": {...}, "shrink": {...}, "platt": {...}}
     recommendation: str = ""
@@ -193,6 +194,21 @@ def oos_validate(
     train_pairs = [(p, y) for _, p, y in train]
     test_pairs = [(p, y) for _, p, y in test]
 
+    # A chronological split only buys a real out-of-sample read if the test slice
+    # contains day(s) the fit never saw. If every graded prediction is from one slate
+    # (the n=147-on-one-date case), this is a random within-slate cut, not a temporal
+    # holdout — any "gain" is in-sample and must not be acted on. A single shared
+    # boundary day is fine; what matters is that some test dates are genuinely new.
+    temporal_holdout = bool(
+        set(d for d, _, _ in test) - set(d for d, _, _ in train)
+    )
+    overlap_note = (
+        ""
+        if temporal_holdout
+        else " [NOTE: train and test share date(s) -- this is one slate cut at random, "
+             "NOT a temporal holdout; treat any improvement as in-sample only.]"
+    )
+
     k, _ = best_shrink([(p, bool(y)) for p, y in train_pairs])
     a, b = platt_fit(train_pairs)
 
@@ -211,10 +227,18 @@ def oos_validate(
             best_method, best_ll = name, ll
 
     gain = (base_test["log_loss"] - best_ll) if (best_ll is not None) else 0.0
-    if n_total < _MIN_N_FOR_VERDICT or len(test) < _MIN_TEST_N:
+    if not temporal_holdout:
+        # No real time separation -> cannot trust OOS at all, regardless of gain.
         rec_method = "none"
         rec = (
-            f"n={n_total} (test={len(test)}): provisional — below the {_MIN_N_FOR_VERDICT}-sample "
+            f"n={n_total}: all graded predictions fall on the same date(s), so there is no "
+            f"out-of-sample test to be had yet -- the model has only been graded on one slate. "
+            f"Keep PROB_SHRINKAGE off until several days of slates are graded."
+        )
+    elif n_total < _MIN_N_FOR_VERDICT or len(test) < _MIN_TEST_N:
+        rec_method = "none"
+        rec = (
+            f"n={n_total} (test={len(test)}): provisional -- below the {_MIN_N_FOR_VERDICT}-sample "
             f"bar for a trustworthy OOS verdict. Best held-out method so far is "
             f"'{best_method}' (log-loss gain {gain:+.3f} vs baseline), but DO NOT enable yet."
         )
@@ -223,7 +247,7 @@ def oos_validate(
         rec = (
             f"n={n_total}: no calibrator beats baseline out-of-sample by the required "
             f"{_MIN_LOGLOSS_GAIN:.2f} log-loss margin (best '{best_method}', gain {gain:+.3f}). "
-            f"Keep PROB_SHRINKAGE off — recalibrating here would be fitting noise."
+            f"Keep PROB_SHRINKAGE off -- recalibrating here would be fitting noise."
         )
     elif best_method == "shrink":
         rec_method = "shrink"
@@ -244,8 +268,9 @@ def oos_validate(
         n_total=n_total, n_train=len(train), n_test=len(test),
         train_date_range=(train[0][0], train[-1][0]),
         test_date_range=(test[0][0], test[-1][0]),
+        temporal_holdout=temporal_holdout,
         fitted={"shrink_k": round(k, 4), "platt_a": round(a, 4), "platt_b": round(b, 4)},
         test_scores=scores,
-        recommendation=rec,
+        recommendation=rec + overlap_note,
         recommended_method=rec_method,
     )
