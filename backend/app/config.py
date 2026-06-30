@@ -47,6 +47,14 @@ class Settings(BaseSettings):
     # /etc/mlb-edge.env. The weekly report prints the post-hoc optimal k so the
     # production value can be sanity-checked as the graded sample grows.
     prob_shrinkage: float = 1.0
+    # Capital control (app.model.bankroll + app.parlay_matrix): top-down hard caps
+    # that sit ABOVE per-bet Kelly. Lock a reserve floor, spread the working capital
+    # over a fixed investment cycle, and cap the daily spend. These are defaults for
+    # the /v2/parlay/matrix route; callers can override per request.
+    bankroll: float = 700.0
+    reserve_floor: float = 200.0
+    cycle_days: int = 30
+
     # Low-confidence gate (v1 had MIN_STARTS/MIN_INNINGS; the v2 path dropped
     # it — restored 2026-06-12): fewer than this many starts this season =>
     # low_confidence, which caps the verdict and blocks the bet flag.

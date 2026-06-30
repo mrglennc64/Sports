@@ -42,6 +42,7 @@ from app.crypto_predictor import (
 from app.ensemble_pipeline import build_slate_ensemble, predict_pitcher_ensemble
 from app.log.predictions import log_predictions
 from app.parlay_pipeline import LegSpec, build_parlay, suggest_parlays
+from app.parlay_matrix import build_parlay_matrix
 from app.pipeline import build_slate, predict_pitcher
 from app import polymarket_client as pmkt
 from app import signals as sig
@@ -285,6 +286,29 @@ async def parlay_suggest(
     parlays same-game legs and never exceeds ``max_legs`` (the hard rules)."""
     return await suggest_parlays(
         date or _today(), max_legs=max_legs, max_suggestions=max_suggestions
+    )
+
+
+@app.get("/v2/parlay/matrix")
+async def parlay_matrix_route(
+    date: str | None = Query(None, description="YYYY-MM-DD; defaults to today"),
+    bankroll: float | None = Query(None, gt=0, description="Total bankroll (default: server setting)"),
+    reserve: float | None = Query(None, ge=0, description="Locked reserve floor (default: server setting)"),
+    cycle_days: int | None = Query(None, gt=0, description="Investment cycle length in days (default: server setting)"),
+) -> dict:
+    """Daily parlay matrix: hard capital control + EV-gated small/medium/large tiers.
+
+    Plans the bankroll (working capital = bankroll − reserve, spread over the cycle
+    to a HARD daily budget), pulls today's +EV one-per-game card legs, and builds the
+    best parlay per tier. The small/medium tiers only stake a +EV parlay (skipped
+    otherwise); the large tier is an explicit, flagged NEGATIVE-EV variance bucket.
+    Legs are hard-capped at 6 — the 8–12-leg "lottery" is never built. The output is
+    honest: capital control caps the bleed rate, it does not create edge."""
+    return await build_parlay_matrix(
+        date or _today(),
+        total_bankroll=bankroll if bankroll is not None else settings.bankroll,
+        reserve_floor=reserve if reserve is not None else settings.reserve_floor,
+        cycle_days=cycle_days if cycle_days is not None else settings.cycle_days,
     )
 
 
