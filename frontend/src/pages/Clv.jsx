@@ -80,6 +80,13 @@ export default function Clv() {
               no closing line to score against.
             </>
           )}
+          {data.n_unmeasurable > 0 && (
+            <>
+              <br />
+              {data.n_unmeasurable} matched a close but the line had moved, so CLV
+              isn't measurable for {data.n_unmeasurable === 1 ? "it" : "them"}.
+            </>
+          )}
         </p>
       )}
 
@@ -111,6 +118,12 @@ export default function Clv() {
               value={data.n_unmatched}
               hint="no closing line yet"
               tone={data.n_unmatched > 0 ? "warn" : ""}
+            />
+            <Metric
+              label="Unmeasurable"
+              value={data.n_unmeasurable ?? 0}
+              hint="line moved before close"
+              tone={data.n_unmeasurable > 0 ? "warn" : ""}
             />
           </div>
 

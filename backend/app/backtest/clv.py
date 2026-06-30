@@ -90,20 +90,43 @@ class ClvBet:
     date: str
     pitcher: str
     side: str
+    line: float | None  # the line we bet — must match the captured close to be scored
     clv: float          # de-vigged closing prob for our side minus the prob we took
     beat_close: bool    # clv > 0 -> we bought below where the market closed
 
 
 @dataclass
+class UnmeasurableBet:
+    """A flagged bet that matched a close, but at a DIFFERENT line — so CLV can't
+    be measured (de-vigging our price against a close at another line compares two
+    different bets). Surfaced for transparency, excluded from the aggregates."""
+    date: str
+    pitcher: str
+    side: str
+    bet_line: float | None
+    close_line: float | None
+    reason: str
+
+
+@dataclass
 class ClvReport:
-    n_bets: int                 # flagged bets matched to a captured closing line
+    n_bets: int                 # flagged bets scored against a SAME-LINE captured close
     n_unmatched: int            # flagged bets with no usable closing line yet
+    n_unmeasurable: int         # matched a close, but the line moved -> CLV not valid
     mean_clv: float | None      # headline: average de-vigged CLV (prob points)
     median_clv: float | None
-    pct_positive: float | None  # share of matched bets that beat the close
+    pct_positive: float | None  # share of scored bets that beat the close
     total_clv: float
     bets: list[ClvBet] = field(default_factory=list)
+    unmeasurable: list[UnmeasurableBet] = field(default_factory=list)
     verdict: str = ""
+
+
+def _to_float(v) -> float | None:
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
 
 
 def _flagged_bets(predictions_log: str) -> list[dict]:
@@ -168,12 +191,32 @@ def clv_report(
     closing = _load_closing(line_history_path)
 
     scored: list[ClvBet] = []
+    unmeasurable: list[UnmeasurableBet] = []
     unmatched = 0
     for b in bets:
         close = find_closing(b["pitcher"], b["date"], closing)
         if not close or not close.get("over_odds") or not close.get("under_odds"):
             unmatched += 1
             continue
+
+        # CLV is only valid at a SINGLE line. If the line moved between our bet and
+        # the captured close, de-vigging our two-way price against the close's
+        # two-way price compares two DIFFERENT bets (e.g. under 5.5 vs under 4.5) and
+        # yields a sign-confused number. Flag it as unmeasurable rather than fake it.
+        bet_line = _to_float(b.get("line"))
+        close_line = _to_float(close.get("line"))
+        if bet_line is None or close_line is None or abs(bet_line - close_line) > 0.01:
+            reason = (
+                f"line moved {bet_line:g} -> {close_line:g} between bet and close"
+                if bet_line is not None and close_line is not None
+                else "line missing on the bet or the captured close"
+            )
+            unmeasurable.append(UnmeasurableBet(
+                date=b.get("date", ""), pitcher=b.get("pitcher", ""), side=b["side"],
+                bet_line=bet_line, close_line=close_line, reason=reason,
+            ))
+            continue
+
         try:
             clv = clv_for_side(
                 b["side"],
@@ -186,34 +229,47 @@ def clv_report(
             continue
         scored.append(ClvBet(
             date=b.get("date", ""), pitcher=b.get("pitcher", ""), side=b["side"],
-            clv=round(clv, 4), beat_close=clv > 0,
+            line=bet_line, clv=round(clv, 4), beat_close=clv > 0,
         ))
 
+    n_unmeas = len(unmeasurable)
     n = len(scored)
     if n == 0:
         msg = (
-            "no flagged bets matched a captured closing line yet — capture "
+            "no flagged bets matched a SAME-LINE captured closing line yet — capture "
             "closing lines near first pitch (line_capture close) so picks can be "
             "scored against the close."
         )
-        return ClvReport(0, unmatched, None, None, None, 0.0, [], msg)
+        if n_unmeas:
+            msg += (
+                f" ({n_unmeas} matched a close but the line had moved, so CLV is not "
+                "measurable for them.)"
+            )
+        return ClvReport(0, unmatched, n_unmeas, None, None, None, 0.0, [], unmeasurable, msg)
 
     vals = [s.clv for s in scored]
     mean_clv = sum(vals) / n
     pct_pos = sum(1 for s in scored if s.beat_close) / n
     edge = "real price edge" if mean_clv > 0 else "no price edge — picks lagged the close"
     note = "" if n >= 50 else " (small sample — treat as provisional)"
+    unmeas_note = (
+        f" {n_unmeas} more matched a close at a different line (line moved) and are "
+        "excluded as unmeasurable."
+        if n_unmeas else ""
+    )
     verdict = (
         f"n={n}: mean CLV {mean_clv * 100:+.2f} prob-points, {pct_pos * 100:.0f}% "
-        f"of bets beat the close -> {edge}.{note}"
+        f"of bets beat the close -> {edge}.{note}{unmeas_note}"
     )
     return ClvReport(
         n_bets=n,
         n_unmatched=unmatched,
+        n_unmeasurable=n_unmeas,
         mean_clv=round(mean_clv, 4),
         median_clv=round(_median(vals), 4),
         pct_positive=round(pct_pos, 4),
         total_clv=round(sum(vals), 4),
         bets=scored,
+        unmeasurable=unmeasurable,
         verdict=verdict,
     )
