@@ -1,0 +1,9 @@
+# Offline grouping engine (app/grouping/*) — the 10-year group-vs-group foundation.
+# The LIVE API never imports app.grouping, so these are deliberately kept OUT of
+# backend/requirements.txt and are NOT installed on the production server.
+#   pip install -r requirements-grouping.txt   (local/offline only)
+
+pybaseball>=2.2.0     # Statcast / Baseball Savant pulls (pitch types, whiff, EV/LA)
+scikit-learn>=1.3.0   # clustering (KMeans + stability selection) — Phase 2
+pandas>=2.0.0         # already a backend dep; listed for standalone installs
+pyarrow>=15.0.0       # Parquet store for the normalized feature tables
