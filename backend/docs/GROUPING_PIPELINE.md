@@ -209,3 +209,39 @@ coarse (silhouette ≈ 0.12 → styles are a continuum, not clean clusters). Re-
 with the now-downloaded **Statcast pitch-physics features** (pitch types, whiff-by-type,
 velo, exit velo) — joined via the Retrosheet↔MLBAM crosswalk — is the one experiment
 with a chance of moving the number. Expected value is modest given this evidence.
+
+---
+
+## 6. Phase 2.5 experiment — add Statcast physics features (2026-07-01)
+
+Hypothesis: the marginal Retrosheet-only result (+0.037 vs own rate) was limited by
+coarse groups; joining Statcast pitch-physics features (pitch types, whiff-by-type,
+velo, exit velo, launch angle) might sharpen the clusters and beat the pitcher's own
+rate by a non-marginal margin.
+
+Setup: crosswalk MLBAM↔Retrosheet (Chadwick register, `app/grouping/combined.py`) →
+inner join on (retro_id, season) → **100% coverage** (6,719 pitcher- and 5,885
+batter-seasons, zero NaN) → 24-feature vectors (12 Retrosheet + 12 Statcast) →
+re-cluster → rebuild train-only matrix → same leak-free OOS gate.
+
+**Result — the experiment FAILED (made it worse):**
+
+| groups | silhouette (pitchers) | OOS improvement vs own rate |
+|---|---|---|
+| Retrosheet-only | 0.122 | +0.0374 |
+| Retrosheet + Statcast | **0.086** | **+0.0174** |
+
+Adding the physics features *lowered* cluster separation and *halved* the OOS edge.
+The Statcast features are largely redundant with the Retrosheet behavioural ones
+(Statcast whiff ≈ Retrosheet swinging-strike rate), so they added dimensionality/noise
+to a k=4 partition of what is fundamentally a **continuum**, not clean clusters.
+
+**Final verdict: group-vs-group is a confirmed dead end for strikeout prediction.**
+Neither Retrosheet-only nor Statcast-enriched groups beat the pitcher's own prior rate
+by a meaningful margin, and both are far worse than the production ensemble (~1.43 MAE
+vs ~1.79–1.81 here). This is the third independent confirmation of the same finding
+(archetype model 1.57 vs 1.43; Retrosheet groups +0.037; combined groups +0.017).
+The pipeline is retained as a validated research asset and as the group features may
+be useful elsewhere (e.g. opponent-context tagging), but it will NOT be wired into the
+staking model. The honest lesson: pitcher/batter styles don't partition cleanly enough
+for a group prior to out-resolve an individual's own rate.
