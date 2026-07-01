@@ -73,3 +73,24 @@ reconstructed opponent windows are cruder and the minor-factor data is absent. T
 for the *structural* read (the collinearity is inherent to the projection formula, not the
 reconstruction quality), but **input fidelity should be raised before the table is used for
 an actual weight fit**, or the fitted weights will chase reconstruction noise.
+
+## Step 2 confirmation — the fit lands on the priors (empirical)
+
+Ran the recommended fit anyway to replace the prediction with a number: NNLS-style
+convex fit (SLSQP), MAE + ridge-toward-priors, w≥0, Σw=1, on the 2024 backfill with a
+temporal 70/30 split.
+
+| | priors MAE | fitted MAE | gain |
+|---|---|---|---|
+| TRAIN (in-sample, best case) | 1.8544 | 1.8515 | **+0.0029** |
+| TEST (out-of-sample) | 1.8808 | 1.8806 | **+0.0002** |
+
+Even **in-sample** the fit beats the expert priors by only 0.003 K; **out-of-sample by
+0.0002 K** — i.e. nothing. The fitted weights confirm the mechanism: all eight
+matchup-family weights moved by the *identical* +0.007 (ridge pinned them to their prior
+ratios because they are unidentifiable — only their sum, 0.69 → 0.75, is determined), and
+the sole real change was trading recent_form (0.22 → 0.09) for lineup (0.09 → 0.16), which
+changed MAE by ~0. **Verdict: weight optimization is confirmed low/no-EV and will not be
+shipped.** Higher-leverage work: (1) make factors 5-10 *actually distinct* by feeding real
+umpire / pitch-mix / weather / catcher data (Statcast is already on disk), so the ensemble
+becomes genuinely multi-dimensional; (2) accumulate graded CLV — the real scoreboard.
