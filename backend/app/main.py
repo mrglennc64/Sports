@@ -276,6 +276,7 @@ async def parlay_suggest(
     date: str | None = Query(None, description="YYYY-MM-DD; defaults to today"),
     max_legs: int = Query(3, ge=2, le=4, description="Max legs per suggested parlay"),
     max_suggestions: int = Query(5, ge=1, le=20, description="How many to return"),
+    bankroll: float | None = Query(None, gt=0, description="If set, each suggestion gets a $ recommended stake = its capped Kelly x bankroll"),
 ) -> dict:
     """Auto-suggest +EV parlays from today's bet card.
 
@@ -285,7 +286,8 @@ async def parlay_suggest(
     Probabilities include the configured shrinkage, so the EV is honest. Never
     parlays same-game legs and never exceeds ``max_legs`` (the hard rules)."""
     return await suggest_parlays(
-        date or _today(), max_legs=max_legs, max_suggestions=max_suggestions
+        date or _today(), max_legs=max_legs, max_suggestions=max_suggestions,
+        bankroll=bankroll,
     )
 
 

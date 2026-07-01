@@ -167,6 +167,39 @@ def _card_leg(row: dict) -> ParlayLeg | None:
     )
 
 
+def parlay_risk(ev, bankroll: float | None = None) -> dict:
+    """Honest per-parlay risk label built from the parlay's OWN numbers.
+
+    No invented CLV and no hand-picked staking fraction. The tier is driven by the
+    two things that actually govern parlay variance — the real joint win probability
+    and the leg count — and the recommended stake is the parlay's own capped Kelly
+    (already computed on the combined price by ``evaluate_parlay``), times bankroll.
+
+    Every leg is a carded play (inside the edge band, not sharp-vetoed) by
+    construction, so the risk surfaced here is *variance*, not model-error legs —
+    those are filtered upstream by the card's edge-band cap and sharp-check.
+    """
+    wp = ev.model_prob
+    if wp < 0.30 or ev.n_legs >= 4:
+        tier = "high"
+    elif wp < 0.50 or ev.n_legs >= 3:
+        tier = "medium"
+    else:
+        tier = "low"
+    return {
+        "tier": tier,
+        "win_prob": round(wp, 4),
+        "loses_about": (f"~1 in {round(1 / wp)}" if wp > 0 else "n/a"),
+        "kelly_fraction": round(ev.kelly, 4),
+        "recommended_stake": (round(bankroll * ev.kelly, 2) if bankroll else None),
+        "note": (
+            f"Hits ~{round(wp * 100)}% of the time; the +EV is the model's own number "
+            "and is UNPROVEN until CLV validates the legs. Stake = the parlay's capped "
+            "Kelly on the combined price — the boldest, highest-variance slice of the card."
+        ),
+    }
+
+
 async def suggest_parlays(
     date: str,
     *,
@@ -176,6 +209,7 @@ async def suggest_parlays(
     max_suggestions: int = 5,
     kelly_fraction: float | None = None,
     kelly_cap: float | None = None,
+    bankroll: float | None = None,
 ) -> dict:
     """Auto-suggest +EV parlays from today's bet card — independence guaranteed.
 
@@ -222,6 +256,7 @@ async def suggest_parlays(
                     }
                     for leg in combo
                 ]
+                row["risk"] = parlay_risk(ev, bankroll)
                 suggestions.append(row)
 
         suggestions.sort(key=lambda r: r["ev_per_unit"], reverse=True)

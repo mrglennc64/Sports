@@ -456,3 +456,11 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
 }
 .parlay-card-bottom b { color: var(--text); }
 .parlay-note { color: var(--muted); font-size: 12px; margin-top: 14px; max-width: 680px; }
+
+/* Suggested-parlay risk tier badges (variance-based, not CLV) */
+.parlay-risk { text-transform: uppercase; font-size: .68rem; font-weight: 700;
+  letter-spacing: .04em; padding: 1px 7px; border-radius: 10px; }
+.risk-low { background: #123d2b; color: #4ade80; }
+.risk-medium { background: #3d3312; color: #fbbf24; }
+.risk-high { background: #3d1717; color: #f87171; }
+.parlay-loses { color: #9aa4b0; font-style: normal; font-size: .85em; }

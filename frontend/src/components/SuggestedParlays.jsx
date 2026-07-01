@@ -77,6 +77,14 @@ export default function SuggestedParlays({ date, bankroll = 0, stakeRound = 5 })
               <div className="parlay-card" key={i}>
                 <div className="parlay-card-top">
                   <span className="parlay-legs-count">{s.n_legs}-leg</span>
+                  {s.risk && (
+                    <span
+                      className={`parlay-risk risk-${s.risk.tier}`}
+                      title="Risk tier from the parlay's own win probability + leg count (not CLV — there isn't enough graded data yet)."
+                    >
+                      {s.risk.tier} risk
+                    </span>
+                  )}
                   <span className="parlay-ev">
                     +{(s.ev_per_unit * 100).toFixed(1)}% EV
                   </span>
@@ -100,6 +108,9 @@ export default function SuggestedParlays({ date, bankroll = 0, stakeRound = 5 })
                 <div className="parlay-card-bottom">
                   <span>
                     Win prob <b>{(s.model_prob * 100).toFixed(1)}%</b>
+                    {s.risk && (
+                      <em className="parlay-loses"> · loses {s.risk.loses_about}</em>
+                    )}
                   </span>
                   <span>
                     Kelly <b>{(s.kelly * 100).toFixed(2)}%</b>
