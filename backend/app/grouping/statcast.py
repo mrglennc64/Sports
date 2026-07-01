@@ -45,10 +45,20 @@ def statcast_dir(data_dir: Path = DATA_DIR) -> Path:
     return Path(data_dir) / "statcast"
 
 
-def pull_season(year: int, data_dir: Path = DATA_DIR, *, force: bool = False) -> Path:
+_MONTH_RANGES = [  # (start, end) within a season; covers spring through the playoffs
+    ("03-01", "03-31"), ("04-01", "04-30"), ("05-01", "05-31"), ("06-01", "06-30"),
+    ("07-01", "07-31"), ("08-01", "08-31"), ("09-01", "09-30"),
+    ("10-01", "10-31"), ("11-01", "11-30"),
+]
+
+
+def pull_season(year: int, data_dir: Path = DATA_DIR, *, force: bool = False, retries: int = 3) -> Path:
     """Pull one season of Statcast pitches to Parquet (cached). Returns the path.
 
-    Imports pybaseball lazily so the module loads even where it isn't installed.
+    Pulls MONTH-BY-MONTH with retries so one bad day-response (Savant occasionally
+    returns a malformed CSV chunk) can't kill the whole season — a flaky month is
+    retried, and a month that never succeeds is skipped with a warning rather than
+    aborting. Imports pybaseball lazily (offline-only dependency).
     """
     out_dir = statcast_dir(data_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -57,7 +67,23 @@ def pull_season(year: int, data_dir: Path = DATA_DIR, *, force: bool = False) ->
         return path
     from pybaseball import statcast  # lazy: offline-only dependency
 
-    df = statcast(start_dt=f"{year}-03-01", end_dt=f"{year}-11-30")
+    frames = []
+    for start_md, end_md in _MONTH_RANGES:
+        start, end = f"{year}-{start_md}", f"{year}-{end_md}"
+        for attempt in range(1, retries + 1):
+            try:
+                chunk = statcast(start_dt=start, end_dt=end, verbose=False)
+                if chunk is not None and len(chunk):
+                    frames.append(chunk)
+                break
+            except Exception as e:  # transient Savant/CSV errors
+                if attempt == retries:
+                    print(f"[statcast] WARN {year} {start_md}: skipped after {retries} tries ({e})", flush=True)
+                # else: retry the month
+    if not frames:
+        raise RuntimeError(f"no Statcast data pulled for {year}")
+    import pandas as _pd
+    df = _pd.concat(frames, ignore_index=True)
     df.to_parquet(path, index=False)
     return path
 
