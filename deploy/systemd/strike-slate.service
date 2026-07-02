@@ -1,0 +1,12 @@
+[Unit]
+Description=Strike: log the daily slate via the v2 ensemble (bet = featured card)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Unified system of record (2026-07-02): log the SAME model the dashboard serves
+# (/v2/slate), not the retired v1 /slate. log=true appends the priced rows to
+# predictions.csv with bet = card membership, so /backtest + /clv grade exactly the
+# featured card. --max-time is generous because the ensemble slate build is slow.
+Type=oneshot
+ExecStart=/usr/bin/curl -fsS --max-time 240 "http://127.0.0.1:8077/v2/slate?log=true" -o /dev/null

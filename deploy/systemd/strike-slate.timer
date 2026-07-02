@@ -1,0 +1,9 @@
+[Unit]
+Description=Strike: daily slate log at 13:00 UTC (v2 ensemble)
+
+[Timer]
+OnCalendar=*-*-* 13:00:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
