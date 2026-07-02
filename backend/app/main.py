@@ -152,10 +152,26 @@ async def predict_v2(
         raise HTTPException(status_code=404, detail=str(exc))
 
 
+def _v2_log_rows(rows: list[dict], date: str) -> list[dict]:
+    """Predictions-log rows from a v2 slate: priced (``ok``) rows only, each with a
+    per-row ``date`` and ``bet`` = **card membership** (``selected``).
+
+    This makes the graded record match the dashboard: the flagged bets that
+    /backtest and /clv score are exactly the featured card (the diversified,
+    one-per-game selections), while every decided row still feeds /calibration.
+    """
+    return [
+        {**r, "date": r.get("date", date), "bet": bool(r.get("selected"))}
+        for r in rows
+        if r.get("status") == "ok"
+    ]
+
+
 @app.get("/v2/slate")
 async def slate_v2(
     date: str | None = Query(None, description="YYYY-MM-DD; defaults to today"),
     min_edge: float | None = Query(None, description="Filter: only rows with edge >= this"),
+    log: bool = Query(False, description="Append the slate to the predictions log (bet = card membership). The daily cron sets this; dashboard loads do not."),
     max_bets: int = Query(4, ge=1, description="Card: max bets to flag"),
     max_per_game: int = Query(1, ge=1, description="Card: max bets from one game"),
     select_min_edge: float = Query(0.05, description="Card: min edge to be eligible"),
@@ -178,11 +194,12 @@ async def slate_v2(
     ``kelly_fraction`` scales every stake: keep it at 0.25 (quarter-Kelly) while the
     model is young and its sample small; dial toward 0.5 (half-Kelly) only once the
     track record + calibration justify it. Clamped to [0.25, 0.5]."""
+    target = date or _today()
     run_settings = settings
     if kelly_fraction is not None:
         run_settings = settings.model_copy(update={"kelly_fraction": kelly_fraction})
     result = await build_slate_ensemble(
-        date or _today(),
+        target,
         max_bets=max_bets,
         max_per_game=max_per_game,
         select_min_edge=select_min_edge,
@@ -192,6 +209,10 @@ async def slate_v2(
         sharp_check=sharp_check,
     )
     result["kelly_fraction"] = run_settings.kelly_fraction
+    # The daily cron passes log=true so the graded record equals the dashboard's v2
+    # card. Dashboard loads leave log=false, so ordinary views never write the log.
+    if log:
+        log_predictions(_v2_log_rows(result["rows"], target), settings.predictions_log)
     if min_edge is not None:
         result["rows"] = [
             r for r in result["rows"]
