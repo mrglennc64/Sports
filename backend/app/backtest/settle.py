@@ -90,16 +90,19 @@ def settle_predictions(
     with open(path, newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
 
-    # Cache actual results per (pitcher_id, date) to avoid duplicate API calls.
-    cache: dict[tuple[str, str], int | None] = {}
+    # Cache actual results per (pitcher_id, date, game_pk) to avoid duplicate API
+    # calls. game_pk is included so a doubleheader's two games don't collide in the
+    # cache and each is graded against its own line.
+    cache: dict[tuple[str, str, str], int | None] = {}
     for row in rows:
         pid, date = row.get("pitcher_id"), row.get("date")
+        game_pk = row.get("game_pk") or None
         if not pid or not date:
             continue
-        key = (pid, date)
+        key = (pid, date, str(game_pk))
         if key not in cache:
             try:
-                cache[key] = mlb.get_actual_strikeouts(int(pid), date)
+                cache[key] = mlb.get_actual_strikeouts(int(pid), date, game_pk=game_pk)
             except Exception:
                 cache[key] = None
         actual = cache[key]

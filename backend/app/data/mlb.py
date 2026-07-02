@@ -40,6 +40,34 @@ class PitcherSeason:
     innings_pitched: float
 
 
+def _is_start(split: dict) -> bool:
+    """True if this game-log split is a STARTED appearance (not relief)."""
+    gs = split.get("stat", {}).get("gamesStarted")
+    return str(gs) in ("1", "1.0")
+
+
+def _select_gamelog_split(splits: list, date: str, game_pk: int | str | None = None) -> dict | None:
+    """Pick the right game-log split for a starter prop (pure; unit-tested).
+
+    * ``game_pk`` given  -> the split for that exact game (None if not found).
+    * doubleheader (two splits on the date) without ``game_pk`` -> the single
+      *started* split; if that's still ambiguous, None (don't misgrade).
+    * relief-only appearance -> None (a starter prop is never graded on a relief line).
+    """
+    on_date = [s for s in splits if s.get("date") == date]
+    if game_pk is not None:
+        for s in on_date:
+            if str(s.get("game", {}).get("gamePk")) == str(game_pk):
+                return s
+        return None
+    starts = [s for s in on_date if _is_start(s)]
+    if len(starts) == 1:
+        return starts[0]
+    if not starts and len(on_date) == 1 and "gamesStarted" not in on_date[0].get("stat", {}):
+        return on_date[0]  # single appearance, no start flag available -> accept
+    return None  # ambiguous doubleheader (need game_pk) or relief-only
+
+
 def parse_innings(ip: str | float) -> float:
     """MLB reports innings like '120.1' meaning 120 and 1/3 innings.
 
@@ -138,11 +166,17 @@ class MlbClient:
         )
 
     # --- actual result (for backtesting) -------------------------------------
-    def get_actual_strikeouts(self, pitcher_id: int, date: str) -> int | None:
-        """Strikeouts the pitcher actually recorded on ``date`` (YYYY-MM-DD).
+    def get_actual_strikeouts(
+        self, pitcher_id: int, date: str, game_pk: int | str | None = None
+    ) -> int | None:
+        """Strikeouts the pitcher recorded on ``date`` (YYYY-MM-DD) in the STARTED game.
 
-        Reads the season game log and matches the date. Returns None if the
-        pitcher did not appear that day (or the game isn't final yet).
+        Pass ``game_pk`` to grade the exact game — essential on doubleheaders, where
+        the pitcher's team plays two games on one date and a date-only match would
+        grade the wrong one. Without a ``game_pk`` we disambiguate by the started
+        appearance (relief outings are never graded as a start). Returns None if the
+        start can't be identified unambiguously (so a bad match is reported as
+        unmatched, not silently misgraded).
         """
         resp = self._client.get(
             f"/api/v1/people/{pitcher_id}/stats",
@@ -152,11 +186,11 @@ class MlbClient:
         stats = resp.json().get("stats") or []
         if not stats:
             return None
-        for split in stats[0].get("splits", []):
-            if split.get("date") == date:
-                ks = split.get("stat", {}).get("strikeOuts")
-                return int(ks) if ks is not None else None
-        return None
+        split = _select_gamelog_split(stats[0].get("splits", []), date, game_pk)
+        if split is None:
+            return None
+        ks = split.get("stat", {}).get("strikeOuts")
+        return int(ks) if ks is not None else None
 
     # --- opponent strikeout rate ---------------------------------------------
     def get_team_k_rate(self, team_id: int) -> float | None:

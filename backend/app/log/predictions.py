@@ -15,6 +15,7 @@ FIELDS = [
     "date",
     "pitcher",
     "pitcher_id",
+    "game_pk",
     "opponent",
     "venue",
     "expected_ks",
