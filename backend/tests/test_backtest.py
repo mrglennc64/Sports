@@ -109,7 +109,7 @@ def test_settle_predictions_end_to_end(tmp_path):
         w.writerow(_row(pitcher_id="2", side="under", line="6.5"))
 
     class FakeMlb:
-        def get_actual_strikeouts(self, pid, date):
+        def get_actual_strikeouts(self, pid, date, game_pk=None):
             return {1: 8, 2: 4}[pid]  # pitcher 1 over hits, pitcher 2 under hits
 
     settled = settle_predictions(str(path), mlb=FakeMlb())
