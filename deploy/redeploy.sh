@@ -34,9 +34,52 @@ ssh $SERVER "cd $REPO_DIR/backend && .venv/bin/pip install -q -r requirements.tx
 # REQUIRED: nginx serves static frontend + proxies /api to this service. Without a
 # restart, any new or changed backend route 404s (or runs stale code) until the
 # next reboot. This is the step the old script omitted.
+#
+# HARDENED: `systemctl restart` can report the unit "active" while an ORPHANED
+# uvicorn (started outside systemd) still holds :8077 — the new process fails to
+# bind ([Errno 98] address already in use), systemd gives up, and the orphan keeps
+# serving STALE code with the API still answering 200. So we don't trust is-active:
+# we confirm the process that actually holds the port IS the service's MainPID, and
+# evict any squatter before retrying.
 echo ""
-echo "[4/8] Restarting backend service..."
-ssh $SERVER "systemctl restart strike-backend.service"
+echo "[4/8] Restarting backend service (with bind verification)..."
+ssh $SERVER 'bash -s' <<'REMOTE'
+set -e
+PORT=8077
+SVC=strike-backend.service
+
+restart() { systemctl reset-failed "$SVC" 2>/dev/null || true; systemctl restart "$SVC"; sleep 2; }
+holder()  { ss -ltnp "sport = :$PORT" 2>/dev/null | grep -oE 'pid=[0-9]+' | head -1 | cut -d= -f2; }
+
+restart
+if ! systemctl is-active --quiet "$SVC"; then
+  echo "  service not active after restart — evicting whatever holds :$PORT"
+  fuser -k "${PORT}/tcp" 2>/dev/null || true
+  sleep 1
+  restart
+fi
+
+MAINPID=$(systemctl show -p MainPID --value "$SVC")
+HOLD=$(holder)
+if [ -z "$HOLD" ]; then
+  echo "  ERROR: nothing is listening on :$PORT after restart"
+  journalctl -u "$SVC" -n 20 --no-pager; exit 1
+fi
+if [ "$HOLD" != "$MAINPID" ]; then
+  # A squatter (not our new process) owns the port. Kill it and restart once more.
+  echo "  :$PORT held by pid $HOLD, not service MainPID $MAINPID — evicting orphan"
+  kill -9 "$HOLD" 2>/dev/null || true
+  sleep 1
+  restart
+  MAINPID=$(systemctl show -p MainPID --value "$SVC")
+  HOLD=$(holder)
+  if [ "$HOLD" != "$MAINPID" ] || [ -z "$HOLD" ]; then
+    echo "  ERROR: :$PORT still not owned by the service (holder=$HOLD, MainPID=$MAINPID)"
+    journalctl -u "$SVC" -n 20 --no-pager; exit 1
+  fi
+fi
+echo "  backend active on :$PORT (pid $MAINPID)"
+REMOTE
 
 # Step 5: Rebuild frontend with correct API base
 echo ""
