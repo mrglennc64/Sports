@@ -11,6 +11,7 @@ a HIGHER probability for our side than the price we took — i.e. we bought low.
 from __future__ import annotations
 
 import csv
+import math
 import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -108,6 +109,102 @@ class UnmeasurableBet:
     reason: str
 
 
+DECISION_TARGET_N = 200  # decision-grade sample: enough graded bets to trust a keep/kill
+
+
+@dataclass
+class DecisionVerdict:
+    """The at-a-glance keep/kill checkpoint for the model's edge.
+
+    CLV is the sample-efficient proof of edge, but a handful of bets prove nothing.
+    This asks two honest questions at once: (1) do we have a decision-grade sample
+    yet (n vs target), and (2) is the mean CLV *significantly* different from zero
+    (95% CI, not just a noisy point estimate)? Only when both hold do we call it.
+
+    status: gathering (below target) | keep | kill | inconclusive (CI straddles 0)
+    """
+    status: str
+    n: int
+    target_n: int
+    progress_pct: float          # min(1, n / target_n)
+    decided: bool                # have we reached a decision-grade sample?
+    mean_clv: float | None       # prob-point mean (e.g. 0.004 = +0.4 pts)
+    se: float | None             # standard error of the mean
+    ci95_low: float | None
+    ci95_high: float | None
+    signal: str                  # keep / kill / inconclusive from the CI alone
+    headline: str                # one-line "N of 200 · mean CLV X · KEEP/KILL"
+
+
+def clv_decision(clv_values: list[float], target_n: int = DECISION_TARGET_N) -> DecisionVerdict:
+    """Turn a set of per-bet CLV values into a keep/kill checkpoint.
+
+    Signal (from the 95% CI on the mean, regardless of sample size):
+      keep         -> whole CI above 0  (we significantly beat the close)
+      kill         -> whole CI below 0  (we significantly lagged the close)
+      inconclusive -> CI straddles 0    (no proven edge either way)
+
+    Status layers the decision-grade sample gate on top: below ``target_n`` we are
+    still *gathering* (the signal is shown as a provisional lean, not a verdict);
+    at/above it, the signal becomes the final call.
+    """
+    n = len(clv_values)
+    if n == 0:
+        return DecisionVerdict(
+            status="gathering", n=0, target_n=target_n, progress_pct=0.0,
+            decided=False, mean_clv=None, se=None, ci95_low=None, ci95_high=None,
+            signal="inconclusive",
+            headline=f"0 of {target_n} graded — no measurable CLV yet. Gathering.",
+        )
+
+    mean = sum(clv_values) / n
+    if n >= 2:
+        var = sum((x - mean) ** 2 for x in clv_values) / (n - 1)
+        se = math.sqrt(var / n)
+    else:
+        se = float("inf")
+    lo, hi = mean - 1.96 * se, mean + 1.96 * se
+
+    if lo > 0:
+        signal = "keep"
+    elif hi < 0:
+        signal = "kill"
+    else:
+        signal = "inconclusive"
+
+    decided = n >= target_n
+    m = mean * 100
+    if not decided:
+        lean = {"keep": "leaning KEEP", "kill": "leaning KILL",
+                "inconclusive": "no edge yet"}[signal]
+        status = "gathering"
+        headline = (
+            f"{n} of {target_n} graded · mean CLV {m:+.2f} pts · "
+            f"NOT YET DECIDED ({lean}) — {target_n - n} more to a call."
+        )
+    else:
+        status = signal
+        call = {
+            "keep": "KEEP — significantly beats the close",
+            "kill": "KILL — significantly lags the close",
+            "inconclusive": "INCONCLUSIVE — no proven edge, keep gathering",
+        }[signal]
+        ci = "" if se == float("inf") else f" (95% CI {lo * 100:+.2f}..{hi * 100:+.2f})"
+        headline = (
+            f"{n} graded (target {target_n} reached) · mean CLV {m:+.2f} pts{ci} · {call}"
+        )
+
+    return DecisionVerdict(
+        status=status, n=n, target_n=target_n,
+        progress_pct=round(min(1.0, n / target_n), 4),
+        decided=decided, mean_clv=round(mean, 4),
+        se=None if se == float("inf") else round(se, 4),
+        ci95_low=None if se == float("inf") else round(lo, 4),
+        ci95_high=None if se == float("inf") else round(hi, 4),
+        signal=signal, headline=headline,
+    )
+
+
 @dataclass
 class ClvReport:
     n_bets: int                 # flagged bets scored against a SAME-LINE captured close
@@ -120,6 +217,7 @@ class ClvReport:
     bets: list[ClvBet] = field(default_factory=list)
     unmeasurable: list[UnmeasurableBet] = field(default_factory=list)
     verdict: str = ""
+    decision: DecisionVerdict | None = None  # at-a-glance keep/kill checkpoint
 
 
 def _to_float(v) -> float | None:
@@ -179,6 +277,7 @@ def clv_report(
     predictions_log: str,
     line_history_path: str,
     method: str = "proportional",
+    target_n: int = DECISION_TARGET_N,
 ) -> ClvReport:
     """Score flagged bets against captured closing lines — the price-based edge.
 
@@ -245,7 +344,10 @@ def clv_report(
                 f" ({n_unmeas} matched a close but the line had moved, so CLV is not "
                 "measurable for them.)"
             )
-        return ClvReport(0, unmatched, n_unmeas, None, None, None, 0.0, [], unmeasurable, msg)
+        return ClvReport(
+            0, unmatched, n_unmeas, None, None, None, 0.0, [], unmeasurable, msg,
+            decision=clv_decision([], target_n),
+        )
 
     vals = [s.clv for s in scored]
     mean_clv = sum(vals) / n
@@ -272,4 +374,5 @@ def clv_report(
         bets=scored,
         unmeasurable=unmeasurable,
         verdict=verdict,
+        decision=clv_decision(vals, target_n),
     )

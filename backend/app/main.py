@@ -26,6 +26,7 @@ from pydantic import BaseModel, Field
 from dataclasses import asdict as _asdict
 
 from app.arb_pipeline import scan_arbitrage
+from app.backtest import clv as clv_module
 from app.backtest.clv import clv_report
 from app.backtest.metrics import summarize
 from app.model.hedge import hedge_existing_position
@@ -395,7 +396,7 @@ def hedge(
 
 
 @app.get("/clv")
-def clv() -> dict:
+def clv(target: int = clv_module.DECISION_TARGET_N) -> dict:
     """Closing Line Value: did our flagged bets beat the market's closing price?
 
     The sharp's truth metric. /backtest asks 'did we profit?' and /calibration
@@ -404,8 +405,14 @@ def clv() -> dict:
     buy below where the market closed (positive de-vigged CLV)? That's the one
     academically-supported signal of real edge. Needs closing lines captured near
     first pitch (line_capture close); unmatched bets are reported, not counted.
+
+    The ``decision`` block is the at-a-glance keep/kill checkpoint: N of ``target``
+    graded, mean CLV, and whether the 95% CI clears zero yet. ``target`` sets the
+    decision-grade sample size (default 200).
     """
-    return _asdict(clv_report(settings.predictions_log, settings.line_history_log))
+    return _asdict(
+        clv_report(settings.predictions_log, settings.line_history_log, target_n=target)
+    )
 
 
 # ============================================================================

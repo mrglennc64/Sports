@@ -22,6 +22,42 @@ function Metric({ label, value, hint, tone }) {
   );
 }
 
+// The at-a-glance keep/kill checkpoint. Answers, in one line, "have we graded
+// enough bets to trust a verdict, and does the mean CLV significantly clear zero?"
+const DECISION_UI = {
+  keep: { tone: "good", icon: "✅", label: "KEEP" },
+  kill: { tone: "bad", icon: "🛑", label: "KILL" },
+  inconclusive: { tone: "warn", icon: "⚖️", label: "INCONCLUSIVE" },
+  gathering: { tone: "gathering", icon: "⏳", label: "GATHERING" },
+};
+
+function DecisionBanner({ decision }) {
+  if (!decision) return null;
+  const ui = DECISION_UI[decision.status] ?? DECISION_UI.gathering;
+  const fill = Math.round((decision.progress_pct ?? 0) * 100);
+  return (
+    <div className={`clv-decision ${ui.tone}`}>
+      <div className="clv-decision-tag">
+        {ui.icon} {ui.label}
+      </div>
+      <div className="clv-decision-body">
+        <div className="clv-decision-head">{decision.headline}</div>
+        <div className="clv-progress" title={`${decision.n} of ${decision.target_n} graded`}>
+          <div className="clv-progress-fill" style={{ width: `${fill}%` }} />
+        </div>
+        <div className="clv-decision-sub">
+          {decision.n} of {decision.target_n} decision-grade bets
+          {decision.ci95_low != null && (
+            <>
+              {" · "}95% CI {pts(decision.ci95_low)} … {pts(decision.ci95_high)}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Clv() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -69,6 +105,8 @@ export default function Clv() {
       </div>
 
       {error && <p className="error">⚠ {error}</p>}
+
+      {data && <DecisionBanner decision={data.decision} />}
 
       {data && !hasSample && (
         <p className="sub" style={{ textAlign: "center", margin: "2rem 0" }}>
