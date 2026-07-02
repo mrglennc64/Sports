@@ -365,29 +365,18 @@ def evaluate_bet(
     kelly_fraction = None
     bet_size = None
     if lean != Lean.PASS:
-        # Convert line to model probability using normal approximation
-        # Assume ~2.5 K standard error (conservative Poisson assumption)
-        from statistics import NormalDist
+        # Exact Poisson probability for the leaned side. (Was a fixed-sigma=2.5 normal
+        # approximation — wrong for small/large lambda and blind to half-line/push
+        # handling.) Size on edge.safe_kelly (fractional + capped), the same Kelly the
+        # live path uses, instead of the separate vig-included normal-approx path.
+        from app.model import poisson
+        from app.model.edge import safe_kelly
         if lean == Lean.OVER:
-            # P(projection > line) using cumulative normal distribution
-            model_prob = 1 - NormalDist(result.projected_ks, 2.5).cdf(line)
+            model_prob = poisson.prob_over(result.projected_ks, line)
         else:
-            # P(projection < line)
-            model_prob = NormalDist(result.projected_ks, 2.5).cdf(line)
+            model_prob = poisson.prob_under(result.projected_ks, line)
 
-        # Market probability from odds
-        decimal_odds = kelly.american_to_decimal(american_odds)
-        market_prob = 1 / decimal_odds
-
-        # Calculate Kelly fraction (with 0.25 quarter Kelly applied internally)
-        kelly_fraction = kelly.calculate_kelly_fraction(
-            model_probability=model_prob,
-            market_probability=market_prob,
-            american_odds=american_odds,
-            kelly_fraction_fraction=0.25
-        )
-
-        # Calculate bet size
+        kelly_fraction = safe_kelly(model_prob, american_odds, 0.25, 0.05)
         if kelly_fraction > 0:
             bet_size = kelly.calculate_bet_size(kelly_fraction, bankroll)
 

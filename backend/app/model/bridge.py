@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from app.config import Settings
 from app.config import settings as default_settings
-from app.model import kelly, poisson
+from app.model import poisson
 from app.model.calibration import shrink_to_even
 from app.model.edge import evaluate_prop, prob_to_american
 from app.model.expected_ks import LEAGUE_AVG_K_RATE
@@ -91,26 +91,14 @@ def evaluate_projection(
         min_edge=settings.min_edge,
     )
 
-    # Calculate kelly_fraction and suggested_bet_size from the model probability
-    kelly_fraction = None
-    suggested_bet_size = None
-    if best.side == "over":
-        kelly_fraction = kelly.calculate_kelly_fraction(
-            model_probability=p_over,
-            market_probability=best.fair_prob,
-            american_odds=over_odds,
-            kelly_fraction_fraction=settings.kelly_fraction
-        )
-    else:  # under
-        kelly_fraction = kelly.calculate_kelly_fraction(
-            model_probability=p_under,
-            market_probability=best.fair_prob,
-            american_odds=under_odds,
-            kelly_fraction_fraction=settings.kelly_fraction
-        )
-
-    if kelly_fraction and kelly_fraction > 0:
-        suggested_bet_size = kelly.calculate_bet_size(kelly_fraction, 1000.0)
+    # kelly_fraction / suggested_bet_size mirror best.kelly (edge.safe_kelly: the
+    # de-vigged, fractional, capped stake) — a single source of truth. Previously
+    # these were recomputed through a separate path with a hard-coded 0.05 cap and a
+    # $1000 bankroll that would silently DISAGREE with `kelly` when settings.kelly_cap
+    # != 0.05. The live card/frontend uses `kelly`/`kelly_capped`, so this changes no
+    # displayed stake — it just removes a divergent, redundant copy.
+    kelly_fraction = best.kelly
+    suggested_bet_size = round(best.kelly * 1000.0, 2) if best.kelly > 0 else None
 
     out.update(
         {

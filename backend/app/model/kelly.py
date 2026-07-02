@@ -146,20 +146,16 @@ def evaluate_bet_with_kelly(
     Returns:
         KellyResult with bet recommendation
     """
-    # Determine if betting OVER or UNDER
+    # Determine if betting OVER or UNDER, using the EXACT Poisson probability
+    # (replaces a fixed sigma=2.5 normal approximation that mis-sized small/large
+    # lambda and ignored half-line/push handling).
+    from app.model import poisson
     if model_projection > market_line:
         side = "OVER"
-        # P(OVER) ≈ 1 - P(projection exactly matches line)
-        # Approximation: use normal distribution
-        # For now, simple: if projection > line, higher over prob
-        from statistics import NormalDist
-        # Assume 2.5 Ks standard error from Poisson
-        model_prob = NormalDist(model_projection, 2.5).cdf(market_line)
-        model_prob = 1 - model_prob  # Probability of exceeding line
+        model_prob = poisson.prob_over(model_projection, market_line)
     else:
         side = "UNDER"
-        from statistics import NormalDist
-        model_prob = NormalDist(model_projection, 2.5).cdf(market_line)
+        model_prob = poisson.prob_under(model_projection, market_line)
 
     # Market probability from odds
     decimal_odds = american_to_decimal(american_odds)
