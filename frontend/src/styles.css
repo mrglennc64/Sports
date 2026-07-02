@@ -464,3 +464,16 @@ footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
 .risk-medium { background: #3d3312; color: #fbbf24; }
 .risk-high { background: #3d1717; color: #f87171; }
 .parlay-loses { color: #9aa4b0; font-style: normal; font-size: .85em; }
+
+/* Win-probability line on Simple cards (honesty: show the downside next to the pick) */
+.card-winprob { font-size: .9rem; color: #cbd5e1; margin: 2px 0 6px; }
+.card-winprob b { color: #e6edf3; }
+.card-loses { color: #9aa4b0; font-style: normal; font-size: .88em; }
+
+/* Error boundary fallback */
+.error-boundary { max-width: 640px; margin: 3rem auto; padding: 24px; border: 1px solid #3d1717;
+  background: #1a1113; border-radius: 10px; color: #e6edf3; }
+.error-boundary h2 { margin-top: 0; color: #f87171; }
+.error-boundary button { margin: 10px 0; padding: 8px 16px; border-radius: 6px; border: none;
+  background: #2563eb; color: #fff; cursor: pointer; }
+.error-boundary pre { white-space: pre-wrap; color: #9aa4b0; font-size: .85rem; }

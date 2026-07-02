@@ -45,7 +45,7 @@ export default function Landing() {
           bet for you.
         </p>
         <div className="cta-row">
-          <Link to="/app" className="cta">Launch the Engine →</Link>
+          <Link to="/" className="cta">Launch the Engine →</Link>
           <Link to="/research" className="cta ghost">All-Sports Edge Research</Link>
           <a
             className="cta ghost"
@@ -82,7 +82,7 @@ export default function Landing() {
           <li><b>Prove</b> — log every pick and settle it: hit rate, ROI, CLV.</li>
         </ol>
         <div className="cta-row center">
-          <Link to="/app" className="cta">Open today's slate →</Link>
+          <Link to="/" className="cta">Open today's slate →</Link>
         </div>
       </section>
 

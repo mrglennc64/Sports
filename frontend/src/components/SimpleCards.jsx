@@ -26,7 +26,7 @@ export default function SimpleCards({ rows, bankroll = 0, stakeRound = 0 }) {
             ? dollarStake(effectiveKelly(r), bankroll, stakeRound)
             : null;
         return (
-        <div key={i} className={`card sig-${r.signal}${r.selected ? " carded" : ""}${r.sharp_vetoed ? " vetoed" : ""}`}>
+        <div key={`${r.pitcher}-${r.side}-${r.line}`} className={`card sig-${r.signal}${r.selected ? " carded" : ""}${r.sharp_vetoed ? " vetoed" : ""}`}>
           <div className="card-top">
             <span className="card-signal">{SIGNAL_EMOJI[r.signal]} {r.recommendation}</span>
             {r.selected ? (
@@ -39,6 +39,14 @@ export default function SimpleCards({ rows, bankroll = 0, stakeRound = 0 }) {
             {r.pitcher} <b>{r.side?.toUpperCase()} {r.line} Ks</b>
           </div>
           <div className="card-vs">vs {r.opponent}</div>
+          {typeof r.model_prob === "number" && (
+            <div className="card-winprob">
+              Model win prob <b>{Math.round(r.model_prob * 100)}%</b>
+              <em className="card-loses">
+                {" "}· loses ~{Math.round((1 - r.model_prob) * 100)}% of the time
+              </em>
+            </div>
+          )}
           {stake != null && (
             <div className="card-stake">
               💵 Stake <b>{fmtMoney(stake)}</b>
@@ -47,7 +55,7 @@ export default function SimpleCards({ rows, bankroll = 0, stakeRound = 0 }) {
           )}
           <ConsensusBar row={r} />
           <ul className="card-reasons">
-            {r.reasons.slice(0, 3).map((reason, j) => (
+            {(r.reasons ?? []).slice(0, 3).map((reason, j) => (
               <li key={j}>{reason}</li>
             ))}
           </ul>
